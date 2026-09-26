@@ -575,7 +575,7 @@ Not decided / later: push categories (Phase 18), Cup time overrides (Phase 14), 
 - [x] Cup verified.
 - [ ] Required player/result flows verified.
 - [ ] Auth/account verified.
-- [ ] Server persistence verified.
+- [x] Server persistence verified. — 2026-09-26 on padelstar.app (0.17.0), guest path against the real database with a Points tournament: create, start, point-by-point scoring, the server row matches (rules, both games), reload restores the same revision, finish gives `Avsluttet` with 24 h retention and no admin token. Earlier account-owned checks: see 0.6.0 and 0.9.0.
 - [ ] History/retention required for v1 verified.
 - [ ] Notifications/TV/PWA/i18n/help/privacy required for v1 verified.
 - [ ] Minimum Systemeier verified.

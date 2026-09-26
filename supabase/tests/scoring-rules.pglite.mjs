@@ -20,6 +20,7 @@ create or replace function public.consume_api_rate_limit(p_bucket text, p_limit 
 const migDir = new URL('../migrations/', import.meta.url).pathname;
 for (const f of ['20260915040000_admin_set_result_status_sync.sql', '20260919120000_match_scorer_lease.sql', '20260919150000_result_approval.sql', '20260919210000_admin_result_correction.sql']) await pg.exec(fs.readFileSync(migDir + f, 'utf8'));
 await pg.exec(fs.readFileSync(MIG2, 'utf8'));
+await pg.exec(fs.readFileSync(migDir + '20260926120000_scoring_helpers_search_path.sql', 'utf8'));
 
 const uuid = (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const M1 = uuid(11);

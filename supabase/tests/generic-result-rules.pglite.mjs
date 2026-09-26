@@ -14,7 +14,7 @@ create table public.player_sessions(tournament_id uuid, player_id uuid, token_ha
 create table public.api_rate_limits(bucket_hash text primary key, window_started_at timestamptz, request_count int, updated_at timestamptz);
 create or replace function public.consume_api_rate_limit(p_bucket text, p_limit integer, p_window_seconds integer) returns boolean language sql as $$ select true $$;
 `);
-for (const f of ['20260915040000_admin_set_result_status_sync.sql', '20260919120000_match_scorer_lease.sql', '20260919150000_result_approval.sql', '20260919210000_admin_result_correction.sql', '20260924120000_generic_scoring_rules.sql']) await pg.exec(fs.readFileSync(dir + f, 'utf8'));
+for (const f of ['20260915040000_admin_set_result_status_sync.sql', '20260919120000_match_scorer_lease.sql', '20260919150000_result_approval.sql', '20260919210000_admin_result_correction.sql', '20260924120000_generic_scoring_rules.sql', '20260926120000_scoring_helpers_search_path.sql']) await pg.exec(fs.readFileSync(dir + f, 'utf8'));
 
 const uuid = (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const TOKEN = 'admintoken-1234567890';

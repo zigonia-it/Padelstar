@@ -30,4 +30,5 @@ A bug is complete only when it was reproduced or clearly verified, the smallest 
 
 ## Other v1 feature bugs
 
+- [ ] **Unconfirmed, not reproduced (2026-09-26):** on padelstar.app, right after a page reload, clicking "Fullfør turnering" and confirming from a script closed the dialog but the tournament stayed `Runde pågår` on the client and the server; the same steps with real clicks a minute later finished it normally. Possibly the admin session was not yet restored after the reload. If a person sees "finish does nothing" after a reload, note the exact steps here.
 - [ ] Add reproducible bugs here as they are found.

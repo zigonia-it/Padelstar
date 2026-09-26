@@ -6,6 +6,10 @@ Only verified completed changes belong here.
 
 ## Unreleased
 
+### Security / verification (2026-09-26)
+- Supabase security advisor: 0 errors. The only new finding was `function_search_path_mutable` on the seven scoring helpers added in 0.17.0; fixed by migration `20260926120000_scoring_helpers_search_path.sql` (applied live, functions re-checked). The other warnings are the known ones: RPCs deliberately callable by `anon`/`authenticated` (each checks its own token or owner), RLS tables without policies (reached only through those RPCs), and leaked-password protection (Pro plan).
+- Production smoke test of 0.17 on padelstar.app, guest path against the real database: Points tournament (first to 3, win by 2, first to 2 games) created through the wizard, started, one match scored point by point (3-0, then 5-3 from a 3-3 tie, so the win-by-2 rule ran live), the server row showed the rules and both games, a reload restored revision 12 and the finished result, and finishing the tournament gave `Avsluttet`, 24 h retention and no admin token in the stored state. The test row expires by itself.
+
 ### Changed
 - New tournaments default to best of 3 (first to 2 sets) in Tennis and padel (developer's decision 2026-09-24). Older tournaments keep one set per match; the create wizard field and the engine's form-input default are both 2, `normalizeRules` (older settings) stays 1. Points mode keeps one game as its default.
 
