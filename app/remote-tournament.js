@@ -60,10 +60,22 @@
         return false;
       }
       applyRemoteState(data.state);
-      state.playerToken = data.playerToken;
-      state.selectedPlayerId = data.playerId;
+      // applyRemoteState replaces the state object: write the token onto the new one, or it is never persisted
+      const joinedState = getState();
+      joinedState.playerToken = data.playerToken;
+      joinedState.selectedPlayerId = data.playerId;
       saveState({ remote: false });
+      clearJoinParams();
       return true;
+    }
+
+    // a reload must reopen the player view, not the join form (initial-view checks ?join first)
+    function clearJoinParams() {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has("join") && !url.searchParams.has("code")) return;
+      url.searchParams.delete("join");
+      url.searchParams.delete("code");
+      window.history?.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
     }
 
     return { createTournament, loadByInvite, join };

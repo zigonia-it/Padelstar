@@ -1,4 +1,4 @@
-const cacheName = "padelstar-v362";
+const cacheName = "padelstar-v363";
 
 const appShell = [
   "./",
@@ -40,7 +40,7 @@ const appShell = [
   "./app/storage.js?v=padelstar-storage-1",
   "./app/tournament-library.js?v=padelstar-tournament-library-3",
   "./app/rendering.js?v=padelstar-rendering-3",
-  "./app/remote-tournament.js?v=padelstar-remote-tournament-2",
+  "./app/remote-tournament.js?v=padelstar-remote-tournament-3",
   "./app/admin-actions.js?v=padelstar-admin-actions-5",
   "./app/court-settings.js?v=padelstar-court-settings-2",
   "./app/setup-forms.js?v=padelstar-setup-forms-5",
@@ -128,7 +128,7 @@ const appShell = [
   "./app/core/remote-state-controller.js?v=padelstar-remote-state-controller-3",
   "./app/core/remote-sync-controller.js?v=padelstar-remote-sync-controller-1",
   "./app/bootstrap/dom-elements.js?v=padelstar-dom-elements-16",
-  "./app/bootstrap/app-meta.js?v=padelstar-app-meta-22",
+  "./app/bootstrap/app-meta.js?v=padelstar-app-meta-23",
   "./app/bootstrap/app-events.js?v=padelstar-bootstrap-events-4",
   "./app/bootstrap/app-init.js?v=padelstar-app-init-2",
   "./app/ui/theme.js?v=padelstar-theme-2",
