@@ -138,6 +138,26 @@ test("sounds: default on, can be switched off, and each number maps to its file"
   assert.deepEqual(played, ["assets/sounds/notification1.m4a"], "falls back to AAC where MP3 is unsupported");
 });
 
+test("sounds are reused and unlocked by a tap, so iOS lets a live update play them (field test 2026-10-04)", async () => {
+  const made = [];
+  const calls = [];
+  class TapAudio {
+    constructor(src) { this.src = src; this.muted = false; this.currentTime = 5; if (src) made.push(this); }
+    canPlayType(type) { return type === "audio/mpeg" ? "maybe" : ""; }
+    play() { calls.push(["play", this.src, this.muted]); return Promise.resolve(); }
+    pause() { calls.push(["pause", this.src]); }
+  }
+  assert.equal(center.unlockSounds({ AudioClass: TapAudio }), true);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(made.length, 2, "one element per sound");
+  assert.ok(calls.some(([action, , muted]) => action === "play" && muted === true), "the unlock plays muted");
+  assert.ok(made.every((audio) => audio.muted === false && audio.currentTime === 0), "and leaves both ready and audible");
+  center.playSound(1, { AudioClass: TapAudio });
+  center.playSound(1, { AudioClass: TapAudio });
+  assert.equal(made.length, 2, "a live update reuses the unlocked element instead of making a new one");
+  assert.deepEqual(calls.filter(([action, , muted]) => action === "play" && muted === false).map(([, src]) => src), ["assets/sounds/notification1.mp3", "assets/sounds/notification1.mp3"]);
+});
+
 test("the two sound files exist", () => {
   for (const file of ["notification1.mp3", "notification1.m4a", "notification2.mp3", "notification2.m4a"]) {
     assert.ok(fs.statSync(path.join(__dirname, "..", "assets", "sounds", file)).size > 10_000, file);

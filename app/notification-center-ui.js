@@ -130,6 +130,16 @@
       syncSettings();
     }
 
+    // iOS allows a live update to play a sound only after a tap has started that audio element once (see unlockSounds);
+    // the first tap after opening, or after coming back to the app, unlocks both sounds again.
+    function bindSoundUnlock() {
+      if (playSound || !lib.unlockSounds) return;
+      let locked = true;
+      const unlock = () => { if (!locked) return; locked = false; lib.unlockSounds(); };
+      for (const type of ["pointerdown", "touchend", "keydown"]) document.addEventListener?.(type, unlock, { capture: true, passive: true });
+      document.addEventListener?.("visibilitychange", () => { if (document.visibilityState === "visible") locked = true; });
+    }
+
     function bind() {
       bell?.addEventListener("click", open);
       closeButton?.addEventListener("click", () => dialog?.close?.());
@@ -137,6 +147,7 @@
       markAll?.addEventListener("click", () => { store.markAllRead(tournamentId(), playerId()); render(); renderList(); });
       soundToggle?.addEventListener("change", () => { lib.setSoundsEnabled(storage, soundToggle.checked); syncSettings(); });
       bindSettings();
+      bindSoundUnlock();
       if (active()) store.prune(tournamentId(), playerId());
       render();
     }

@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v366/);
+  assert.match(serviceWorkerSource, /padelstar-v368/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -326,8 +326,8 @@ test("match lifecycle actions have their own mutation boundary", () => {
   assert.match(matchActionsSource, /captureMatchUndoState/);
   assert.match(matchActionsSource, /setWalkover/);
   assert.match(matchActionsSource, /global\.PadelstarMatchActions/);
-  assert.match(indexSource, /app\/match-actions\.js\?v=padelstar-match-actions-3/);
-  assert.match(serviceWorkerSource, /app\/match-actions\.js\?v=padelstar-match-actions-3/);
+  assert.match(indexSource, /app\/match-actions\.js\?v=padelstar-match-actions-4/);
+  assert.match(serviceWorkerSource, /app\/match-actions\.js\?v=padelstar-match-actions-4/);
   assert.match(appSource, /matchActions\.startMatch/);
 });
 

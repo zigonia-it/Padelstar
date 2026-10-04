@@ -60,7 +60,7 @@ window.PadelstarState = (() => {
         undoStack: [],
         ...match,
       };
-      return migrateUndoState(migrated);
+      return compactMatchHistory(migrateUndoState(migrated));
     }
     return {
       id: match.id,
@@ -86,6 +86,37 @@ window.PadelstarState = (() => {
       undoStack: [],
       completedAt: match.completedAt,
     };
+  }
+
+  // Undo history (0.17.1, field test 2026-10-04): every point stored a snapshot of the whole match including its event
+  // log, so the history grew with the square of the points: 93 points left one match with 800 KB, the tournament went
+  // over the server's 256 KB state limit and every admin save was refused. A restore never takes the scorer role, its
+  // log or the event history from a snapshot (the current ones are kept, in JS and SQL), so they are not stored, and
+  // only the last UNDO_LIMIT steps are kept. The database applies the same rules (trigger compact_tournament_history).
+  const UNDO_LIMIT = 20;
+  const SNAPSHOT_EXCLUDED_FIELDS = ["undoStack", "redoStack", "scorer", "scorerRequest", "scorerLog", "eventLog"];
+
+  function compactSnapshotMatch(snapshotMatch) {
+    if (!snapshotMatch || typeof snapshotMatch !== "object") return snapshotMatch;
+    const compact = { ...snapshotMatch };
+    for (const field of SNAPSHOT_EXCLUDED_FIELDS) delete compact[field];
+    return compact;
+  }
+
+  function compactEntry(entry) {
+    if (!entry || typeof entry !== "object") return entry;
+    const compact = { ...entry };
+    if (compact.match) compact.match = compactSnapshotMatch(compact.match);
+    // redo entries (written by the database) hold an undo entry and a target snapshot
+    if (compact.undoEntry) compact.undoEntry = compactEntry(compact.undoEntry);
+    if (compact.target) compact.target = compactEntry(compact.target);
+    return compact;
+  }
+
+  function compactMatchHistory(match) {
+    if (Array.isArray(match.undoStack)) match.undoStack = match.undoStack.slice(-UNDO_LIMIT).map(compactEntry);
+    if (Array.isArray(match.redoStack)) match.redoStack = match.redoStack.slice(-UNDO_LIMIT).map(compactEntry);
+    return match;
   }
 
   // Pre-multi-step-undo saved state (local or synced from a server not yet
@@ -161,6 +192,7 @@ window.PadelstarState = (() => {
     delete sharedState.claimedAt;
     delete sharedState.serverConfirmed;
     if (sharedState.settings) delete sharedState.settings.language;
+    for (const round of sharedState.rounds ?? []) for (const match of round.matches ?? []) compactMatchHistory(match);
     return sharedState;
   }
 
@@ -185,6 +217,8 @@ window.PadelstarState = (() => {
   return {
     migrateState,
     migrateMatch,
+    compactMatchHistory,
+    UNDO_LIMIT,
     readSyncMetadata,
     loadPendingAdminSync,
     loadPendingPlayerScores,

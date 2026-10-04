@@ -25,6 +25,12 @@
         applyRemoteState(data, { source: "rpc", clearConflict: true });
         return true;
       }
+      // a shared tournament changes only on the server: a player device without its token (or offline) must say so,
+      // not change its own copy, which nobody else sees and the next update from the server undoes
+      if (state.remoteMode === "shared" && !isCurrentUserAdmin()) {
+        handleRemoteError(null, translate("messages.availabilityUpdateFailed"));
+        return false;
+      }
       player.availability = nextAvailability;
       saveState({ remote: isCurrentUserAdmin() });
       render();
