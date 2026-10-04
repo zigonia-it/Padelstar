@@ -3,7 +3,7 @@ module.exports = function handler(request, response) {
   response.status(200).json({
     ok: true,
     service: "padelstar-web",
-    version: "0.17.2",
+    version: "0.17.3",
     timestamp: new Date().toISOString(),
   });
 };
