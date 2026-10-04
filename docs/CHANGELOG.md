@@ -12,7 +12,8 @@ Field-test fix (field test 2026-10-02: a player who joined a guest Cup by QR fro
 
 ### Fixed
 - A player who joins from another device now keeps their player token. `join` wrote the token onto the state object that `applyRemoteState` had just replaced, so it was never saved and the phone could not act as that player.
-- A reload after joining reopens the player view instead of the join form: `?join=` / `?code=` is removed from the address once the join succeeds (the start-up routing checks it before the saved tournament, and joining again by the same name is refused for a guest).
+- A reload after joining reopens the player view instead of the join form: `?join=` / `?code=` (and `?view=setup-player`, used by the guide and privacy pages) is removed from the address once the join succeeds (the start-up routing checks it before the saved tournament, and joining again by the same name is refused for a guest).
+- Typing an invite code over a prefilled one works on iPhone (field test 2026-10-04, code 9PV9X3FR "not found"). The join form is prefilled with the code of the tournament saved on the phone; iOS Safari ignores `select()` on a programmatic focus, so every key after the first was blocked by `maxlength=1` (typing 6CBNY4Y2 over E6FYUMMK sent 66FYUMMK). The cells now insert the typed character themselves (`beforeinput`), and are marked `autocapitalize=characters`, `autocorrect=off`. Verified in a phone viewport with real key presses: over a prefilled code, lowercase, backspace, then join and reload.
 
 ### Known
 - Claiming a name that is already on the roster does not raise the revision, so the admin's next save overwrites the claimed player's `userId`/`guest` markers in the state. Access is unaffected (the account link lives in `tournament_account_players`); to be fixed server-side.

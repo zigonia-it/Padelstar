@@ -1,4 +1,4 @@
-const cacheName = "padelstar-v363";
+const cacheName = "padelstar-v364";
 
 const appShell = [
   "./",
@@ -40,7 +40,7 @@ const appShell = [
   "./app/storage.js?v=padelstar-storage-1",
   "./app/tournament-library.js?v=padelstar-tournament-library-3",
   "./app/rendering.js?v=padelstar-rendering-3",
-  "./app/remote-tournament.js?v=padelstar-remote-tournament-3",
+  "./app/remote-tournament.js?v=padelstar-remote-tournament-4",
   "./app/admin-actions.js?v=padelstar-admin-actions-5",
   "./app/court-settings.js?v=padelstar-court-settings-2",
   "./app/setup-forms.js?v=padelstar-setup-forms-5",
@@ -154,7 +154,7 @@ const appShell = [
   "./app/workspace-events.js?v=padelstar-workspace-events-3",
   "./app/tournament-entry.js?v=padelstar-tournament-entry-8",
   "./app/create-wizard.js?v=padelstar-create-wizard-4",
-  "./app/invite-code-input.js?v=padelstar-invite-code-input-1",
+  "./app/invite-code-input.js?v=padelstar-invite-code-input-2",
   "./app/accent-picker.js?v=padelstar-accent-picker-1",
   "./app/admin-form-events.js?v=padelstar-admin-form-events-9",
   "./app/match-actions.js?v=padelstar-match-actions-3",

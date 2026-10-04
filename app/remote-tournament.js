@@ -72,9 +72,11 @@
     // a reload must reopen the player view, not the join form (initial-view checks ?join first)
     function clearJoinParams() {
       const url = new URL(window.location.href);
-      if (!url.searchParams.has("join") && !url.searchParams.has("code")) return;
+      const joinView = url.searchParams.get("view") === "setup-player";
+      if (!url.searchParams.has("join") && !url.searchParams.has("code") && !joinView) return;
       url.searchParams.delete("join");
       url.searchParams.delete("code");
+      if (joinView) url.searchParams.delete("view");
       window.history?.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
     }
 

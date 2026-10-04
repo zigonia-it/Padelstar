@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v363/);
+  assert.match(serviceWorkerSource, /padelstar-v364/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -282,8 +282,8 @@ test("invite code input is a real 8-cell control kept in sync with the form fiel
   assert.match(indexSource, /data-code-cell-index="0"/);
   assert.match(indexSource, /data-code-cell-index="7"/);
   assert.match(indexSource, /name="inviteCode" type="text" class="invite-code-hidden-field" required minlength="8" maxlength="8"/);
-  assert.match(indexSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-1/);
-  assert.match(serviceWorkerSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-1/);
+  assert.match(indexSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-2/);
+  assert.match(serviceWorkerSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-2/);
   assert.match(inviteCodeInputSource, /window\.PadelstarInviteCodeInput/);
   assert.match(inviteCodeInputSource, /syncCellsFromHidden/);
   // prefillJoinForm is the one function every real caller (URL prefill,
