@@ -2036,6 +2036,19 @@ Object.assign(padelstarTranslations.en, {
   "feedback.error.failed": "Couldn't send the message. Try again, or send it by email.",
   "feedback.emailInstead": "Send by email instead",
 });
+// A saved tournament that no longer exists on the server (0.17.1).
+Object.assign(padelstarTranslations.nb, {
+  "messages.tournamentRemoved": "«{name}» finnes ikke lenger på serveren og er fjernet fra denne enheten.",
+  "messages.thisTournament": "Turneringen",
+  "messages.joinAccountAlreadyJoined": "Kontoen din er allerede med i denne turneringen som en annen spiller.",
+  "messages.joinNameTaken": "Den spilleren er allerede tatt i bruk på en annen enhet. Logg inn med kontoen som brukte den, eller be admin om hjelp.",
+});
+Object.assign(padelstarTranslations.en, {
+  "messages.tournamentRemoved": "“{name}” no longer exists on the server and has been removed from this device.",
+  "messages.thisTournament": "The tournament",
+  "messages.joinAccountAlreadyJoined": "Your account is already in this tournament as another player.",
+  "messages.joinNameTaken": "That player is already in use on another device. Sign in with the account that used it, or ask the admin.",
+});
 window.PadelstarTranslations = padelstarTranslations;
 window.PadelstarI18n = {
   fallbackLanguage,

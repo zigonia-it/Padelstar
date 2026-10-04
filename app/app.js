@@ -867,6 +867,7 @@ const realtimeConnection = window.PadelstarRealtimeConnection.create({
   isReady: () => isSupabaseReady(),
   observability,
   onConnectionStateChange: () => syncConnectionStatus(),
+  onTournamentMissing: () => void handleTournamentMissing(),
   realtimeSync,
   translate: (key, values) => t(key, values),
 });
@@ -1066,8 +1067,21 @@ async function handleEndTournament() {
 async function handleResetTournament() {
   if (!await requestConfirmationWithTitle(t("messages.resetTournamentConfirm"), t("messages.resetTournamentTitle"))) return;
   if (!await tournamentFinalization.finalize("cancelled")) return;
+  clearLocalTournament();
+  showStart();
+  render();
+}
+
+// Forgets the current tournament on this device only (the server copy is gone or was just cancelled).
+function clearLocalTournament() {
+  removeRealtimeChannel();
   tournamentLibrary.remove(state.id);
+  const language = state.settings?.language;
   state = structuredClone(defaultTournament);
+  if (language) state.settings.language = language;
+  pendingAdminSync = false;
+  pendingPlayerScores = [];
+  remoteConflict = false;
   localStorage.removeItem(storageKey);
   localStorage.removeItem(legacyStorageKey);
   localStorage.removeItem(recoveryStorageKey);
@@ -1078,8 +1092,26 @@ async function handleResetTournament() {
   syncCreateFormDefaults();
   elements.joinTournamentForm.reset();
   syncJoinPreview();
+}
+
+// The server answered that the saved tournament does not exist: deleted (retention, the admin, the system owner)
+// or its invite code now belongs to another tournament. Without this, the device kept showing it as live, saves
+// failed silently, and its invite code could not be joined (field test 2026-10-04).
+// A tournament this device created but never got onto the server is uploaded again instead of forgotten.
+let recreatingTournament = false;
+async function handleTournamentMissing() {
+  if (state.remoteMode !== "shared" || !state.id) return;
+  if (state.adminToken && state.serverConfirmed === false) {
+    if (recreatingTournament) return;
+    recreatingTournament = true;
+    try { await createRemoteTournament(); } finally { recreatingTournament = false; }
+    return;
+  }
+  const name = state.name || t("messages.thisTournament");
+  clearLocalTournament();
   showStart();
   render();
+  showToast(t("messages.tournamentRemoved", { name }), "status-message-error");
 }
 
 function initializeNavigation() {
@@ -1235,6 +1267,27 @@ function activateSupabaseClient() {
   void accountAuth?.refresh();
   void syncProfileHistoryRemote();
   connectRealtimeForCurrentState();
+  void pruneSavedTournaments();
+}
+
+// "Dine turneringer" kept tournaments the server had deleted long ago. Once per page load, ask the server about
+// each saved shared tournament (other than the open one, which the realtime refresh checks) and drop the gone ones.
+async function pruneSavedTournaments() {
+  if (!isSupabaseReady()) return;
+  let removed = false;
+  for (const entry of tournamentLibrary.list()) {
+    const saved = entry.state;
+    if (entry.id === state.id || saved.remoteMode !== "shared" || saved.serverConfirmed === false || !saved.inviteCode) continue;
+    try {
+      const { data, error } = await getTournamentByInviteRpc(saved.inviteCode);
+      if (error) continue;
+      if (!data || data.id !== entry.id) {
+        tournamentLibrary.remove(entry.id);
+        removed = true;
+      }
+    } catch { /* offline or rate limited: keep the entry */ }
+  }
+  if (removed) render();
 }
 
 function createTournament({ name, inviteCode, players, courtCount, format, rulesFormData, pointMode, cupTeamSetupMode, includesThirdPlaceMatch }) {
@@ -1377,11 +1430,12 @@ function openSavedTournament(tournamentId) {
     }
     return;
   }
-  if (!isCurrentUserAdmin()) {
+  // the saved entry carries its own admin token; without one there is nothing to resume as admin
+  if (!savedState.adminToken) {
     showToast(t("admin.identitySignInRequired"), "status-message-error");
     return;
   }
-  persistLocalState();
+  if (state.id && hasActiveTournament()) persistLocalState();
   removeRealtimeChannel();
   state = migrateState(savedState);
   state.settings.language = loadUserLanguage(state.settings?.language ?? "nb");
@@ -1479,6 +1533,8 @@ function showRecoveryNotice() {
 function handleRemoteError(error, fallback) {
   markSyncError(error);
   observability?.error("remote_error", error, { transient: isTransientRemoteError(error) });
+  // "Admin token mismatch or tournament not found": ask the server whether the tournament still exists
+  if (/tournament not found/i.test(String(error?.message ?? ""))) void refreshRemoteState("missing-check");
   if (isConflictError(error)) {
     markRemoteConflict();
     return;
