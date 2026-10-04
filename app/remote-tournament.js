@@ -40,6 +40,15 @@
       return true;
     }
 
+    // the server's refusals that "try again" never fixes get their own message
+    function joinErrorMessage(error) {
+      const message = String(error?.message ?? "");
+      if (/account already joined/i.test(message)) return translate("messages.joinAccountAlreadyJoined");
+      if (/belongs to another session|already joined; sign in/i.test(message)) return translate("messages.joinNameTaken");
+      if (/already started/i.test(message)) return translate("messages.tournamentStartedAskAdmin");
+      return errorMessage(error, translate("messages.joinFailed"));
+    }
+
     async function join(playerName, avatarId, accent) {
       if (!isReady()) return false;
       const state = getState();
@@ -52,7 +61,7 @@
         p_player: player,
       });
       if (error) {
-        showToast(errorMessage(error, translate("messages.joinFailed")), "status-message-error");
+        showToast(joinErrorMessage(error), "status-message-error");
         return false;
       }
       if (!data?.state || !data.playerToken || !data.playerId) {

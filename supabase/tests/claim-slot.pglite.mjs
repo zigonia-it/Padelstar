@@ -25,6 +25,7 @@ const start = impl.indexOf('create or replace function public.join_tournament_im
 const end = impl.indexOf('$function$;', impl.indexOf('$function$', start) + 10) + '$function$;'.length;
 await pg.exec(impl.slice(start, end));
 await pg.exec(fs.readFileSync(dir + '20260920120000_claim_unlinked_slot.sql', 'utf8'));
+await pg.exec(fs.readFileSync(dir + '20261004220000_drop_stale_account_player_links.sql', 'utf8'));
 
 let pass = 0, fail = 0;
 const ok = (name, cond, extra = '') => { if (cond) { pass++; console.log('  ok  ', name); } else { fail++; console.log('  FAIL', name, extra); } };
@@ -65,6 +66,20 @@ ok('the same account can rejoin its own slot', !r.error && (await sessions(P.car
 r = await join(U1, 'erik');
 ok('an account cannot also claim a second slot in the same tournament', r.error?.includes('Account already joined'), r.error);
 ok('the second slot stays free', (await binding(P.erik)) === null);
+
+console.log('a link to a player who left the roster does not block the account (field test 2026-10-04)');
+await fresh();
+await join(U1, 'Newcomer');
+await pg.query(`update public.tournaments set state = jsonb_set(state, '{players}', (select jsonb_agg(v) from jsonb_array_elements(state->'players') v where v->>'name' <> 'Newcomer'))`);
+r = await join(U1, 'carl');
+ok('the account can claim another slot once its old player was removed', !r.error && r.data.playerId === P.carl, r.error);
+ok('the claimed slot is linked, the stale link is gone', (await binding(P.carl)) === U1 && (await pg.query('select count(*)::int n from public.tournament_account_players where user_id = $1', [U1])).rows[0].n === 1);
+await fresh();
+await join(U2, 'dina');
+await join(U1, 'Newcomer');
+await pg.query(`update public.tournaments set state = jsonb_set(state, '{players}', (select jsonb_agg(v) from jsonb_array_elements(state->'players') v where v->>'name' <> 'Newcomer'))`);
+await join(U1, 'carl');
+ok("another account's link to a player still on the roster is untouched", (await binding(P.dina)) === U2);
 
 console.log('other rules are unchanged');
 await fresh();

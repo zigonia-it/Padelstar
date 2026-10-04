@@ -159,6 +159,7 @@ window.PadelstarState = (() => {
     delete sharedState.selectedPlayerId;
     delete sharedState.ownerUserId;
     delete sharedState.claimedAt;
+    delete sharedState.serverConfirmed;
     if (sharedState.settings) delete sharedState.settings.language;
     return sharedState;
   }

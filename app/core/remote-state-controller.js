@@ -65,6 +65,7 @@
       setIsApplyingRemoteState(true);
       const nextState = migrateState({ ...remoteState, selectedPlayerId });
       nextState.remoteMode = "shared";
+      nextState.serverConfirmed = true; // local only: this tournament has been seen on the server
       nextState.adminToken = adminToken;
       nextState.playerToken = playerToken;
       nextState.ownerUserId = remoteState.ownerUserId ?? ownerUserId;

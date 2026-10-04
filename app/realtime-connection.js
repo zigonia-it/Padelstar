@@ -1,5 +1,5 @@
 (function initPadelstarRealtimeConnection(global) {
-  function create({ applyRemoteState, flushPendingRemoteWrites, getClient, getInviteState, getNavigator, getState, handleRemoteError, hasActiveTournament, isReady, observability, onConnectionStateChange, realtimeSync, translate }) {
+  function create({ applyRemoteState, flushPendingRemoteWrites, getClient, getInviteState, getNavigator, getState, handleRemoteError, hasActiveTournament, isReady, observability, onConnectionStateChange, onTournamentMissing, realtimeSync, translate }) {
     let channel = null;
     let tournamentId = null;
     let reconnectTimer = null;
@@ -57,8 +57,13 @@
 
       const currentTournamentId = state.id;
       refreshPromise = getInviteState(state.inviteCode).then(({ data, error }) => {
-        if (error || !data || data.id !== currentTournamentId) {
-          if (error) handleRemoteError(error, translate("messages.fetchRemoteFailed"));
+        if (error) {
+          handleRemoteError(error, translate("messages.fetchRemoteFailed"));
+          return false;
+        }
+        // the server answered, and the code no longer leads to this tournament: deleted, or its code reused
+        if (!data || data.id !== currentTournamentId) {
+          if (getState().id === currentTournamentId) onTournamentMissing?.();
           return false;
         }
         return applyRemoteState(data, { source: "refresh", clearConflict: reason === "manual" });

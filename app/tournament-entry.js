@@ -90,6 +90,8 @@
         includesThirdPlaceMatch: formData.get("includesThirdPlaceMatch") === "on",
       });
       nextState.remoteMode = getClient() ? "shared" : "local";
+      // stays false until create_tournament succeeds, so a failed create is uploaded again, not mistaken for a deletion
+      nextState.serverConfirmed = false;
       if (adminUser?.id) nextState.ownerUserId = adminUser.id;
       if (getProfile?.()?.id) nextState.ownerProfileId = getProfile().id;
 
