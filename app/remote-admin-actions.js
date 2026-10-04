@@ -146,7 +146,7 @@
       enqueue("admin_advance_round", () => {
         const state = deps.getState();
         return { p_tournament_id: state.id, p_admin_token: state.adminToken, p_expected_revision: state.revision };
-      }, "messages.nextRoundFailed", () => deps.sendPushNotification("round_ready"));
+      }, "messages.nextRoundFailed"); // the "round ready" push is sent when the device sees the new round (announceRoundChange)
     }
 
     // `confirmLuckyLoser`: the admin confirmed that the best-placed losing team takes the place of a match in which both

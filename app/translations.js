@@ -2042,12 +2042,16 @@ Object.assign(padelstarTranslations.nb, {
   "messages.thisTournament": "Turneringen",
   "messages.joinAccountAlreadyJoined": "Kontoen din er allerede med i denne turneringen som en annen spiller.",
   "messages.joinNameTaken": "Den spilleren er allerede tatt i bruk på en annen enhet. Logg inn med kontoen som brukte den, eller be admin om hjelp.",
+  "round.autoStarted": "Runde {finished} er ferdig. Runde {round} har startet.",
+  "round.allRoundsFinished": "Alle rundene er spilt. Du kan avslutte turneringen.",
 });
 Object.assign(padelstarTranslations.en, {
   "messages.tournamentRemoved": "“{name}” no longer exists on the server and has been removed from this device.",
   "messages.thisTournament": "The tournament",
   "messages.joinAccountAlreadyJoined": "Your account is already in this tournament as another player.",
   "messages.joinNameTaken": "That player is already in use on another device. Sign in with the account that used it, or ask the admin.",
+  "round.autoStarted": "Round {finished} is complete. Round {round} has started.",
+  "round.allRoundsFinished": "All rounds have been played. You can finish the tournament.",
 });
 window.PadelstarTranslations = padelstarTranslations;
 window.PadelstarI18n = {
