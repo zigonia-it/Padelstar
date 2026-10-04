@@ -6,7 +6,11 @@ Only verified completed changes belong here.
 
 ## Unreleased
 
-### Fixed (field test 2026-10-04, round 3)
+## 0.17.2
+
+Field test 2026-10-04, round 3. Verified: 573 automated tests, PGlite `compact-history` 17/17, both migrations applied live and checked, TV mode live updates and the new score line in the browser and on padelstar.app. Not yet verified on a real iPhone: the sound and the zoom fix.
+
+### Fixed
 - **Admin results hung on "sender".** The undo history grew with the square of the points: every point stored a snapshot of the match including its event log. After 93 points one match held 800 KB, the tournament passed the server's 256 KB state limit, and every admin save was refused ("Invalid tournament state payload"); players' points (save_player_point) kept going. Snapshots no longer store the scorer, its log or the event log (a restore always keeps the current ones, in JS and SQL), and only the last 20 steps are kept. The client compacts on load and before every upload; migration `20261005090000_compact_tournament_history.sql` adds a BEFORE trigger that does the same for every write and compacts tournaments still being played (applied live 2026-10-05 on the developer's go-ahead: 9PV9X3FR went from 1 084 KB to 140 KB with identical sets, games, points and revision; no tournament is over the limit). Verified: 6 new unit tests, PGlite `compact-history` 17/17 (93 points: 1.08 MB → far under the limit).
 - **A partner's withdrawal was lost.** The admin's withdrawal (and the partner's notice) never reached the server because of the save above, and the next point brought the server's copy back. A player device without a token no longer pretends to mark itself away in a shared tournament; it says the update failed.
 - **TV mode** shows sets won and the points in the game (15/30/40, plain numbers in Points scoring) next to the games, and updates on the database's revision broadcast instead of only every 15 seconds (it looked frozen because a point never changed the games). One client for the screen's lifetime.
