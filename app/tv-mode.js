@@ -76,9 +76,22 @@
     });
   }
 
+  // The same numbers as the app's scoreboard: the big one is the games in the set (the running points in Points
+  // scoring), this line adds the sets won and the points in the game. The TV showed only the games, so a point never
+  // changed the screen until a game was won and it looked as if the TV did not update (field test 2026-10-04).
+  function scoreDetail(match) {
+    const scoring = global.PadelstarScoring;
+    const pair = (one, two) => `${escapeHtml(one)}–${escapeHtml(two)}`;
+    const item = (label, value) => `<span>${escapeHtml(label)} <strong>${value}</strong></span>`;
+    const won = pair(scoring.setsWonByTeam(match, 0), scoring.setsWonByTeam(match, 1));
+    if (scoring.isPointsMatch(match, state?.settings ?? {})) return `<div class="tv-score-detail">${item(t("common.games"), won)}</div>`;
+    const points = pair(scoring.pointLabel(match, match.currentGame?.teamOne ?? 0), scoring.pointLabel(match, match.currentGame?.teamTwo ?? 0));
+    return `<div class="tv-score-detail">${item(t("common.sets"), won)}${item(t("common.points"), points)}</div>`;
+  }
+
   function matchCard(match, next = false) {
     const awaiting = match.state === "awaitingApproval";
-    return `<article class="tv-match-card${next ? "" : " tv-live-match"}"><h3><span>${escapeHtml(match.courtName ?? t("tv.court"))}</span>${escapeHtml(matchContext(match))}</h3><div class="tv-match-teams"><div class="tv-team">${teamNames(match.teamOne)}</div><strong class="tv-team-score">${next ? "–" : score(match, 0)}</strong><span class="tv-versus">${t("tv.versus")}</span><strong class="tv-team-score">${next ? "–" : score(match, 1)}</strong><div class="tv-team">${teamNames(match.teamTwo)}</div></div><div class="tv-match-meta"><span class="${next ? "" : "tv-live-label"}">${next ? t("tv.startingSoon") : awaiting ? t("tv.awaitingApproval") : t("tv.playing")}</span><span>${escapeHtml(matchContext(match))}</span>${timerHtml(match)}</div></article>`;
+    return `<article class="tv-match-card${next ? "" : " tv-live-match"}"><h3><span>${escapeHtml(match.courtName ?? t("tv.court"))}</span>${escapeHtml(matchContext(match))}</h3><div class="tv-match-teams"><div class="tv-team">${teamNames(match.teamOne)}</div><strong class="tv-team-score">${next ? "–" : score(match, 0)}</strong><span class="tv-versus">${t("tv.versus")}</span><strong class="tv-team-score">${next ? "–" : score(match, 1)}</strong><div class="tv-team">${teamNames(match.teamTwo)}</div></div>${next ? "" : scoreDetail(match)}<div class="tv-match-meta"><span class="${next ? "" : "tv-live-label"}">${next ? t("tv.startingSoon") : awaiting ? t("tv.awaitingApproval") : t("tv.playing")}</span><span>${escapeHtml(matchContext(match))}</span>${timerHtml(match)}</div></article>`;
   }
 
   function matchContext(match) { return t("tv.matchContext", { round: match.rotationNumber ?? 1 }); }
@@ -220,11 +233,34 @@
     updateTimers();
   }
 
+  // one client for the screen's lifetime (a new one every poll piled up auth clients)
+  let client = null;
+  function remoteClient() {
+    const settings = global.PADELSTAR_SUPABASE;
+    if (!client && settings && global.supabase?.createClient) client = global.supabase.createClient(settings.url, settings.anonKey);
+    return client;
+  }
+
   async function loadRemote() {
     const code = new URLSearchParams(global.location.search).get(queryKey)?.trim().toUpperCase();
-    const settings = global.PADELSTAR_SUPABASE;
-    if (!code || !settings || !global.supabase?.createClient) { remoteConnected = false; return false; }
-    try { const client = global.supabase.createClient(settings.url, settings.anonKey); const { data, error } = await client.rpc("get_spectator_tournament_by_code", { p_invite_code: code }); if (error || !data) { remoteConnected = false; return false; } state = data; remoteConnected = true; return true; } catch { remoteConnected = false; return false; }
+    if (!code || !remoteClient()) { remoteConnected = false; return false; }
+    try { const { data, error } = await remoteClient().rpc("get_spectator_tournament_by_code", { p_invite_code: code }); if (error || !data) { remoteConnected = false; return false; } state = data; remoteConnected = true; listenForRevisions(); return true; } catch { remoteConnected = false; return false; }
+  }
+
+  // The database announces every new revision on the tournament's channel (the app listens the same way); the screen
+  // fetches it at once instead of waiting for the next 15-second poll, which stays as the fallback.
+  let channel = null;
+  let fetching = false;
+  function listenForRevisions() {
+    if (channel || !state?.id || !remoteClient()?.channel) return;
+    channel = remoteClient().channel(`tournament:${state.id}`)
+      .on("broadcast", { event: "revision" }, async (message) => {
+        const revision = Number(message?.payload?.revision);
+        if (fetching || !Number.isInteger(revision) || revision <= (Number(state?.revision) || 0)) return;
+        fetching = true;
+        try { if (await loadRemote()) render(); } finally { fetching = false; }
+      });
+    channel.subscribe();
   }
 
   async function start() {

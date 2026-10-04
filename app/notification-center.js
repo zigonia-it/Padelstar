@@ -157,19 +157,52 @@
     try { return Boolean(navigatorRef.vibrate(number === 1 ? [200, 100, 200] : [120])); } catch { return false; }
   }
 
+  // iOS plays sound only from an audio element that a tap has started once. A new Audio made when a live update
+  // arrived was refused without an error, so phones showed the notification but stayed silent (field test 2026-10-04;
+  // the Mac allows it). The two elements are made once, unlocked silently on the first tap (unlockSounds) and reused.
+  // An <audio> element also plays with the ring switch on silent, unlike Web Audio.
+  let soundCache = { AudioClass: null, elements: {} };
+  function soundElement(number, AudioClass, baseUrl) {
+    if (soundCache.AudioClass !== AudioClass) soundCache = { AudioClass, elements: {} };
+    if (!soundCache.elements[number]) {
+      const probe = new AudioClass();
+      const extension = probe.canPlayType?.("audio/mpeg") ? "mp3" : "m4a";
+      const audio = new AudioClass(`${baseUrl}notification${number}.${extension}`);
+      audio.preload = "auto";
+      soundCache.elements[number] = audio;
+    }
+    return soundCache.elements[number];
+  }
+
+  // Call from a tap: starts both sounds muted and stops them at once, so later plays from live updates are allowed.
+  function unlockSounds({ AudioClass = global.Audio, baseUrl = "assets/sounds/" } = {}) {
+    if (!AudioClass) return false;
+    for (const number of [1, 2]) {
+      try {
+        const audio = soundElement(number, AudioClass, baseUrl);
+        audio.muted = true;
+        const reset = () => { audio.pause?.(); try { audio.currentTime = 0; } catch { /* not loaded yet */ } audio.muted = false; };
+        const started = audio.play?.();
+        if (started?.then) started.then(reset, () => { audio.muted = false; });
+        else reset();
+      } catch { /* no audio on this device */ }
+    }
+    return true;
+  }
+
   // Plays one of the two sounds. Browsers may refuse until the person has interacted with the page: that is not an error.
   function playSound(number, { AudioClass = global.Audio, baseUrl = "assets/sounds/" } = {}) {
     if (!AudioClass || ![1, 2].includes(number)) return false;
     try {
-      const probe = new AudioClass();
-      const extension = probe.canPlayType?.("audio/mpeg") ? "mp3" : "m4a";
-      const audio = new AudioClass(`${baseUrl}notification${number}.${extension}`);
+      const audio = soundElement(number, AudioClass, baseUrl);
+      audio.muted = false;
       audio.volume = 0.8;
+      try { audio.currentTime = 0; } catch { /* not loaded yet */ }
       const played = audio.play?.();
       played?.catch?.(() => {});
       return true;
     } catch { return false; }
   }
 
-  global.PadelstarNotificationCenter = { detect, soundFor, createStore, soundsEnabled, setSoundsEnabled, vibrationEnabled, setVibrationEnabled, vibrationSupported, vibrate, playSound, STORAGE_KEY, SOUND_KEY, VIBRATION_KEY, MAX_ITEMS, MAX_AGE_MS };
+  global.PadelstarNotificationCenter = { detect, soundFor, createStore, soundsEnabled, setSoundsEnabled, vibrationEnabled, setVibrationEnabled, vibrationSupported, vibrate, playSound, unlockSounds, STORAGE_KEY, SOUND_KEY, VIBRATION_KEY, MAX_ITEMS, MAX_AGE_MS };
 })(window);

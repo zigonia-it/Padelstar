@@ -1,6 +1,9 @@
 (function attachPadelstarMatchActions(global) {
   "use strict";
 
+  // same limit as PadelstarState.UNDO_LIMIT and the database trigger compact_tournament_history
+  const UNDO_LIMIT = 20;
+
   function create(deps) {
     const {
       activateNextWaitingMatch,
@@ -23,8 +26,11 @@
       const state = getState();
       const activeRound = getRoundForMatch(match);
       const matchSnapshot = structuredClone(match);
-      delete matchSnapshot.undoStack;
-      delete matchSnapshot.redoStack;
+      // a restore keeps the current scorer role, its log and the event history, so a snapshot does not store them
+      // (storing the growing event log made the history grow with the square of the points, field test 2026-10-04)
+      for (const field of ["undoStack", "redoStack", "scorer", "scorerRequest", "scorerLog", "eventLog"]) delete matchSnapshot[field];
+      // every capture is pushed right after: keep room for it, only the last UNDO_LIMIT steps can be undone
+      if (Array.isArray(match.undoStack) && match.undoStack.length >= UNDO_LIMIT) match.undoStack.splice(0, match.undoStack.length - UNDO_LIMIT + 1);
       const nextWaitingMatch = activeRound?.matches.find((item) => item.id !== match.id && item.state === "waiting");
       return {
         match: matchSnapshot,

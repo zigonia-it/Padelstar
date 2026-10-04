@@ -209,6 +209,19 @@ select {
   letter-spacing: 0.01em;
 }
 
+/* Quick taps on the point buttons zoomed the page in on iPhone (double-tap zoom, field test 2026-10-04).
+   manipulation keeps pinch zoom and scrolling, and drops only double-tap zoom on things you tap. */
+button,
+a,
+label,
+input,
+select,
+textarea,
+summary,
+[role="button"] {
+  touch-action: manipulation;
+}
+
 button {
   min-height: 44px;
   border: 1px solid transparent;
