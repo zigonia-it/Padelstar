@@ -6,6 +6,17 @@ Only verified completed changes belong here.
 
 ## Unreleased
 
+## 0.17.3
+
+A Round Robin round starts the next one by itself (developer's decision 2026-10-05). Verified: 576 automated tests, PGlite `auto-advance-round` 18/18, the migration applied live, and a 4-player Round Robin played through on the real database.
+
+### Changed
+- **A Round Robin round starts the next one by itself** once its last match is finished or cancelled, in the same database write, whichever way the result came in (approved player result, admin result or point, walkover, approval cron, admin save). After the last round the tournament is "Runde fullført" and the admin can finish it. The step is shared with the manual "Start neste runde" button (`_advance_round_state`, the unchanged body of `admin_advance_round_impl`); a Cup keeps its bracket action. Migration `20261005120000_auto_advance_round.sql` (applied live). The admin's device says "Runde 2 er ferdig. Runde 3 har startet." and sends the round-ready push once, for the automatic step and the button alike. Verified: PGlite `auto-advance-round` 18/18, 3 new unit tests, and a 4-player Round Robin on the real database: rounds 2 and 3 started by themselves from the admin's typed results, then "Runde fullført" with "Fullfør turnering" available.
+
+### Known
+- **Email invitations and the feedback button cannot send**: `RESEND_API_KEY` is not set in Vercel production (`/api/invitation-email` answers `notConfigured`). The developer sets it in Vercel (Production) and redeploys.
+- Vibration is not available to web pages on iPhone (Safari has no Vibration API); the setting says so, sound works.
+
 ## 0.17.2
 
 Field test 2026-10-04, round 3. Verified: 573 automated tests, PGlite `compact-history` 17/17, both migrations applied live and checked, TV mode live updates and the new score line in the browser and on padelstar.app. Not yet verified on a real iPhone: the sound and the zoom fix.

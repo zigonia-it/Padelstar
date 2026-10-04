@@ -1549,6 +1549,26 @@ function handleRemoteError(error, fallback) {
 
 function markRemoteConflict() { return remoteStateController.markRemoteConflict(); }
 
+// A Round Robin round starts the next one by itself in the database once its last match is finished (0.17.3,
+// developer's decision 2026-10-05; trigger tournament_auto_advance_round_before_update). The admin's device says so
+// and sends the "round ready" push, for the automatic step and the manual button alike (the button no longer sends its
+// own). Players get "your match is ready" from their own notification center.
+function announceRoundChange(previous, next, meta) {
+  if (!meta?.sameTournament || !isCurrentUserAdmin()) return;
+  if ((next?.settings?.format ?? "roundRobin") !== "roundRobin") return;
+  const activeRoundNumber = (tournament) => tournament?.rounds?.find((round) => round.status === "active")?.roundNumber ?? null;
+  const before = activeRoundNumber(previous);
+  const after = activeRoundNumber(next);
+  // shown after the update has finished: applying a server state ends with its own "tournament updated" notice
+  const announce = (message) => window.setTimeout(() => showToast(message, "status-message-success"), 0);
+  if (before && after && after !== before) {
+    announce(t("round.autoStarted", { finished: before, round: after }));
+    void sendPushNotification("round_ready");
+  } else if (before && !after && next.status === "Runde fullført" && previous?.status !== "Runde fullført") {
+    announce(t("round.allRoundsFinished"));
+  }
+}
+
 function applyRemoteState(remoteState, options = {}) {
   return remoteStateController.applyRemoteState(remoteState, options);
 }
@@ -2581,7 +2601,10 @@ remoteStateController = window.PadelstarRemoteStateController.create({
   hasRealtimeChannel: () => realtimeConnection.hasChannel(),
   render,
   saveProfileHistory,
-  onRemoteStateApplied: (previous, next, meta) => notificationCenterUi.handleStateChange(previous, next, meta),
+  onRemoteStateApplied: (previous, next, meta) => {
+    notificationCenterUi.handleStateChange(previous, next, meta);
+    announceRoundChange(previous, next, meta);
+  },
   translate: (key, values) => t(key, values),
 });
 remoteSyncController = window.PadelstarRemoteSyncController.create({
