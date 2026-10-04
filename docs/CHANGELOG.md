@@ -6,6 +6,22 @@ Only verified completed changes belong here.
 
 ## Unreleased
 
+## 0.17.1
+
+Field-test fix (field test 2026-10-02: a player who joined a guest Cup by QR from a phone lost the player view). Verified: 561 automated tests, and in the browser with two separate origins against the real database: guest join by QR, the admin starts the Cup, the phone reloads and still opens the player view, and a point scored from the phone is saved on the server. The test tournaments were removed afterwards.
+
+### Fixed
+- A player who joins from another device now keeps their player token. `join` wrote the token onto the state object that `applyRemoteState` had just replaced, so it was never saved and the phone could not act as that player.
+- A reload after joining reopens the player view instead of the join form: `?join=` / `?code=` (and `?view=setup-player`, used by the guide and privacy pages) is removed from the address once the join succeeds (the start-up routing checks it before the saved tournament, and joining again by the same name is refused for a guest).
+- Typing an invite code over a prefilled one works on iPhone (field test 2026-10-04, code 9PV9X3FR "not found"). The join form is prefilled with the code of the tournament saved on the phone; iOS Safari ignores `select()` on a programmatic focus, so every key after the first was blocked by `maxlength=1` (typing 6CBNY4Y2 over E6FYUMMK sent 66FYUMMK). The cells now insert the typed character themselves (`beforeinput`), and are marked `autocapitalize=characters`, `autocorrect=off`. Verified in a phone viewport with real key presses: over a prefilled code, lowercase, backspace, then join and reload.
+
+### Known
+- Claiming a name that is already on the roster does not raise the revision, so the admin's next save overwrites the claimed player's `userId`/`guest` markers in the state. Access is unaffected (the account link lives in `tournament_account_players`); to be fixed server-side.
+
+### Security / verification (2026-09-26)
+- Supabase security advisor: 0 errors. The only new finding was `function_search_path_mutable` on the seven scoring helpers added in 0.17.0; fixed by migration `20260926120000_scoring_helpers_search_path.sql` (applied live, functions re-checked). The other warnings are the known ones: RPCs deliberately callable by `anon`/`authenticated` (each checks its own token or owner), RLS tables without policies (reached only through those RPCs), and leaked-password protection (Pro plan).
+- Production smoke test of 0.17 on padelstar.app, guest path against the real database: Points tournament (first to 3, win by 2, first to 2 games) created through the wizard, started, one match scored point by point (3-0, then 5-3 from a 3-3 tie, so the win-by-2 rule ran live), the server row showed the rules and both games, a reload restored revision 12 and the finished result, and finishing the tournament gave `Avsluttet`, 24 h retention and no admin token in the stored state. The test row expires by itself.
+
 ### Changed
 - New tournaments default to best of 3 (first to 2 sets) in Tennis and padel (developer's decision 2026-09-24). Older tournaments keep one set per match; the create wizard field and the engine's form-input default are both 2, `normalizeRules` (older settings) stays 1. Points mode keeps one game as its default.
 
