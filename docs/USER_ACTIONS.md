@@ -1,65 +1,54 @@
 # USER ACTIONS / CONFIRMATIONS REQUIRED
 
-Things only the developer can do or decide. Kept up to date while working. Order = recommended order.
+Things only the developer can do or decide. Every work session updates this file before it ends: new items are added, finished ones are ticked and moved to "Done" (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). Order = recommended order.
+
+Last updated: 2026-10-05 (version 1.0.0 on padelstar.app).
 Status: `[ ]` open, `[x]` done.
 
-## 1. Fix first (something does not work for users today)
+## 1. Decide or review now
 
-- [x] **Feedback form** works (2026-09-20): `FEEDBACK_TO_EMAIL` contained an API key, not an address; corrected, redeployed, test message received.
-- [x] **Clean up in Vercel and Resend**: reported done by the developer 2026-09-20 (the key-named Vercel variable removed, the unused Resend keys revoked). Vercel deletes old deployments after 30 days, which also brings the deployment storage (it showed 38 GB of 10 GB) down over time; if Vercel ever refuses a deployment because of it, delete old deployments by hand.
+- [ ] **Review and merge PR #44** (large Round Robin can be created; above 8 players each team plays one match per rotation). Until it is merged, a Round Robin with many players fails on padelstar.app (`docs/BUGS.md`). The 2 MB server limit it relies on is already live.
+- [ ] **Review PR #46** (League v2.0 plan and `docs/MASTER-ROADMAP.md`). The master roadmap is the governing plan (developer's decision 2026-10-05); merging #46 puts it in the repo.
+- [ ] **Master roadmap decisions** (`docs/MASTER-ROADMAP.md` §15):
+  1. Should League 2.0 start right after 1.0.x, or after 1.1–1.5 as planned?
+  2. Pending product decisions: retroactive guest-stat claiming, post-finish corrections scope, invitation push, Cup time overrides, public read-only view, public statistics sharing.
+  3. League open questions (league plan §7): guests in leagues, a court without a free referee, golden-point wins worth 3 points, who may create leagues.
+  4. Start the Vipps merchant agreement and test environment early (needed for 3.0; it takes calendar time, not code time).
+- [ ] **Privacy page "beta text" line.** `privacy.html` still says (nb): "Dette er fortsatt en beta-tekst og bør kvalitetssikres av behandlingsansvarlig før bred bruk." You are the data controller: read the privacy text, then tell Claude to remove the sentence (or what to change). The nn/es/de/fr/sv/da versions are older than nb/en and stay hidden until they are updated.
+- [ ] **Email sending (invitations and feedback).** At 0.17.3 `RESEND_API_KEY` was missing in Vercel Production, so `/api/invitation-email` answered `notConfigured` and the feedback button could not send. If you have not done it yet: Vercel → the Padelstar project → Settings → Environment Variables → add `RESEND_API_KEY` (Production) → redeploy. Then send yourself a feedback message from padelstar.app.
 
-- [x] **Last step of the "I'm not a robot" check: the secret key.** Done by Claude on 2026-09-20: the Cloudflare Turnstile widget `Padelstar` (Managed, `padelstar.app`) was created, its public site key is live in `supabase-config.js` (the real Cloudflare checkbox already appears on sign-up and sign-in on padelstar.app), and in Supabase (Authentication -> Attack Protection) CAPTCHA is switched on with provider "Turnstile by Cloudflare" but **not saved**, because Claude may not enter secrets. You: Cloudflare -> Turnstile -> the widget -> click the **Secret key** to copy it, paste it into "Captcha secret" in Supabase, click **Save changes**. Then test in a private window: create an account, the checkbox must appear and the confirmation mail must arrive. If sign-in ever breaks, switch CAPTCHA off in Supabase again.
+## 2. Verify as a person (Claude cannot sign in or use real devices)
 
-- [x] **Unverified accounts are deleted on 2026-09-28.** The job is live (`padelstar-unverified-users`, 03:20 daily). 41 of the 45 accounts are unverified and all 41 come due that day. Nothing is deleted before then. If you want to warn them first, tell me and I will add a reminder email through Resend (they would need to be told before the 28th); to stop or move the date, tell me before the 27th (or run `select cron.unschedule('padelstar-unverified-users');` in the Supabase SQL editor).
+One structured field test with two accounts and two phones covers most of these (master roadmap §1, "live verification debt").
 
-- [x] **Set up two-factor for System (0.14).** Done and confirmed working by the developer 2026-09-20. Sign in on padelstar.app as `sigurd.grodem@live.no` and open **System**. The page shows a QR code and a key: open your authenticator app (you said OneProtect: any app that can add a 6-digit TOTP code by QR or manual key works; if it cannot, use Google Authenticator, Microsoft Authenticator or 1Password), scan the QR code (also on a second device as a backup, or save the key in a password manager), type the 6-digit code and press "Aktiver og åpne". After that System asks for a code each time you open it. If the page says two-factor could not be set up, switch on TOTP in Supabase (Authentication, Sign In / Providers, Multi-Factor) and reload. If you lose the app without a backup, the reset is one SQL line in `docs/technical/operations.md`.
+- [ ] **Guide and privacy popups on your phone (fixed in 1.0.0).** Open padelstar.app on the phone that showed a blank or a full page, reload once (close and reopen if installed), press Personvern and Bruksanvisning: a popup with an X must open. Tell Claude the phone and browser if not.
+- [ ] **Push notifications on a real phone (0.15).** Install padelstar.app (iPhone: Add to Home Screen), join a tournament as a player and switch notifications on. Profile → "Varsler": (a) all categories on: the admin starts a match / next round / corrects a result → a push arrives, with the phone's own sound; (b) "Kampen min er klar" off → no match/round pushes; (c) "Bare mine egne kamper" on → only your matches, a new round still arrives; (d) the admin withdraws your teammate → "Lagkameraten din har trukket seg", and the opponents get nothing.
+- [ ] **Invitations with two real accounts.** Account A creates a tournament, lobby → "Inviter med e-post" → account B's email. B signs in → Profil → "Invitasjoner" → "Bli med" → A's list shows "Har blitt med". Also try "Avslå".
+- [ ] **Withdrawal with two devices.** Start a Round Robin, withdraw one player on the admin device, then on the teammate's phone choose "Spill alene" / "Gi walkover".
+- [ ] **Network loss during a running match.** Airplane mode for ~30 s while scoring, then back online: the queued points arrive, nothing lost or doubled.
+- [ ] **Points mode (0.17).** Create a tournament with "Poeng (først til N)" (e.g. first to 21, win by 2), start and score a match: the table shows GAMES and POENG, 20-20 continues until a 2-point lead, "Set resultat" takes two numbers. Also best of 3 games and a timed match, and the point-by-point approval with a second player.
+- [ ] **Motion on your phone (after 1.0.0).** The menu highlight slides, pages fly in, the winning point shows the win moment, the podium lands 3rd, 2nd, 1st. With "Reduce motion" on in the phone's settings nothing should move. Tell Claude anything that feels slow or wrong.
+- [ ] **Large Round Robin after PR #44 is merged.** Create a Round Robin with 20–40 players on padelstar.app, start it and play a few matches.
 
-- [ ] **Push categories on a real phone (0.15).** Install padelstar.app as an app on a phone (iPhone: Add to Home Screen), join a tournament as a player and switch notifications on. Profile page, "Varsler og lyd": try (a) all categories on: the admin starts a match / next round / corrects a result: you should get a push message; (b) switch "Kampen min er klar" off: no match/round pushes; (c) "Bare mine egne kamper" on: pushes only for matches you play in, but a new round still arrives; (d) the admin withdraws your teammate: you get "Lagkameraten din har trukket seg", and your teammate's opponents do not. Production had 0 push subscriptions before this, so this is the first real test of push at all.
+## 3. Later, when the time comes
 
-- [x] **Look at the primary buttons (0.15.1).** They now follow your colour spec exactly: on dark a pale-to-vivid blue with dark text and a wide blue glow, on light a solid deep blue with white text and a tighter shadow. Before, they were a cyan-to-blue diagonal without a shadow. Check "Opprett turnering", "Bli med", "Start turnering" and the landing buttons in both themes on a real device, and the progress bars (now blue into violet). If you prefer the old look for some buttons, tell me which.
+- [ ] Supabase leaked-password protection needs the Pro plan (accepted for now).
+- [ ] `assets/padelstar-webapp-ui-design/` (16 MB) is still in git history (removed from the tree in PR #8). Purging it means rewriting history; your decision.
 
-- [ ] **Privacy / guide popup on your phone (0.16.1).** Open padelstar.app on the phone that gave the blank screen (reload once so the new version loads; if it is the installed app, close and reopen it), press Personvern and Bruksanvisning: the page should show with an X in the top right that closes it. If it ever stays blank, the X still closes it, and after 8 seconds the page opens normally instead. Tell me the phone and browser (for example iPhone, Safari or the installed app) if anything still goes wrong, because I could not reproduce the original blank screen here.
-**Does not work as a popup anymore, needs fixing**
+## Done
 
-## 2. Verify as a person (I cannot sign in or use real devices)
+Kept short for reference; details are in `docs/CHANGELOG.md` and git history.
 
-- [x] **Withdrawal in a Cup (0.13) with a real Cup.** Create a Cup (e.g. 8 players = 4 teams) on padelstar.app, start it, withdraw one player of a team in the admin's player list: their match waits for the teammate (play alone / walkover; the admin can decide). Then withdraw players on both sides of one match: it is cancelled; when the other matches are done, "Start neste runde" asks to confirm the best loser moving up, and the next round has that team (with a note on the match). Also check that declining the dialog changes nothing.
-- [x] **The merged lobby (0.12) on your devices.** Create a tournament: you land in the workspace on the Lobby panel (invite code, QR, players with remove buttons, courts, invitations). "Start turnering" opens Styring; Lobby stays in the side rail / phone tab bar (now five items: check they fit on your smallest phone) and is read-only after the start. Also check that a returning admin (reload, profile → open tournament) reaches Styring/Kamper as before.
-- [x] **System owner page.** Sign in on padelstar.app (or the preview) as `sigurd.grodem@live.no`. Expect a **"System"** link in the top menu and `admin.html` showing counts and the latest tournaments. Then sign in as any other account (or signed out): no "System" link, and opening `admin.html` sends you away with a message.
-- [ ] **Invitations with two real accounts.** Account A creates a tournament (not a guest one), lobby → "Inviter med e-post" → the email of account B. Account B (verified email) signs in → profile page → "Invitasjoner" → "Bli med" → join → A's list shows "Har blitt med". Also try "Avslå".
-- [x] **Claim a pre-added slot with an account.** Admin adds a player name in the lobby; a signed-in account joins with that exact name → it is linked (their statistics follow the account). A second account or a guest using the same name must be refused.
-- [ ] **Withdrawal through the real database with two devices.** Start a Round Robin with several players, withdraw one on the admin device, then on the teammate's phone choose "Spill alene" / "Gi walkover" (the admin path was tested; the teammate's own RPC was tested against the real schema but not from a second device).
-- [ ] **Notifications on a phone.** In a running tournament: does your own match trigger the bell, the sound (notification1 = match ready, notification2 = other updates) and vibration? Try the switches on the profile page ("Varsler og lyd") and the test button. Note that browsers may block sound until the page was tapped once, and iPhone has no vibration.
-- [ ] **Network loss during a running match.** On a phone, airplane mode for ~30 s while scoring, then back online: the queued points must arrive, nothing lost or doubled.
-- [x] **Install on Windows/Linux** was accepted as confirmed (you cannot test it).
-
-- [x] **The new colours (0.11) on your own devices**, dark and light: the lifted slate dark theme, the soft blue-white light theme with white cards, the deep-blue primary button in light mode, player initials in the gems, TV Mode. Tell Claude any screen where something looks off. (Older text follows.) **Light mode on your own devices (0.9).** Switch Lys/Mørk (header on desktop, menu on phone, or Profil → Utseende) and click through: landing, create, lobby, matches, scoring, standings, podium, guide/privacy, feedback, notifications. Tell me any screen where something is hard to read, too pale or looks wrong; I fix those in `styles/theme-light-manual.css`. Also check that a phone set to light/dark switches Padelstar when "Følg enheten" is chosen.
-
-- [x] **0.9.1 fixes on real devices.** (a) iPhone: tap the flag in the menu, pick a language: only the custom list may open, never iOS's own list afterwards. (b) Phone menu: open it in dark and light, on a small phone too. (c) Create a tournament while signed in on the phone, sign in on the Mac, Profil → "Mine aktive turneringer" → "Fortsett som admin": it should open as admin (the lobby if not started). (d) Signed in as `sigurd.grodem@live.no`: `admin.html` → click through Oversikt, Turneringer, Brukere, Vedlikehold; look for text running outside the page. (e) Light mode: any screen where a panel still has a square background, a wrong color or a padding that looks off: tell me which screen, with a screenshot if you can.
-
-- [x] **0.9.2 fixes.** (a) TV Mode from the rail/menu opens exactly one new tab and the app stays where it is; with pop-ups blocked in the browser it falls back to the same tab. (b) On the TV page the Lys/Mørk switch works and stays chosen after a reload; try it on the real TV. (c) In the lobby remove a player; in Styring (before starting) click "Lobby" in the rail/bottom tabs.
-
-- [x] **Check the 0.10 features with real accounts.** (a) Invitations by email: invite a real address in a lobby; the mail comes from `invitations@padelstar.app` with the join link and code. (b) Corrections after finish: signed in as the owner, finish a tournament that has account players, then Profil → "Avsluttede turneringer" → "Åpne og korriger" → correct a result; the statistics on the profile page must change with it. (c) System page: Brukere (search, block, unblock, delete a test account) and Logg (sign-ups, tournaments created/finished/deleted, your own actions). (d) Phone: TV Mode in the bottom tab bar and the TV page on a phone.
-
-## 3. Decisions I need (I made a safe default; tell me if you want it different)
-
-- [x] **Withdrawal in a Cup** — decided 2026-09-20; built in 0.13.0 (see the check at the top).
-- [x] **"Best-placed" loser — please confirm my definition.** You did not define the ranking. I built: all candidates lost in the same round, so the games difference over the cup decides, then the order of their match; a team that lost by walkover or has nobody left is not a candidate. Tell me if you want another rule (e.g. only the result of the lost match). In a Round Robin a match with players withdrawn on both teams is still cancelled (no rule was given).
-- [x] **Corrections after the tournament is finished**: decided 2026-09-20 (added to the statistics); built in 0.10.0.
-- [x] **Invitations by email**: decided 2026-09-20; built in 0.10.0 (sender `invitations@padelstar.app`, verified domain). Needs a real check: invite an address in the lobby and look for the email.
-- [x] **Privacy text**: decided 2026-09-20 (a bottom section naming the services); built in 0.10.0.
-- [x] **TV Mode button** on the phone tab bar and TV on phones: decided 2026-09-20; built in 0.10.0.
-- [x] **Lobby vs. workspace** — decided 2026-09-20; built in 0.12.0: the lobby is the first panel of the workspace. Needs a look on your phone and desktop (see the list at the top).
-- [x] **System administration**: decided 2026-09-20: a log view and block/delete users (built, see CHANGELOG); everything else (force-finish, opening other people's tournaments, ...) is treated as privacy and is not built.
-- [x] **Push categories** — confirmed 2026-09-20; built in 0.15.0 for match/round, results, withdrawal decisions and "only my own matches". Invitation push is not built yet (needs an account-level push subscription); tell me to go ahead and I build it as the next step.
-
-- [x] **Two ways to report a result: keep both?** Decided 2026-09-22: keep only the point-by-point approval flow. The older "Resultatforslag" panel is removed (0.17.0); a disputed player-scored result still flags for the admin the same way.
-
-- [x] **Scoring engine: 7 decisions** — answered 2026-09-24; built in 0.17.0 (see the plan doc).
-- [x] **Default for "sets per match" in new tournaments** — decided 2026-09-24: best of 3 (first to 2 sets).
-- [ ] **Try the Points mode as a person (0.17).** Create a tournament, step 2 "Poengsystem" = "Poeng (først til N)" (for example first to 21, win by 2, 1 game), start it and score a match: the table shows GAMES and POENG, 20-20 continues until someone leads by 2, "Set resultat" takes two numbers. Also try best of 3 games and a timed match. On a phone with a second player: the point-by-point flow and the approval should behave exactly as for padel.
-
-## 4. Later, when the time comes
-
-- [x] Light mode (Phase 27) was built from the local copy of the design files in `assets/padelstar-webapp-ui-design/` (colors only, as the roadmap says); the Claude Design connector was not needed. The real-device check is in section 2.
-- [ ] Supabase leaked-password protection needs the Pro plan (accepted for now). **Later**
+- [x] Feedback form address fixed; stray Vercel variable and unused Resend keys removed (2026-09-20).
+- [x] Turnstile secret saved in Supabase; sign-ups without the check are refused (2026-09-20).
+- [x] Unverified accounts deleted from 2026-09-28 (cron `padelstar-unverified-users`).
+- [x] Two-factor for System set up and confirmed (2026-09-20).
+- [x] Primary buttons, colours and light mode checked on your devices (0.9–0.15).
+- [x] Withdrawal in a real Cup, the merged lobby, the System owner page, claiming a pre-added slot, 0.9.1/0.9.2/0.10 fixes: checked on real devices.
+- [x] Install on Windows/Linux accepted as confirmed.
+- [x] Decisions: withdrawal in a Cup, best-placed loser rule, corrections after finish, email invitations, privacy services section, TV button on phones, lobby in the workspace, system administration scope, push categories, one result flow (point-by-point), scoring engine (7 decisions), best of 3 default.
+- [x] 1.0.0 released (2026-10-05): "merge this into the live webapp and publish as version 1.0.0".
+- [x] No in-app notification sounds (2026-10-05).
+- [x] Round Robin rounds start the next one by themselves (2026-10-05).
+- [x] Large Round Robin rule: all teams meet up to 8 players; above that one match per rotation; server state limit 2 MB (2026-10-05, PR #44).
+- [x] `docs/MASTER-ROADMAP.md` is the governing plan (2026-10-05).

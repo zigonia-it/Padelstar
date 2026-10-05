@@ -2,9 +2,32 @@
 
 # Padelstar Changelog
 
-Only verified completed changes belong here.
+Only verified completed changes belong here. Every work session that merges or pushes a change adds it under **Unreleased** (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). When the developer applies a version, the Unreleased entries move under that version's heading.
+
+Last updated: 2026-10-05.
 
 ## Unreleased
+
+Merged to `main` and deployed to padelstar.app after 1.0.0 (version still shown as 1.0.0). Verified with the automated test suite, the asset-version check and browser flows at phone and desktop widths in both themes; not yet checked by a person on a real phone.
+
+### Added
+- **Motion system** (PR #42): motion tokens in `styles/tokens.css` (durations, easings, distances, scales) with a reduced-motion layer that removes movement, and the spec `docs/technical/motion.md`.
+- **Menu highlight slides** to the active item in the top menu, the rail and the tab bars (`app/nav-indicator.js`).
+- **Panels fly between pages** when you move through the menu or rail (View Transitions where the browser has them, a fly-in otherwise; `app/view-motion.js`, `styles/motion.css`).
+- **Win moment** (PR #45): the winning point keeps the big score up for one beat (the winner's pad shows the final games and "Winner", the other pad steps back), the match card gets a ball-yellow sweep and its score ticks once. The podium lands 3rd, 2nd, then 1st.
+
+### Changed
+- **The big score paints the point first** (PR #42); the save and the full re-render follow after the frame (tap to number went from about 240 ms to 35 ms at 4x CPU slowdown).
+- The create and join intros are the captions of their photo cards, also on phones.
+- The join page uses the same single wide code field as the home join card (a typed code or a pasted join link).
+- "Gi tilbakemelding" is only in the footer (it was doubled in the top menu).
+
+### Fixed
+- **The 512 px app icon was missing** (PR #43): `assets/icons/padelstar-512.png` was gitignored, so the service worker's precache failed and the app had no offline shell. Cache name bumped.
+- Opening the language picker no longer pushes the desktop menu about 100 px to the left.
+- The System menu link sat 13 px too high; it is centred like the other menu items.
+- The `.score-flash` wash on a match card had no CSS.
+- The big score title no longer resets to its placeholder on every render.
 
 ## 1.0.0
 
