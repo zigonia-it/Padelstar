@@ -120,6 +120,20 @@ The app's catch-all in `styles/styles.css` (the `*` rule that sets every duratio
   that follow a user action or a realtime update.
 - Test both themes, 390px phone, 1440px desktop and the TV board, with reduced motion on and off.
 
+## Built so far (2026-10-05)
+- **Menu highlight** (`app/nav-indicator.js`, `styles/motion.css` section 1): one pill per menu (top menu, desktop rail,
+  admin tab bar, player tab bar) slides to the active item over `--motion-base`; the items' ink changes with it.
+- **Panels fly out and in** (`app/view-motion.js`, section 2): menu and rail clicks run through `navigate()`. With the
+  View Transitions API, cards only on the old page fly out (`--motion-quick`), cards only on the new page fly in one
+  after another (`--motion-base`, 90ms after the exit starts, `--motion-stagger` apart, at most 4 steps), and a card on
+  both glides. The top bar and tab bars stay above the cards. Without the API the new cards still fly in.
+- **Big score**: the tapped number ticks (`--ease-pop`), the pad presses in, and match cards get a short ball wash
+  (`.score-flash`, which had no CSS before). Each point now paints the big score first; saving and redrawing the rest
+  follow after the frame, shared by a quick run of points while the big score is open (flushed on close and page hide).
+  Measured at 4x CPU slowdown: 240ms to 35ms from tap to the new number.
+- Navigation is the one place where the old view leaves before the new one is shown; it never waits more than
+  `--motion-quick` and the menu highlight moves at once.
+
 ## Plan
 1. Tokens and this spec (done).
 2. Scoring and results motion: scorepad press and tick, `.score-flash`, the win moment, podium stagger.

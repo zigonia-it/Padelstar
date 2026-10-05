@@ -80,13 +80,32 @@
         if (deps.currentLocalRole() === "player") deps.enterApproval(match);
         else deps.finishMatch(match);
       }
-      deps.saveState();
       if (deps.currentLocalRole() === "player" && deps.matchIncludesPlayer(match, deps.getState().selectedPlayerId)) {
         deps.queuePlayerScore(match.id, teamIndex);
       }
-      deps.render();
+      // The big score is what the scorer is looking at: paint it first. Saving and the full re-render of every card
+      // (hundreds of ms on a phone) follow once that frame is on screen, and taps in between share one save and render.
       deps.renderLargeScore();
-      deps.flashMatchCards(match.id);
+      pendingFlashMatchIds.add(match.id);
+      afterPointPending = true;
+      if (matchWon || typeof deps.afterPaint !== "function") flushAfterPoint();
+      else if (!afterPointScheduled) {
+        afterPointScheduled = true;
+        deps.afterPaint(flushAfterPoint);
+      }
+    }
+
+    let afterPointScheduled = false;
+    let afterPointPending = false;
+    const pendingFlashMatchIds = new Set();
+    function flushAfterPoint() {
+      afterPointScheduled = false;
+      if (!afterPointPending) return;
+      afterPointPending = false;
+      deps.saveState();
+      deps.render();
+      pendingFlashMatchIds.forEach((matchId) => deps.flashMatchCards(matchId));
+      pendingFlashMatchIds.clear();
     }
 
     function isSetComplete(teamOne, teamTwo) {
@@ -101,7 +120,7 @@
       return deps.scoring.setsWonByTeam(match, teamIndex);
     }
 
-    return { saveMatchResult, saveSetResult, validateSetScore, translateScoreValidationError, awardTennisPoint, isSetComplete, hasMatchWinner, setsWonByTeam };
+    return { saveMatchResult, saveSetResult, validateSetScore, translateScoreValidationError, awardTennisPoint, flushPendingPoint: flushAfterPoint, isSetComplete, hasMatchWinner, setsWonByTeam };
   }
 
   global.PadelstarScoreActions = { create };

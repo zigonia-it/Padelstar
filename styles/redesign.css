@@ -167,7 +167,10 @@ body[data-theme] .brand-lockup .version {
 body[data-theme] .brand-lockup .version:empty { display: none; }
 body[data-theme] .topbar-actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); flex: 1 1 auto; min-width: 0; }
 body[data-theme] .app-menu { gap: 2px; padding: 0; border: 0; background: transparent; box-shadow: none; }
+/* System is a link (<a href="admin.html">) among buttons: as an inline box it ignored min-height and sat higher than the
+   rest, so every menu entry is a centred flex box whatever its tag */
 body[data-theme] .app-menu .module-link {
+  display: inline-flex; align-items: center; text-decoration: none;
   min-height: 40px; padding: 0 14px; border: 0; border-radius: var(--radius-pill);
   background: transparent; color: var(--ink-body); font: 700 14px/1 var(--font-ui); box-shadow: none; text-shadow: none;
 }

@@ -1,5 +1,7 @@
 (() => {
   const menuToggle = () => document.querySelector("#appMenuToggle");
+  // Panels fly out and in when the view-motion module is loaded; otherwise the page simply switches.
+  const navigate = (update) => (window.PadelstarViewMotion?.navigate ?? ((run) => run()))(update);
 
   function closeMenu() {
     const toggle = menuToggle();
@@ -16,11 +18,13 @@
     // unavailable in a partial/static render.
     document.querySelectorAll("[data-module-link]").forEach((link) => {
       link.addEventListener("click", () => {
-        showModule(link.dataset.moduleLink);
         closeMenu();
-        if (link.dataset.focusTarget) {
-          window.requestAnimationFrame(() => document.getElementById(link.dataset.focusTarget)?.focus());
-        }
+        navigate(() => {
+          showModule(link.dataset.moduleLink);
+          if (link.dataset.focusTarget) {
+            window.requestAnimationFrame(() => document.getElementById(link.dataset.focusTarget)?.focus());
+          }
+        });
       });
     });
 

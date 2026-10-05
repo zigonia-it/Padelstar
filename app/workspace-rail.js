@@ -5,12 +5,15 @@
     document.querySelectorAll("[data-rail-target]").forEach((button) => {
       button.addEventListener("click", () => {
         const target = button.dataset.railTarget;
-        if (target === "player") {
-          showModule("player");
-        } else {
-          showModule("admin");
-          activateAdminPanel(target);
-        }
+        const navigate = window.PadelstarViewMotion?.navigate ?? ((run) => run());
+        navigate(() => {
+          if (target === "player") {
+            showModule("player");
+          } else {
+            showModule("admin");
+            activateAdminPanel(target);
+          }
+        });
       });
     });
 
