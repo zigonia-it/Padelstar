@@ -87,19 +87,15 @@ Prefer implementation over commentary.
 
 ## Versioning
 
-The actual current development baseline is **`0.5.0`**.
-
-The UI may currently display `0.6`/`0.6.0`, but that does **not** mean version 0.6.0 has been completed or released. The displayed version was changed before the corresponding development milestone was finished.
+The actual current baseline is **`1.0.0`** (released 2026-10-05 on the developer's explicit instruction: the Padelstar 1.0 redesign; see `docs/CHANGELOG.md`).
 
 Version numbers represent **completed and verified milestones**, not planned work.
 
 Use this model:
 
-- `0.5.0` — current actual baseline.
-- `0.5.1`, `0.5.2`, etc. — coherent verified bug-fix batches that do not complete a new feature milestone.
-- `0.6.0` — appropriate candidate when the complete Monday critical path is implemented and verified end-to-end: owner account → login → create Round Robin → start → register results → Supabase/server persistence → finish tournament → create/start another tournament.
-- later `0.x` minor versions — coherent new feature milestones on the path to v1.0.
-- `1.0.0` — only when the complete defined v1.0 scope and Definition of Done are implemented and verified.
+- `1.0.0` — current actual baseline.
+- `1.0.1`, `1.0.2`, etc. — coherent verified bug-fix batches that do not complete a new feature milestone.
+- later `1.x` minor versions — coherent new verified feature milestones.
 
 **Codex must never change the application version automatically.**
 

@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v377/);
+  assert.match(serviceWorkerSource, /padelstar-v378/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -562,10 +562,10 @@ test("profile session lifecycle has its own storage and RPC boundary", () => {
   assert.match(indexSource, /app\/profile-session\.js\?v=padelstar-profile-session-4/);
   assert.match(serviceWorkerSource, /app\/profile-session\.js\?v=padelstar-profile-session-4/);
   assert.match(indexSource, /app\/bootstrap\/dom-elements\.js\?v=padelstar-dom-elements-17/);
-  assert.match(indexSource, /app\/bootstrap\/app-meta\.js\?v=padelstar-app-meta-25/);
+  assert.match(indexSource, /app\/bootstrap\/app-meta\.js\?v=padelstar-app-meta-26/);
   assert.match(indexSource, /app\/ui\/theme\.js\?v=padelstar-theme-2/);
   assert.match(serviceWorkerSource, /app\/bootstrap\/dom-elements\.js\?v=padelstar-dom-elements-17/);
-  assert.match(serviceWorkerSource, /app\/bootstrap\/app-meta\.js\?v=padelstar-app-meta-25/);
+  assert.match(serviceWorkerSource, /app\/bootstrap\/app-meta\.js\?v=padelstar-app-meta-26/);
   assert.match(serviceWorkerSource, /app\/ui\/theme\.js\?v=padelstar-theme-2/);
   assert.doesNotMatch(appSource, /p_profile_token:\s*profile\.accessToken/);
 });

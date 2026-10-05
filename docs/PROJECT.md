@@ -113,7 +113,7 @@ Detailed sequencing is in `ROADMAP.md`.
 
 ## Decided, not yet built
 
-Nothing is decided and unbuilt at the moment; see `docs/ROADMAP.md` for what remains before 1.0.0.
+Nothing is decided and unbuilt at the moment; `docs/ROADMAP.md` Phase 30 lists the Definition-of-Done items that were still open when 1.0.0 was released.
 
 
 ## Later versions
@@ -126,14 +126,14 @@ Permanent tamper-protected security audit logging is post-1.0.
 
 ## Version baseline
 
-The actual current development baseline is `0.17.3` (2026-10-05: a Round Robin round starts the next one by itself; `0.17.2` was the field-test round 3 fixes 2026-10-05: admin results no longer refused by the undo-history size, TV mode, iPhone zoom and sound; `0.17.1` was the field-test fix 2026-10-03: a player who joins by QR keeps their player view after a reload; `0.17.0` was the generic scoring engine with a Tennis and a Points mode, 2026-09-24; `0.16.2` removed the older result-proposal flow, 2026-09-22; `0.16.1` was the popup fix; `0.16.0` was the expired-tournament notice; `0.15.1` was colour spec additions; `0.15.0` was push categories; `0.14.0` was two-factor for the system menu; `0.13.1` deleted unverified accounts after 7 days; `0.13.0` was withdrawal in a Cup; `0.12.0` was the lobby merged into the workspace; `0.11.1` was fixes after the colour system; `0.11.0` was the colour system; `0.10.0` was the decisions batch; `0.9.1` was the first bug-fix batch the same day; `0.9.0` was applied 2026-09-19 under the developer's standing authorization to bump fully verified milestones; `docs/CHANGELOG.md` lists what was verified and what still awaits a person on real devices). `0.7.0` was the beta feature milestone.
+The actual current baseline is `1.0.0` (released 2026-10-05 on the developer's instruction: the Padelstar 1.0 redesign; see `docs/CHANGELOG.md`). Before it, `0.17.3` (2026-10-05: a Round Robin round starts the next one by itself; `0.17.2` was the field-test round 3 fixes 2026-10-05: admin results no longer refused by the undo-history size, TV mode, iPhone zoom and sound; `0.17.1` was the field-test fix 2026-10-03: a player who joins by QR keeps their player view after a reload; `0.17.0` was the generic scoring engine with a Tennis and a Points mode, 2026-09-24; `0.16.2` removed the older result-proposal flow, 2026-09-22; `0.16.1` was the popup fix; `0.16.0` was the expired-tournament notice; `0.15.1` was colour spec additions; `0.15.0` was push categories; `0.14.0` was two-factor for the system menu; `0.13.1` deleted unverified accounts after 7 days; `0.13.0` was withdrawal in a Cup; `0.12.0` was the lobby merged into the workspace; `0.11.1` was fixes after the colour system; `0.11.0` was the colour system; `0.10.0` was the decisions batch; `0.9.1` was the first bug-fix batch the same day; `0.9.0` was applied 2026-09-19 under the developer's standing authorization to bump fully verified milestones; `docs/CHANGELOG.md` lists what was verified and what still awaits a person on real devices). `0.7.0` was the beta feature milestone.
 
 `0.7.0` was applied on the developer's explicit instruction (2026-09-19) for the beta feature milestone (scorer roles, result approval and correction, timed matches and scoring rules, player replacement, TV Mode in every supported language, feedback button); `docs/CHANGELOG.md` lists which parts have been verified live and which still await it. `0.6.0` was set once the Monday critical path was verified end-to-end; `0.6.1` is a verified UI-redesign/polish batch on top of it (fonts, design tokens, gem avatars, workspace nav shell, a handful of real bug fixes) that changed no critical-path behavior.
 
 Version changes are milestone-based:
 
-- patch (`0.5.x`) for verified bug-fix batches;
-- minor (`0.x.0`) for coherent verified feature milestones;
-- `1.0.0` only after the complete v1.0 Definition of Done.
+- patch (`1.0.x`) for verified bug-fix batches;
+- minor (`1.x.0`) for coherent verified feature milestones;
+- major (`2.0.0`) only for a decided, verified major release.
 
 Codex may recommend a version after a completed verified milestone, but only the developer decides whether to apply the version change.
