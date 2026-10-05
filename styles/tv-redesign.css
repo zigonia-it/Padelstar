@@ -72,3 +72,55 @@ body.tv-page::before, body.tv-page::after { content: none; display: none; }
 
 .tv-page .tv-bracket-card { border: 0; border-radius: var(--radius-sm); background: var(--surface-raised); box-shadow: none; }
 .tv-page .tv-cup-champion { border: 0; border-radius: var(--radius-md); background: var(--ball); color: var(--on-ball); box-shadow: none; }
+
+/* ---------- TVBoard layout (prototype): courts left, the table right ---------- */
+@media (min-width: 1051px) {
+  .tv-page .tv-columns { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); grid-template-rows: minmax(0, auto) minmax(0, 1fr); }
+  .tv-page .tv-live-panel { grid-column: 1; grid-row: 1; }
+  .tv-page .tv-next-panel { grid-column: 1; grid-row: 2; }
+  .tv-page .tv-standing-panel { grid-column: 2; grid-row: 1 / span 2; }
+  .tv-page .tv-columns.tv-idle .tv-standing-panel { grid-row: 1 / -1; }
+}
+.tv-page .tv-live-panel .tv-card-list { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.tv-page .tv-next-panel .tv-card-list { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+/* cards keep their full height; a long queue scrolls in the panel instead of squashing every card */
+.tv-page .tv-card-list { grid-auto-rows: max-content; align-content: start; }
+.tv-page .tv-match-card:not(.tv-live-match) { gap: 4px; padding: clamp(10px, 1vw, 18px) clamp(14px, 1.3vw, 22px); }
+.tv-page .tv-match-card:not(.tv-live-match) .tv-match-line .tv-team { display: flex; flex-wrap: wrap; column-gap: .35em; font-size: clamp(.9rem, 1.15vw, 1.25rem); }
+.tv-page .tv-match-card:not(.tv-live-match) .tv-team > span + span::before { content: "& "; }
+
+.tv-page .tv-match-card { display: flex; flex-direction: column; gap: 6px; padding: clamp(14px, 1.3vw, 24px) clamp(16px, 1.6vw, 28px); border-radius: var(--radius-lg); }
+.tv-page .tv-match-card h3 { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 4px; }
+.tv-page .tv-court-tag,
+.tv-page .tv-live-label,
+.tv-page .tv-next-label {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--hairline); font: 700 12px/16px var(--font-ui); letter-spacing: 1.2px; text-transform: uppercase; white-space: nowrap;
+}
+.tv-page .tv-court-tag { color: var(--court); }
+.tv-page .tv-next-label { color: var(--ink-muted); }
+.tv-page .tv-match-teams { display: grid; grid-template-columns: 1fr; gap: 4px; }
+.tv-page .tv-match-line { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; }
+.tv-page .tv-match-line .tv-team { min-width: 0; font: 600 clamp(1rem, 1.6vw, 1.6rem)/1.15 var(--font-display); letter-spacing: -0.02em; text-align: left; }
+.tv-page .tv-match-line .tv-team-score { flex: none; font: 800 clamp(2.4rem, 4.4vw, 4.4rem)/1 var(--font-display); letter-spacing: -0.045em; color: var(--ink-muted); }
+.tv-page .tv-match-line .tv-team-score.is-lead { color: var(--ink-heading); }
+.tv-page .tv-match-card:not(.tv-live-match) .tv-team-score { font-size: clamp(1.4rem, 2vw, 2rem); }
+.tv-page .tv-match-meta { display: flex; justify-content: space-between; gap: 8px; margin: 2px 0 0; font: 600 clamp(.62rem, .75vw, .85rem)/1.3 var(--font-ui); }
+
+/* the live court card: the panel holds it on the card ground, the leader's score in ink, the other muted */
+.tv-page .tv-match-card.tv-live-match { background: var(--surface-raised); color: var(--ink-heading); }
+.tv-page .tv-live-match .tv-team,
+.tv-page .tv-live-match .tv-match-line .tv-team { color: var(--ink-heading); }
+.tv-page .tv-live-match .tv-match-line .tv-team-score { color: var(--ink-muted); }
+.tv-page .tv-live-match .tv-match-line .tv-team-score.is-lead { color: var(--ink-heading); }
+.tv-page .tv-live-match .tv-score-detail,
+.tv-page .tv-live-match .tv-match-meta { color: var(--ink-muted); }
+.tv-page .tv-live-match .tv-score-detail strong { color: var(--ink-heading); }
+.tv-page .tv-live-match h3,
+.tv-page .tv-live-match h3 > span.tv-court-tag { color: var(--court); }
+.tv-page .tv-live-match .tv-live-label { color: var(--live); }
+.tv-page .tv-live-match .tv-live-label,
+.tv-page .tv-match-card:not(.tv-live-match) .tv-live-label { color: var(--live); }
+
+/* round tag on the ball, like the prototype header */
+.tv-page .tv-title-wrap > span { display: inline-flex; align-items: center; height: 30px; padding: 0 14px; border-radius: var(--radius-pill); background: var(--ball); color: var(--on-ball); letter-spacing: .1em; }

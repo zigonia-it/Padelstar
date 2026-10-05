@@ -89,9 +89,14 @@
     return `<div class="tv-score-detail">${item(t("common.sets"), won)}${item(t("common.points"), points)}</div>`;
   }
 
+  // Court card (design system: TVBoard): court and status on top, then one line per team with its score, the leader bright.
   function matchCard(match, next = false) {
     const awaiting = match.state === "awaitingApproval";
-    return `<article class="tv-match-card${next ? "" : " tv-live-match"}"><h3><span>${escapeHtml(match.courtName ?? t("tv.court"))}</span>${escapeHtml(matchContext(match))}</h3><div class="tv-match-teams"><div class="tv-team">${teamNames(match.teamOne)}</div><strong class="tv-team-score">${next ? "–" : score(match, 0)}</strong><span class="tv-versus">${t("tv.versus")}</span><strong class="tv-team-score">${next ? "–" : score(match, 1)}</strong><div class="tv-team">${teamNames(match.teamTwo)}</div></div>${next ? "" : scoreDetail(match)}<div class="tv-match-meta"><span class="${next ? "" : "tv-live-label"}">${next ? t("tv.startingSoon") : awaiting ? t("tv.awaitingApproval") : t("tv.playing")}</span><span>${escapeHtml(matchContext(match))}</span>${timerHtml(match)}</div></article>`;
+    const one = next ? "–" : score(match, 0);
+    const two = next ? "–" : score(match, 1);
+    const lead = (mine, theirs) => (!next && Number(mine) >= Number(theirs) ? " is-lead" : "");
+    const status = next ? t("tv.startingSoon") : awaiting ? t("tv.awaitingApproval") : t("tv.playing");
+    return `<article class="tv-match-card${next ? "" : " tv-live-match"}"><h3><span class="tv-court-tag">${escapeHtml(match.courtName ?? t("tv.court"))}</span><span class="${next ? "tv-next-label" : "tv-live-label"}">${status}</span></h3><div class="tv-match-teams"><div class="tv-match-line"><div class="tv-team">${teamNames(match.teamOne)}</div><strong class="tv-team-score${lead(one, two)}">${one}</strong></div><div class="tv-match-line"><div class="tv-team">${teamNames(match.teamTwo)}</div><strong class="tv-team-score${lead(two, one)}">${two}</strong></div></div>${next ? "" : scoreDetail(match)}<div class="tv-match-meta"><span>${escapeHtml(matchContext(match))}</span>${timerHtml(match)}</div></article>`;
   }
 
   function matchContext(match) { return t("tv.matchContext", { round: match.rotationNumber ?? 1 }); }

@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v373/);
+  assert.match(serviceWorkerSource, /padelstar-v374/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -561,10 +561,10 @@ test("profile session lifecycle has its own storage and RPC boundary", () => {
   assert.match(profileSessionSource, /global\.PadelstarProfileSession/);
   assert.match(indexSource, /app\/profile-session\.js\?v=padelstar-profile-session-4/);
   assert.match(serviceWorkerSource, /app\/profile-session\.js\?v=padelstar-profile-session-4/);
-  assert.match(indexSource, /app\/bootstrap\/dom-elements\.js\?v=padelstar-dom-elements-16/);
+  assert.match(indexSource, /app\/bootstrap\/dom-elements\.js\?v=padelstar-dom-elements-17/);
   assert.match(indexSource, /app\/bootstrap\/app-meta\.js\?v=padelstar-app-meta-25/);
   assert.match(indexSource, /app\/ui\/theme\.js\?v=padelstar-theme-2/);
-  assert.match(serviceWorkerSource, /app\/bootstrap\/dom-elements\.js\?v=padelstar-dom-elements-16/);
+  assert.match(serviceWorkerSource, /app\/bootstrap\/dom-elements\.js\?v=padelstar-dom-elements-17/);
   assert.match(serviceWorkerSource, /app\/bootstrap\/app-meta\.js\?v=padelstar-app-meta-25/);
   assert.match(serviceWorkerSource, /app\/ui\/theme\.js\?v=padelstar-theme-2/);
   assert.doesNotMatch(appSource, /p_profile_token:\s*profile\.accessToken/);
@@ -627,8 +627,8 @@ test("match list rendering has its own grouping boundary", () => {
 test("standings rendering has its own leaderboard boundary", () => {
   assert.match(standingsSource, /renderStandings/);
   assert.match(standingsSource, /window\.PadelstarStandings/);
-  assert.match(indexSource, /app\/standings\.js\?v=padelstar-standings-3/);
-  assert.match(serviceWorkerSource, /app\/standings\.js\?v=padelstar-standings-3/);
+  assert.match(indexSource, /app\/standings\.js\?v=padelstar-standings-4/);
+  assert.match(serviceWorkerSource, /app\/standings\.js\?v=padelstar-standings-4/);
   assert.doesNotMatch(appSource, /function renderStandingsList/);
 });
 
@@ -686,8 +686,8 @@ test("player status rendering has its own dashboard boundary", () => {
 test("player next-match rendering has its own workspace boundary", () => {
   assert.match(playerNextMatchSource, /renderPlayerNextMatch/);
   assert.match(playerNextMatchSource, /window\.PadelstarPlayerNextMatch/);
-  assert.match(indexSource, /app\/player-next-match\.js\?v=padelstar-player-next-match-7/);
-  assert.match(serviceWorkerSource, /app\/player-next-match\.js\?v=padelstar-player-next-match-7/);
+  assert.match(indexSource, /app\/player-next-match\.js\?v=padelstar-player-next-match-8/);
+  assert.match(serviceWorkerSource, /app\/player-next-match\.js\?v=padelstar-player-next-match-8/);
   assert.match(appSource, /playerNextMatch\.renderPlayerNextMatch\(matches\)/);
 });
 
@@ -721,8 +721,8 @@ test("design-chat suggestions: gem-color court strips, offline indicator, waitin
 test("large score rendering has its own dialog boundary", () => {
   assert.match(largeScoreSource, /renderLargeScore/);
   assert.match(largeScoreSource, /window\.PadelstarLargeScore/);
-  assert.match(indexSource, /app\/large-score\.js\?v=padelstar-large-score-3/);
-  assert.match(serviceWorkerSource, /app\/large-score\.js\?v=padelstar-large-score-3/);
+  assert.match(indexSource, /app\/large-score\.js\?v=padelstar-large-score-4/);
+  assert.match(serviceWorkerSource, /app\/large-score\.js\?v=padelstar-large-score-4/);
   assert.match(appSource, /largeScore\.renderLargeScore\(largeScoreMatchId\)/);
 });
 

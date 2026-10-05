@@ -13,8 +13,9 @@
    ========================================================= */
 
 /* ---------- Logo: the supplied wordmark + ball, one image per ground ---------- */
-.ps-logo { display: inline-flex; align-items: center; height: 26px; flex: none; }
-.ps-logo img { display: block; width: auto; height: 100%; }
+/* the lockup is 928×180; the ratio gives the box its real width, so whatever sits beside the logo (the version) is never drawn under it */
+.ps-logo { display: inline-flex; align-items: center; height: 26px; aspect-ratio: 928 / 180; flex: none; }
+.ps-logo img { display: block; width: 100%; height: 100%; }
 .ps-logo .logo-on-dark { display: none; }
 [data-theme="dark"] .ps-logo .logo-on-light { display: none; }
 [data-theme="dark"] .ps-logo .logo-on-dark { display: block; }
@@ -153,7 +154,8 @@ body[data-theme] .brand-home-button {
   display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: transparent; box-shadow: none;
 }
 body[data-theme] .brand-home-button:not(:disabled):hover { transform: none; }
-body[data-theme] .brand-home-button .ps-logo { height: 26px; }
+/* the old square-icon rules fixed .brand-logo at 52–60px wide, which clipped the box and drew the version under the wordmark */
+body[data-theme] .brand-home-button .ps-logo { width: auto; height: 26px; flex: none; }
 body[data-theme] .version {
   order: 0; margin: 0; padding: 4px 10px; border: 0; border-radius: var(--radius-pill);
   background: var(--surface-sunken); color: var(--ink-muted);
@@ -671,6 +673,14 @@ body[data-theme] .large-score-team:not(:disabled):hover { transform: none; filte
 body[data-theme] .large-score-actions > div { border: 0; border-radius: var(--radius-md); background: var(--surface-card); }
 body[data-theme] .large-score-actions span { color: var(--ink-muted); font: 700 12px/16px var(--font-ui); letter-spacing: 1.2px; }
 body[data-theme] .large-score-actions strong { color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; }
+/* the three facts stay one row on phones too, so both halves of the pad fit the screen */
+body[data-theme] .large-score-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 560px) {
+  body[data-theme] .large-score-actions { gap: 8px; }
+  body[data-theme] .large-score-actions > div { padding: 10px 12px; }
+  body[data-theme] .large-score-actions span { font-size: 10px; letter-spacing: 1px; }
+  body[data-theme] .large-score-actions strong { font-size: 1.05rem; }
+}
 
 /* =========================================================
    11. CREATE WIZARD (WizardStep) — four ball segments, choice rows
@@ -910,6 +920,10 @@ body[data-theme]:not(.landing-active) .account-intro h2,
 body[data-theme]:not(.landing-active) .setup-card h2 { text-transform: none; letter-spacing: -0.03em; }
 
 body[data-theme] .player-identity-card { border: 0; border-radius: var(--radius-md); background: var(--surface-raised); box-shadow: none; }
+/* the name keeps its line on phones: the role chips wrap below it instead of squeezing it */
+body[data-theme] .player-identity-card { flex-wrap: wrap; }
+body[data-theme] .player-identity-main { flex: 1 1 10rem; }
+body[data-theme] .player-identity-main strong { overflow-wrap: normal; word-break: normal; }
 body[data-theme] .next-match .player-now-grid > div { border: 0; background: color-mix(in srgb, var(--on-inverse) 9%, transparent); box-shadow: none; }
 body[data-theme] .next-match .player-now-grid span,
 body[data-theme] .next-match .player-now-grid small { color: color-mix(in srgb, var(--on-inverse) 64%, transparent); }
@@ -980,3 +994,91 @@ body[data-theme] .privacy-header > a.secondary {
 @media (max-width: 900px) {
   body[data-theme] .privacy-header .brand-lockup .ps-logo { height: 22px; }
 }
+
+/* =========================================================
+   20. PROTOTYPE LAYOUTS — the live prototype (claude.ai "Padelstar – live prototype")
+   ========================================================= */
+
+/* NextMatch hero: eyebrow + tag, own team · big score · opponents, one ball action */
+body[data-theme] .next-match { display: grid; gap: 18px; }
+body[data-theme] .next-match-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+body[data-theme] .next-match-head .eyebrow { margin: 0; }
+body[data-theme] .next-match-head .eyebrow::before { content: none; }
+body[data-theme] .next-match .next-match-head .eyebrow { color: color-mix(in srgb, var(--on-inverse) 72%, transparent); }
+body[data-theme] .next-match .ps-tag--ball { flex: none; background: var(--ball); color: var(--on-ball); box-shadow: none; }
+body[data-theme] .next-match-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--on-ball); animation: ps-pulse 1.6s ease-in-out infinite; }
+body[data-theme] .next-match-teams { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; }
+body[data-theme] .next-match-team { color: var(--on-inverse); font: 600 20px/24px var(--font-display); letter-spacing: -0.6px; overflow-wrap: anywhere; }
+body[data-theme] .next-match-team-opponents { text-align: right; }
+body[data-theme] .next-match-score { color: var(--on-inverse); font: 800 52px/52px var(--font-display); letter-spacing: -2px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+body[data-theme] .next-match-score > span { padding: 0 4px; opacity: .5; }
+body[data-theme] .next-match-vs { color: color-mix(in srgb, var(--on-inverse) 60%, transparent); font: 800 14px/1 var(--font-ui); letter-spacing: .1em; }
+body[data-theme] .next-match .next-match-keep-score { min-height: var(--tap-court); }
+body[data-theme] .next-match .next-match-summary { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; padding-top: 14px; border-top: 1px solid color-mix(in srgb, var(--on-inverse) 18%, transparent); color: color-mix(in srgb, var(--on-inverse) 72%, transparent); font: 600 13px/18px var(--font-ui); }
+body[data-theme] .next-match > h3 { margin: 0; }
+@media (prefers-reduced-motion: reduce) { body[data-theme] .next-match-live-dot { animation: none; } }
+
+/* Player TabBar: ink pill with a ball active item, phones only */
+body[data-theme] .player-bottom-tabs { display: none; }
+@media not all and (min-width: 860px) {
+  body[data-theme] .player-bottom-tabs:not(.hidden) {
+    position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 20;
+    display: flex; gap: 4px; grid-column: 1 / -1; margin-top: var(--space-2); padding: 6px;
+    border-radius: var(--radius-pill); background: var(--surface-inverse); box-shadow: var(--shadow-float);
+  }
+  body[data-theme] .player-bottom-tabs .workspace-rail-item {
+    flex: 1 1 0; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 0; border: 0; border-radius: var(--radius-pill);
+    background: transparent; color: color-mix(in srgb, var(--on-inverse) 78%, transparent); font: 700 11px/14px var(--font-ui);
+  }
+  body[data-theme] .player-bottom-tabs .workspace-rail-item.is-active { background: var(--ball); color: var(--on-ball); }
+  body[data-theme] .player-bottom-tabs .workspace-rail-icon { width: 22px; height: 22px; }
+}
+body[data-theme] #playerMatchesPanel,
+body[data-theme] #playerStandingsPanel,
+body[data-theme] #playerNextMatch { scroll-margin-top: 92px; }
+
+/* Scorepad: two big halves (ink and ball), close and undo on top */
+body[data-theme] .large-score-top { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-2); }
+body[data-theme] .large-score-heading { display: grid; justify-items: center; gap: 2px; min-width: 0; text-align: center; }
+body[data-theme] .large-score-heading .eyebrow { margin: 0; }
+body[data-theme] .large-score-top h2 { margin: 0; font: 700 15px/20px var(--font-ui); letter-spacing: 0; overflow-wrap: anywhere; }
+body[data-theme] .large-score-close,
+body[data-theme] .large-score-undo {
+  display: grid; place-items: center; width: 48px; min-width: 48px; height: 48px; min-height: 48px; padding: 0;
+  border: 0; border-radius: var(--radius-pill); background: var(--surface-card); color: var(--ink-heading); box-shadow: none;
+}
+body[data-theme] .large-score-close svg,
+body[data-theme] .large-score-undo svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+body[data-theme] .large-score-undo:disabled { background: var(--surface-sunken); color: var(--ink-disabled); }
+body[data-theme] .large-score-team {
+  grid-template-rows: auto minmax(0, 1fr) auto; justify-items: stretch; align-items: end; text-align: left; padding: 20px 24px;
+  box-shadow: var(--shadow-press);
+}
+body[data-theme] .large-score-label { display: grid; gap: 2px; justify-items: start; align-self: start; font: 700 17px/22px var(--font-ui); }
+body[data-theme] .large-score-hint { font: 700 12px/16px var(--font-ui); letter-spacing: 1.4px; text-transform: uppercase; opacity: .72; }
+body[data-theme] .large-score-label .team-player { justify-content: flex-start; }
+body[data-theme] .large-score-team strong { justify-self: end; font-size: clamp(96px, 24vw, 220px); line-height: .87; letter-spacing: -0.05em; }
+body[data-theme] .large-score-team small { justify-self: end; min-width: 72px; min-height: 44px; font-size: clamp(1.2rem, 4vw, 2rem); }
+body[data-theme] .large-score-team:not(:disabled):active { transform: scale(.985); }
+@media (max-width: 899px) {
+  body[data-theme] .large-score-board { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; gap: 8px; }
+  body[data-theme] .large-score-team { min-height: 0; }
+}
+
+/* Standings (Standings table): rank, name, numbers; the leader's rank on the ball */
+body[data-theme] .standings { display: grid; gap: 0; padding: 0; overflow: hidden; border-radius: var(--radius-md); background: var(--surface-card); }
+body[data-theme] .standings > li,
+body[data-theme] .panel .standings > li {
+  margin: 0; padding: 11px 16px; border: 0; border-radius: 0; border-top: 1px solid var(--hairline); background: transparent; box-shadow: none;
+}
+body[data-theme] .standings > li:first-child { border-top: 0; }
+body[data-theme] .standings > li::before { content: none; display: none; }
+body[data-theme] .standings > li.is-me,
+body[data-theme] .standings > li.current-player,
+body[data-theme] .standings > li.highlight { background: var(--ball-wash); }
+/* muted ink drops under 4.5:1 on the ball wash in Floodlight, so the own row's small print uses body ink */
+body[data-theme] .standings > li.is-me small,
+body[data-theme] .standings > li.is-me span { color: var(--ink-body); }
+body[data-theme] .standings .placement-badge { min-width: 28px; height: 28px; box-shadow: none; background: transparent; }
+body[data-theme] .standings > li:first-child .placement-badge { background: var(--ball); color: var(--on-ball); }
+body[data-theme] .standing-stats strong { font-size: 18px; }

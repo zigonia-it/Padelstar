@@ -436,6 +436,7 @@ const standings = window.PadelstarStandings.create({
   document,
   elements,
   escapeHtml: (value) => escapeHtml(value),
+  getSelectedPlayerId: () => state.selectedPlayerId,
   leaderboardEntries: (matches) => leaderboardEntries(matches),
   t: (key, values) => t(key, values),
 });
@@ -521,6 +522,7 @@ const playerNextMatch = window.PadelstarPlayerNextMatch.create({
   getState: () => state,
   matchContextText: (match) => matchContextText(match),
   notifyPlayerMatch: (match, kind) => notifyPlayerMatch(match, kind),
+  openLargeScore: (matchId) => openLargeScore(matchId),
   playerPlacement: (player, matches) => playerPlacement(player, matches),
   playerTournamentState: (player, matches) => playerTournamentState(player, matches),
   scoreSummary: (match) => scoreSummary(match),
@@ -551,6 +553,14 @@ const playerControls = window.PadelstarPlayerControls.create({
 });
 const largeScore = window.PadelstarLargeScore.create({
   awardTennisPoint: (match, teamIndex) => awardTennisPoint(match, teamIndex),
+  // Same rule as the scoreboard's minus button: a player in the match undoes through the scorer queue, an admin reopens.
+  undoLastPoint: (match) => {
+    if (currentLocalRole() === "player" && matchIncludesPlayer(match, state.selectedPlayerId)) {
+      if (match.undoStack?.length) void remotePlayerScore.scorerAction(match.id, "undo");
+      return;
+    }
+    reopenMatch(match);
+  },
   closeLargeScore: () => closeLargeScore(),
   elements,
   escapeHtml: (value) => escapeHtml(value),

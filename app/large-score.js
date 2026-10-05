@@ -1,5 +1,5 @@
 window.PadelstarLargeScore = (() => {
-  function create({ awardTennisPoint, closeLargeScore, elements, escapeHtml, getMatchById, getState, gameScoreText, matchContextText, setScoreText, startingTeamText, teamAccentStyle, teamDisplay, tennisPointLabel, t }) {
+  function create({ awardTennisPoint, undoLastPoint, closeLargeScore, elements, escapeHtml, getMatchById, getState, gameScoreText, matchContextText, setScoreText, startingTeamText, teamAccentStyle, teamDisplay, tennisPointLabel, t }) {
     function renderLargeScore(matchId) {
       if (!matchId || !elements.largeScoreDialog.open) return;
       const match = getMatchById(matchId);
@@ -15,7 +15,7 @@ window.PadelstarLargeScore = (() => {
         const teamKey = index === 0 ? "teamOne" : "teamTwo";
         return `
           <button class="large-score-team" type="button" data-large-score-team="${index}" style="${teamAccentStyle(team)}">
-            <span>${teamDisplay(team)}</span>
+            <span class="large-score-label"><span class="large-score-hint">${t("score.tapForPoint")}</span>${teamDisplay(team)}</span>
             <strong>${match.currentSet[teamKey]}</strong>
             ${window.PadelstarScoring.isPointsMatch(match, state.settings) ? "" : `<small>${window.PadelstarScoring.pointLabel(match, match.currentGame[teamKey])}</small>`}
           </button>`;
@@ -26,6 +26,11 @@ window.PadelstarLargeScore = (() => {
         <div><span>${t("common.games")}</span><strong>${pointsMode ? gamesWon : setScoreText(match)}</strong></div>
         <div><span>${t("common.points")}</span><strong>${pointsMode ? setScoreText(match) : gameScoreText(match)}</strong></div>
         <div><span>${t("common.server")}</span><strong>${escapeHtml(startingTeamText(match))}</strong></div>`;
+      const undo = elements.largeScoreUndoButton;
+      if (undo) {
+        undo.disabled = !match.undoStack?.length;
+        undo.onclick = () => { undoLastPoint?.(match); renderLargeScore(matchId); };
+      }
       elements.largeScoreBoard.querySelectorAll("[data-large-score-team]").forEach((button) => {
         button.addEventListener("click", () => awardTennisPoint(match, Number(button.dataset.largeScoreTeam)));
       });
