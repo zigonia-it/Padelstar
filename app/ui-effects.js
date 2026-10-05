@@ -11,11 +11,15 @@ window.PadelstarUiEffects = (() => {
     const escapedMatchId = typeof CSS !== "undefined" && typeof CSS.escape === "function"
       ? CSS.escape(matchId)
       : String(matchId).replace(/"/g, '\\"');
-    document.querySelectorAll(`[data-match-id="${escapedMatchId}"]`).forEach((card) => {
-      card.classList.remove("score-flash");
-      void card.offsetWidth;
-      card.classList.add("score-flash");
-      window.setTimeout(() => card.classList.remove("score-flash"), 520);
+    // The cards were just re-rendered, so the class goes on in the next frame instead of forcing a layout
+    // (reading offsetWidth here cost a full reflow on every point).
+    const cards = document.querySelectorAll(`[data-match-id="${escapedMatchId}"]`);
+    cards.forEach((card) => card.classList.remove("score-flash"));
+    window.requestAnimationFrame(() => {
+      cards.forEach((card) => {
+        card.classList.add("score-flash");
+        card.addEventListener("animationend", () => card.classList.remove("score-flash"), { once: true });
+      });
     });
   }
 

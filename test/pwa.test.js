@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v378/);
+  assert.match(serviceWorkerSource, /padelstar-v379/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -206,8 +206,8 @@ test("score actions have their own mutation boundary", () => {
   assert.match(scoreActionsSource, /awardTennisPoint/);
   assert.match(scoreActionsSource, /saveSetResult/);
   assert.match(scoreActionsSource, /global\.PadelstarScoreActions/);
-  assert.match(indexSource, /app\/score-actions\.js\?v=padelstar-score-actions-8/);
-  assert.match(serviceWorkerSource, /app\/score-actions\.js\?v=padelstar-score-actions-8/);
+  assert.match(indexSource, /app\/score-actions\.js\?v=padelstar-score-actions-9/);
+  assert.match(serviceWorkerSource, /app\/score-actions\.js\?v=padelstar-score-actions-9/);
   assert.match(appSource, /scoreActions\.awardTennisPoint/);
 });
 
@@ -278,12 +278,11 @@ test("create tournament wizard has real format/rules choices and its own step bo
   assert.match(tournamentEntrySource, /formData\.get\("format"\)/);
 });
 
-test("invite code input is a real 8-cell control kept in sync with the form field", () => {
-  assert.match(indexSource, /data-code-cell-index="0"/);
-  assert.match(indexSource, /data-code-cell-index="7"/);
-  assert.match(indexSource, /name="inviteCode" type="text" class="invite-code-hidden-field" required minlength="8" maxlength="8"/);
-  assert.match(indexSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-2/);
-  assert.match(serviceWorkerSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-2/);
+test("invite code input is one wide field like the join card on home, kept clean and in sync", () => {
+  assert.doesNotMatch(indexSource, /data-code-cell-index/);
+  assert.match(indexSource, /name="inviteCode" type="text" class="home-join-input invite-code-input"[^>]*required/);
+  assert.match(indexSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-\d+/);
+  assert.match(serviceWorkerSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-\d+/);
   assert.match(inviteCodeInputSource, /window\.PadelstarInviteCodeInput/);
   assert.match(inviteCodeInputSource, /syncCellsFromHidden/);
   // prefillJoinForm is the one function every real caller (URL prefill,
@@ -721,8 +720,8 @@ test("design-chat suggestions: gem-color court strips, offline indicator, waitin
 test("large score rendering has its own dialog boundary", () => {
   assert.match(largeScoreSource, /renderLargeScore/);
   assert.match(largeScoreSource, /window\.PadelstarLargeScore/);
-  assert.match(indexSource, /app\/large-score\.js\?v=padelstar-large-score-4/);
-  assert.match(serviceWorkerSource, /app\/large-score\.js\?v=padelstar-large-score-4/);
+  assert.match(indexSource, /app\/large-score\.js\?v=padelstar-large-score-5/);
+  assert.match(serviceWorkerSource, /app\/large-score\.js\?v=padelstar-large-score-5/);
   assert.match(appSource, /largeScore\.renderLargeScore\(largeScoreMatchId\)/);
 });
 
@@ -986,7 +985,7 @@ test("active app files do not reference archived assets", () => {
 
 test("browser entrypoint and service worker use the same cache-busting versions", () => {
   assert.match(indexSource, /styles\/styles\.css\?v=padelstar-ui-106/);
-  assert.match(indexSource, /app\/app\.js\?v=padelstar-session-93/);
+  assert.match(indexSource, /app\/app\.js\?v=padelstar-session-94/);
   assert.match(indexSource, /app\/avatar-system\.js\?v=padelstar-avatar-system-1/);
   assert.match(indexSource, /app\/accent-system\.js\?v=padelstar-accent-system-2/);
   assert.match(indexSource, /app\/ui-feedback\.js\?v=padelstar-ui-feedback-2/);
@@ -997,7 +996,7 @@ test("browser entrypoint and service worker use the same cache-busting versions"
   assert.match(indexSource, /app\/module-routing\.js\?v=padelstar-module-routing-5/);
   assert.match(indexSource, /app\/session-policy\.js\?v=padelstar-session-policy-1/);
   assert.match(serviceWorkerSource, /styles\/styles\.css\?v=padelstar-ui-106/);
-  assert.match(serviceWorkerSource, /app\/app\.js\?v=padelstar-session-93/);
+  assert.match(serviceWorkerSource, /app\/app\.js\?v=padelstar-session-94/);
   assert.match(serviceWorkerSource, /app\/avatar-system\.js\?v=padelstar-avatar-system-1/);
   assert.match(serviceWorkerSource, /app\/accent-system\.js\?v=padelstar-accent-system-2/);
   assert.match(serviceWorkerSource, /app\/ui-feedback\.js\?v=padelstar-ui-feedback-2/);
@@ -1122,7 +1121,9 @@ test("browser smoke is wired into the Pages deployment gate", () => {
 
 test("new invite codes use the stronger eight-character format", () => {
   assert.match(utilitiesSource, /Array\.from\(\{ length: 8 \}/);
-  assert.match(indexSource, /maxlength="8"/);
+  // the join field takes a pasted link too, so it is cut to the 8-character code in JS rather than by maxlength
+  assert.match(indexSource, /name="inviteCode"[^>]*minlength="8"/);
+  assert.match(inviteCodeInputSource, /const codeLength = 8;/);
 });
 
 test("backup export preserves admin/player identity so restore can resume as the same user", () => {

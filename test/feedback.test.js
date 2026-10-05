@@ -66,9 +66,10 @@ test("a failed send offers an email draft with the same text", () => {
   assert.match(params.get("body"), /Something & more/);
 });
 
-test("the feedback link is in the footer and the menu, and every text exists in both languages", () => {
+test("the feedback link is in the footer only (not doubled in the menu), and every text exists in both languages", () => {
   const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
-  assert.equal((html.match(/data-feedback-open/g) ?? []).length, 2, "footer + menu");
+  assert.equal((html.match(/data-feedback-open/g) ?? []).length, 1, "footer only");
+  assert.match(html, /id="feedbackFooterButton"[^>]*data-feedback-open/);
   assert.match(html, /app\/feedback\.js\?v=padelstar-feedback-\d+/);
   assert.match(html, /styles\/feedback\.css\?v=padelstar-feedback-\d+/);
   const sw = fs.readFileSync(path.join(root, "service-worker.js"), "utf8");

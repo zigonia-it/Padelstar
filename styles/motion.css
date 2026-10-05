@@ -1,0 +1,101 @@
+/* =========================================================
+   MOTION - the animations built on the motion tokens (styles/tokens.css, spec: docs/technical/motion.md)
+   Loaded after redesign.css. Only transform and opacity move. Reduced motion: the tokens drop distance and scale,
+   app/view-motion.js skips the page transition, and the catch-all in styles.css shortens whatever is left.
+   ========================================================= */
+
+/* ---------- 1. Menu highlight: one pill per menu slides to the page a person picks (app/nav-indicator.js) ---------- */
+body[data-theme] .app-menu.has-nav-indicator { position: relative; }
+body[data-theme] .has-nav-indicator { --nav-indicator-bg: var(--surface-inverse); }
+body[data-theme] .workspace-bottom-tabs.has-nav-indicator,
+body[data-theme] .player-bottom-tabs.has-nav-indicator { --nav-indicator-bg: var(--ball); }
+
+body[data-theme] .nav-indicator {
+  position: absolute; top: 0; left: 0; z-index: 0;
+  width: var(--nav-w, 0); height: var(--nav-h, 0);
+  border-radius: var(--radius-pill); background: var(--nav-indicator-bg);
+  transform: translate(var(--nav-x, 0), var(--nav-y, 0));
+  opacity: 0; pointer-events: none;
+}
+body[data-theme] .nav-indicator.is-visible { opacity: 1; }
+body[data-theme] .nav-indicator.is-sliding {
+  transition:
+    transform var(--motion-base) var(--ease-standard),
+    width var(--motion-base) var(--ease-standard),
+    height var(--motion-base) var(--ease-standard),
+    opacity var(--motion-quick) var(--ease-standard);
+}
+/* the items sit above the pill; the active one hands its background to the pill and its ink changes with the slide */
+body[data-theme] .has-nav-indicator > .module-link,
+body[data-theme] .has-nav-indicator > .workspace-rail-item { position: relative; z-index: 1; }
+body[data-theme] .has-nav-indicator > .module-link,
+body[data-theme] .has-nav-indicator > .workspace-rail-item {
+  transition: color var(--motion-base) var(--ease-standard), background-color var(--motion-quick) var(--ease-standard);
+}
+body[data-theme] .app-menu.has-nav-indicator .module-link.active,
+body[data-theme] .app-menu.has-nav-indicator .module-link[aria-current="page"],
+body[data-theme] .has-nav-indicator .workspace-rail-item.is-active { background: transparent; }
+
+/* ---------- 2. Panels fly out and in between pages (app/view-motion.js) ---------- */
+@keyframes ps-fly-in {
+  from { opacity: 0; transform: translateY(var(--motion-distance-md)) scale(var(--motion-scale-press)); }
+}
+@keyframes ps-fly-out {
+  to { opacity: 0; transform: translateY(calc(-1 * var(--motion-distance-sm))) scale(var(--motion-scale-press)); }
+}
+
+/* with the View Transitions API: everything that is not a card switches at once, cards move on their own */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; }
+/* the top bar and the tab bars stay live and above the cards (named only while a transition runs) */
+.view-motion-running body[data-theme] .topbar { view-transition-name: ps-topbar; }
+.view-motion-running body[data-theme] #workspaceRail { view-transition-name: ps-rail; }
+.view-motion-running body[data-theme] .workspace-bottom-tabs { view-transition-name: ps-bottom-tabs; }
+.view-motion-running body[data-theme] .player-bottom-tabs { view-transition-name: ps-player-tabs; }
+::view-transition-group(ps-topbar), ::view-transition-group(ps-rail),
+::view-transition-group(ps-bottom-tabs), ::view-transition-group(ps-player-tabs),
+::view-transition-new(ps-topbar), ::view-transition-new(ps-rail),
+::view-transition-new(ps-bottom-tabs), ::view-transition-new(ps-player-tabs) { animation: none; }
+::view-transition-old(ps-topbar), ::view-transition-old(ps-rail),
+::view-transition-old(ps-bottom-tabs), ::view-transition-old(ps-player-tabs) { animation: none; opacity: 0; }
+::view-transition-group(.ps-box) { animation-duration: var(--motion-slow); animation-timing-function: var(--ease-standard); }
+::view-transition-old(.ps-box):only-child { animation: ps-fly-out var(--motion-quick) var(--ease-in) both; }
+::view-transition-new(.ps-box):only-child { animation: ps-fly-in var(--motion-base) var(--ease-out) both; }
+
+/* without it: the new cards still fly in, one after another */
+.motion-enter {
+  animation: ps-fly-in var(--motion-base) var(--ease-out) both;
+  animation-delay: calc(min(var(--enter-index, 0), 5) * var(--motion-stagger));
+}
+
+/* ---------- 3. Big score (Scorepad): the pad gives under the thumb, the number that changed ticks ---------- */
+body[data-theme] .large-score-team { transition: transform var(--motion-instant) var(--ease-standard); }
+body[data-theme] .large-score-team:not(:disabled):active { transform: scale(var(--motion-scale-press)); }
+
+@keyframes ps-score-tick {
+  40% { transform: scale(var(--motion-scale-pop)); }
+}
+body[data-theme] .large-score-team .is-ticking,
+body[data-theme] .large-score-actions .is-ticking {
+  animation: ps-score-tick var(--motion-base) var(--ease-pop);
+}
+/* the facts row's numbers are left-aligned blocks: grow from their left edge, not the middle of the box */
+body[data-theme] .large-score-actions .is-ticking { transform-origin: left center; }
+
+/* a match card whose score changed gets a short ball wash (app/ui-effects.js flashMatchCards) */
+@keyframes ps-wash-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+body[data-theme] .match-card.score-flash { position: relative; }
+body[data-theme] .match-card.score-flash::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--ball-wash); pointer-events: none;
+  animation: ps-wash-out var(--motion-celebrate) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-theme] .nav-indicator.is-sliding { transition: opacity var(--motion-quick) var(--ease-standard); }
+  .motion-enter,
+  body[data-theme] .large-score-team .is-ticking,
+  body[data-theme] .large-score-actions .is-ticking { animation: none; }
+}

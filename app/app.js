@@ -291,6 +291,11 @@ const remotePlayerScore = window.PadelstarRemotePlayerScore.create({
   t: (key, values) => t(key, values),
 });
 const scoreActions = window.PadelstarScoreActions.create({
+  // While the big score is open the cards behind it are covered, so a quick run of points shares one save and redraw
+  // (it is flushed when the dialog closes or the page is hidden).
+  afterPaint: (callback) => (window.PADELSTAR_TEST_MODE
+    ? callback()
+    : requestAnimationFrame(() => setTimeout(callback, elements.largeScoreDialog?.open ? 350 : 0))),
   captureMatchUndoState: (match) => captureMatchUndoState(match),
   currentLocalRole: () => currentLocalRole(),
   enterApproval: (match) => tournamentRuntime.enterApproval(match),
@@ -1130,6 +1135,7 @@ async function handleTournamentMissing() {
 function initializeNavigation() {
   window.PadelstarNavigation?.initialize({ showModule, translate: t });
   window.PadelstarWorkspaceRail?.initialize({ showModule, activateAdminPanel });
+  window.PadelstarNavIndicator?.initialize();
   window.PadelstarHomeJoin?.initialize({
     form: document.querySelector("#homeJoinForm"),
     translate: t,
@@ -1975,6 +1981,8 @@ function closeSetScoreDialog() {
 function closeLargeScore() {
   elements.largeScoreDialog.close();
 }
+elements.largeScoreDialog?.addEventListener("close", () => scoreActions.flushPendingPoint());
+window.addEventListener("pagehide", () => scoreActions.flushPendingPoint());
 
 function renderLargeScore() {
   largeScore.renderLargeScore(largeScoreMatchId);

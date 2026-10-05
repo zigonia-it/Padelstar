@@ -31,9 +31,22 @@ window.PadelstarLargeScore = (() => {
         undo.disabled = !match.undoStack?.length;
         undo.onclick = () => { undoLastPoint?.(match); renderLargeScore(matchId); };
       }
+      tickChangedNumbers(matchId);
       elements.largeScoreBoard.querySelectorAll("[data-large-score-team]").forEach((button) => {
         button.addEventListener("click", () => awardTennisPoint(match, Number(button.dataset.largeScoreTeam)));
       });
+    }
+
+    // The numbers that changed since the last paint of this match tick once (styles/motion.css), so the scorer sees
+    // which side the point went to. The board is rebuilt on every point, so the values are compared by position.
+    let lastNumbers = { matchId: null, values: [] };
+    function tickChangedNumbers(matchId) {
+      const numbers = [...elements.largeScoreBoard.querySelectorAll(".large-score-team strong, .large-score-team small"), ...elements.largeScoreActions.querySelectorAll("strong")];
+      const values = numbers.map((element) => element.textContent);
+      if (lastNumbers.matchId === matchId) {
+        numbers.forEach((element, index) => { if (values[index] !== lastNumbers.values[index]) element.classList.add("is-ticking"); });
+      }
+      lastNumbers = { matchId, values };
     }
 
     return { renderLargeScore };
