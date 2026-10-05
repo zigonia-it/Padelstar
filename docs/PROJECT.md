@@ -4,21 +4,30 @@
 
 Padelstar is a multi-device padel tournament application/PWA for creating, running, scoring and displaying tournaments.
 
-## Immediate delivery objective
+Last updated: 2026-10-05.
 
-The shortest critical product path is:
+## Current state
 
-1. Owner can create an account.
-2. Owner can log in.
-3. Owner can create a tournament.
-4. Owner can select/create Round Robin.
-5. Tournament can start.
-6. Results can be registered.
-7. Tournament state/results persist to the server/Supabase.
-8. Tournament can be completed cleanly.
-9. Owner can create/start a new tournament afterwards.
+- **Version 1.0.0** is live on https://padelstar.app (Vercel, deployed from `main`; Supabase project `sxzlljxodorkfrjnwfgr` in the EU). Released 2026-10-05 with the Padelstar 1.0 redesign.
+- Merged after 1.0.0, not yet versioned: the motion system and win moment (PR #42, #45) and the missing 512 px icon (PR #43). See `docs/CHANGELOG.md` "Unreleased".
+- Open pull requests: **#44** large Round Robin can be created (the 2 MB server limit it needs is already live); **#46** League v2.0 plan and `docs/MASTER-ROADMAP.md`.
+- Live modes: Round Robin and Cup. Scoring: Tennis (padel) and Points modes on the generic scoring engine.
+- Current stage of the plan: **1.0.x, stabilise** (master roadmap §1): live verification on real devices, the open bugs in `docs/BUGS.md`, the privacy sign-off, motion step 3.
+- What the developer must do or decide: `docs/USER_ACTIONS.md`.
 
-This flow must be reliable before lower-priority features consume development time.
+## The plan
+
+`docs/MASTER-ROADMAP.md` is the **governing plan** for all development (developer's decision 2026-10-05). It sets what comes in which release and in what order, from 1.0.x to 4.x. `docs/ROADMAP.md` is the detailed checkbox plan underneath it; where the two disagree, the master roadmap wins. Work that is not in the master roadmap needs an explicit developer instruction, and that instruction is then added to the master roadmap.
+
+## The critical path (must never break)
+
+The flow that 0.6.0 was built around stays the regression check for every change:
+
+1. Owner can create an account and log in.
+2. Owner can create a Round Robin tournament.
+3. The tournament starts; results can be registered.
+4. State and results persist to the server (Supabase) and survive a reload.
+5. The tournament finishes cleanly, and a new one can be created afterwards.
 
 ## Core principles
 
@@ -26,8 +35,7 @@ This flow must be reliable before lower-priority features consume development ti
 - Shared active tournament state uses backend/database state when multiple devices participate.
 - Current implemented UI is the design authority.
 - Product rules must not be silently changed to match old documentation.
-- Round Robin and Cup are the v1.0 tournament modes. Liga is pushed out to a later release (see `ROADMAP.md` Priority 2) per explicit developer decision.
-- For the Monday usable-build milestone, Round Robin is mandatory; Cup may follow if time remains.
+- Round Robin and Cup are the 1.x tournament modes. League (ligaspill) is release 2.0 together with Social (master roadmap §7). Hidden formats (Americano, Mexicano, ...) are not deleted; they are server-wired in 1.2.
 
 ## Ownership/account
 
@@ -59,43 +67,16 @@ Do not treat browser local storage as the only backup/source for active shared t
 
 ## Result entry
 
-Players/admin flows may evolve, but the immediate milestone requires that the owner/admin can reliably register match results and advance the Round Robin tournament.
-
-Approved richer player-scoring/result-confirmation behavior remains part of the broader v1 roadmap.
-
-## v1.0 direction
-
-Beyond the Monday critical path, v1.0 includes the approved core functionality for:
-
-- Round Robin;
-- Cup;
-- scoring/rules;
-- shared live state;
-- player scoring;
-- result approval/correction;
-- replacements;
-- timed matches;
-- auth/account;
-- history/statistics;
-- retention;
-- claiming/invitations;
-- notifications;
-- TV Mode;
-- PWA;
-- i18n;
-- help/privacy;
-- initial system-owner foundation.
-
-Detailed sequencing is in `ROADMAP.md`.
+One active scorer per match, point by point, approved by the teams (details below). The admin can always register and correct results.
 
 ## Approved product behaviour (built so far)
 
-- **Scoring**: golden point, set tiebreak and timed matches (a game won after time is up ends the match; level after time = deciding golden-point game) are rule settings; ties in the table are broken head-to-head. One active scorer per match; a player-scored result is approved by one player of each team (auto-approved after 30 minutes, or at once when only one team uses the app); the admin can always approve and can correct a finished result with a reason (the old result is kept and can be restored). Nothing can be corrected after the tournament is finished.
+- **Scoring**: golden point, set tiebreak and timed matches (a game won after time is up ends the match; level after time = deciding golden-point game) are rule settings; ties in the table are broken head-to-head. One active scorer per match; a player-scored result is approved by one player of each team (auto-approved after 30 minutes, or at once when only one team uses the app); the admin can always approve and can correct a finished result with a reason (the old result is kept and can be restored). After the finish only the admin can still correct a result (see "Corrections after the finish" below).
 - **Players who leave**: the admin can replace a player (a running match restarts at 0–0 after a warning) or withdraw them without a replacement: their unplayed matches wait for the remaining teammate, who plays alone (1 against 2) or gives a walkover (the admin can decide for them).
 - **Guests and accounts**: guests use a temporary session per device; a name alone never takes over a claimed slot. A signed-in account can claim an unclaimed pre-added slot; statistics follow the account. The admin can invite people by email; an invitation reserves nothing until the person joins and lapses when the first round starts.
 - **History**: only account players get permanent statistics, written once at the finish; deleting a tournament never deletes anyone's statistics.
 - **Retention**: a finished guest tournament stays readable for 24 hours; an idle one expires after 30 days and is deleted 7 days later unless resumed; account tournaments and statistics are kept.
-- **Notifications**: in-app notifications (match ready, result to approve, teammate withdrew, correction, finished) with a notification center; sounds and vibration can be switched off on the profile page.
+- **Notifications**: in-app notifications (match ready, result to approve, teammate withdrew, correction, finished) with a notification center, a toast and vibration (not on iPhone). No in-app sounds since 1.0.0 (developer's decision): the browser's or phone's own notifications carry the sound.
 - **TV Mode** opens in a new tab, read-only, in the chosen language. **Guide and privacy** open as a popup.
 - **System owner**: exactly one protected owner, stored in the database; `admin.html` and its data are for the owner only (details below).
 - **Corrections after the finish**: the admin can still correct a finished result (not in a cancelled tournament); the account statistics follow the corrected result. A Cup result that later matches depend on stays blocked.
@@ -103,7 +84,9 @@ Detailed sequencing is in `ROADMAP.md`.
 - **System owner**: `admin.html` has Oversikt, Turneringer (search, filter, paging), Brukere (search, block, unblock, delete; never the owner), Logg (sign-ups, tournaments created/finished/deleted, the owner's own actions; ids only, 90 days) and Vedlikehold (cleanup jobs). Everything else the owner could do with other people's tournaments is deliberately not built (privacy).
 - **TV Mode** works on desktop and phone (button in the rail and the phone tab bar; the page stacks on a phone) and has the Lys/Mørk switch.
 - **Privacy text** ends with a section naming the services used (Supabase in the EU, Vercel, Resend, jsDelivr, flagcdn.com, Cloudflare Turnstile, quickchart.io).
-- **Colour system**: one token set (`styles/tokens.css`), two themes: dark is a lifted slate navy, light is a soft blue-white with white cards; the choice is saved, the device decides only on the first visit. No colour literals in components.
+- **Design (1.0.0)**: the Padelstar 1.0 redesign from the Claude Design system: one token set (`styles/tokens.css`), two themes (Daylight and Floodlight); the choice is saved, the device decides only on the first visit. No colour literals in components. Players have no colour or avatar (names in plain ink). The version shows in a pill beside the logo.
+- **Motion**: motion tokens and `docs/technical/motion.md`; the menu highlight slides, pages fly in, a win moment on the winning point, the podium lands 3rd, 2nd, 1st. "Reduce motion" removes movement.
+- **Round Robin rounds advance by themselves** (0.17.3): when the last match of a round is finished or cancelled, the next round starts in the same database write.
 - **One screen for lobby, Styring, Kamper and Tabell** (0.12.0): the lobby is the first panel of the workspace, reached from the side rail, the phone tab bar and the sub-tabs.
 - **Withdrawal in a Cup** (0.13.0): the same conditions as in a Round Robin; a fully withdrawn team = walkover; both sides of a match withdrawn = the best-placed losing team takes the place after the admin confirms.
 - **Sign-up check**: a Cloudflare Turnstile "I'm not a robot" dialog before sign-up, sign-in and the admin sign-in link (enforced by Supabase).
@@ -111,24 +94,17 @@ Detailed sequencing is in `ROADMAP.md`.
 - **Push categories** (0.15.0): each device chooses match/round, results, withdrawal decisions and "only my own matches"; the server filters before sending. Invitation push is planned.
 - **Unverified accounts** are deleted after 7 days (0.13.1).
 
-## Decided, not yet built
+## Decided, not yet on main
 
-Nothing is decided and unbuilt at the moment; `docs/ROADMAP.md` Phase 30 lists the Definition-of-Done items that were still open when 1.0.0 was released.
-
+- **Large Round Robin** (2026-10-05, PR #44): up to 8 players every team meets every other team; above 8 each team plays one match per rotation against a neighbouring team. Tournament state may be up to 2 MB (already live in the database).
 
 ## Later versions
 
-1.x may add templates, additional tournament modes and expanded system administration.
-
-2.0.0 is the social expansion, including friend-list/social functionality.
-
-Permanent tamper-protected security audit logging is post-1.0.
+See `docs/MASTER-ROADMAP.md`: 1.1 templates, 1.2 more formats and a player-first UI, 1.3 organiser tools, 1.4 administration, 1.5 match-model foundation, 2.0 League and Social, 3.0 scheduled tournaments and payments, 4.x community, clubs and commercial.
 
 ## Version baseline
 
-The actual current baseline is `1.0.0` (released 2026-10-05 on the developer's instruction: the Padelstar 1.0 redesign; see `docs/CHANGELOG.md`). Before it, `0.17.3` (2026-10-05: a Round Robin round starts the next one by itself; `0.17.2` was the field-test round 3 fixes 2026-10-05: admin results no longer refused by the undo-history size, TV mode, iPhone zoom and sound; `0.17.1` was the field-test fix 2026-10-03: a player who joins by QR keeps their player view after a reload; `0.17.0` was the generic scoring engine with a Tennis and a Points mode, 2026-09-24; `0.16.2` removed the older result-proposal flow, 2026-09-22; `0.16.1` was the popup fix; `0.16.0` was the expired-tournament notice; `0.15.1` was colour spec additions; `0.15.0` was push categories; `0.14.0` was two-factor for the system menu; `0.13.1` deleted unverified accounts after 7 days; `0.13.0` was withdrawal in a Cup; `0.12.0` was the lobby merged into the workspace; `0.11.1` was fixes after the colour system; `0.11.0` was the colour system; `0.10.0` was the decisions batch; `0.9.1` was the first bug-fix batch the same day; `0.9.0` was applied 2026-09-19 under the developer's standing authorization to bump fully verified milestones; `docs/CHANGELOG.md` lists what was verified and what still awaits a person on real devices). `0.7.0` was the beta feature milestone.
-
-`0.7.0` was applied on the developer's explicit instruction (2026-09-19) for the beta feature milestone (scorer roles, result approval and correction, timed matches and scoring rules, player replacement, TV Mode in every supported language, feedback button); `docs/CHANGELOG.md` lists which parts have been verified live and which still await it. `0.6.0` was set once the Monday critical path was verified end-to-end; `0.6.1` is a verified UI-redesign/polish batch on top of it (fonts, design tokens, gem avatars, workspace nav shell, a handful of real bug fixes) that changed no critical-path behavior.
+The actual current baseline is `1.0.0` (released 2026-10-05 on the developer's instruction: the Padelstar 1.0 redesign). The history of every earlier version is in `docs/CHANGELOG.md`.
 
 Version changes are milestone-based:
 
