@@ -1,5 +1,5 @@
 window.PadelstarTournamentEngine = (() => {
-  const allTeamsMeetMaxPlayers = 32;
+  const allTeamsMeetMaxPlayers = 8;
 
   function buildSchedule(players, format = "roundRobin", options = {}) {
     const activePlayers = players.filter((player) => player.active && player.availability !== "away");

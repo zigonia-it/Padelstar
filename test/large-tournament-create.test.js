@@ -37,14 +37,14 @@ test("the 40-player plan fits the server's 256 KB create limit and is filled in 
   assert.equal(round.teams[0].accent, "silver");
 });
 
-test("up to 32 players every team in a rotation still meets every other team", () => {
+test("up to 8 players every team in a rotation still meets every other team", () => {
   const engine = load(["tournament-engine.js"]).PadelstarTournamentEngine;
-  assert.equal(engine.allTeamsMeetMaxPlayers, 32);
-  const at32 = engine.buildSchedule(players(32), "roundRobin");
-  assert.ok(at32.every((round) => round.allTeamsMeet === true));
-  assert.equal(engine.roundPlanMatchups(at32[0]).length, 120);
-  const at33 = engine.buildSchedule(players(33), "roundRobin");
-  assert.ok(at33.every((round) => round.allTeamsMeet === false && round.sittingOut.length === 1));
+  assert.equal(engine.allTeamsMeetMaxPlayers, 8);
+  const at8 = engine.buildSchedule(players(8), "roundRobin");
+  assert.ok(at8.every((round) => round.allTeamsMeet === true));
+  assert.equal(engine.roundPlanMatchups(at8[0]).length, 6);
+  const at9 = engine.buildSchedule(players(9), "roundRobin");
+  assert.ok(at9.every((round) => round.allTeamsMeet === false && round.sittingOut.length === 1));
 });
 
 test("older saved schedules with matchups are compacted and still produce the same matchups", () => {
