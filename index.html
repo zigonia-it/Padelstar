@@ -629,30 +629,13 @@
           </figure>
         </div>
         <form class="panel setup-card" id="joinTournamentForm">
-          <div class="invite-code-field">
+          <label class="invite-code-field">
             <span data-i18n="share.inviteCode">Invitasjonskode</span>
-            <div class="invite-code-cells" role="group" aria-label="Invitasjonskode"
-              data-i18n-aria-label="share.inviteCode">
-              <input type="text" class="invite-code-cell" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-                placeholder=" " data-code-cell-index="0">
-              <input type="text" class="invite-code-cell" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-                placeholder=" " data-code-cell-index="1">
-              <input type="text" class="invite-code-cell" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-                placeholder=" " data-code-cell-index="2">
-              <input type="text" class="invite-code-cell" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-                placeholder=" " data-code-cell-index="3">
-              <input type="text" class="invite-code-cell" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-                placeholder=" " data-code-cell-index="4">
-              <input type="text" class="invite-code-cell" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-                placeholder=" " data-code-cell-index="5">
-              <input type="text" class="invite-code-cell" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-                placeholder=" " data-code-cell-index="6">
-              <input type="text" class="invite-code-cell" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-                placeholder=" " data-code-cell-index="7">
-            </div>
-            <input name="inviteCode" type="text" class="invite-code-hidden-field" required minlength="8" maxlength="8"
-              autocomplete="off" tabindex="-1" aria-hidden="true">
-          </div>
+            <!-- the same field as the join card on home: one wide box, a code or a pasted join link (app/invite-code-input.js) -->
+            <input name="inviteCode" type="text" class="home-join-input invite-code-input" inputmode="text" required
+              minlength="8" maxlength="200" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
+              placeholder="KODE" data-i18n-placeholder="home.joinPlaceholder">
+          </label>
           <label>
             <span data-i18n="common.name">Navn</span>
             <input name="playerName" type="text" placeholder="Skriv navnet ditt" maxlength="64" autocomplete="name"
@@ -1433,7 +1416,7 @@
   <script defer src="app/workspace-events.js?v=padelstar-workspace-events-3"></script>
   <script defer src="app/tournament-entry.js?v=padelstar-tournament-entry-9"></script>
   <script defer src="app/create-wizard.js?v=padelstar-create-wizard-4"></script>
-  <script defer src="app/invite-code-input.js?v=padelstar-invite-code-input-2"></script>
+  <script defer src="app/invite-code-input.js?v=padelstar-invite-code-input-3"></script>
   <script defer src="app/home-join.js?v=padelstar-home-join-1"></script>
   <script defer src="app/player-tabs.js?v=padelstar-player-tabs-1"></script>
   <script defer src="app/accent-picker.js?v=padelstar-accent-picker-1"></script>

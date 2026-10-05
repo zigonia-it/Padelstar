@@ -278,12 +278,11 @@ test("create tournament wizard has real format/rules choices and its own step bo
   assert.match(tournamentEntrySource, /formData\.get\("format"\)/);
 });
 
-test("invite code input is a real 8-cell control kept in sync with the form field", () => {
-  assert.match(indexSource, /data-code-cell-index="0"/);
-  assert.match(indexSource, /data-code-cell-index="7"/);
-  assert.match(indexSource, /name="inviteCode" type="text" class="invite-code-hidden-field" required minlength="8" maxlength="8"/);
-  assert.match(indexSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-2/);
-  assert.match(serviceWorkerSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-2/);
+test("invite code input is one wide field like the join card on home, kept clean and in sync", () => {
+  assert.doesNotMatch(indexSource, /data-code-cell-index/);
+  assert.match(indexSource, /name="inviteCode" type="text" class="home-join-input invite-code-input"[^>]*required/);
+  assert.match(indexSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-\d+/);
+  assert.match(serviceWorkerSource, /app\/invite-code-input\.js\?v=padelstar-invite-code-input-\d+/);
   assert.match(inviteCodeInputSource, /window\.PadelstarInviteCodeInput/);
   assert.match(inviteCodeInputSource, /syncCellsFromHidden/);
   // prefillJoinForm is the one function every real caller (URL prefill,
@@ -1122,7 +1121,9 @@ test("browser smoke is wired into the Pages deployment gate", () => {
 
 test("new invite codes use the stronger eight-character format", () => {
   assert.match(utilitiesSource, /Array\.from\(\{ length: 8 \}/);
-  assert.match(indexSource, /maxlength="8"/);
+  // the join field takes a pasted link too, so it is cut to the 8-character code in JS rather than by maxlength
+  assert.match(indexSource, /name="inviteCode"[^>]*minlength="8"/);
+  assert.match(inviteCodeInputSource, /const codeLength = 8;/);
 });
 
 test("backup export preserves admin/player identity so restore can resume as the same user", () => {
