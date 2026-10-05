@@ -1,4 +1,4 @@
-const cacheName = "padelstar-v375";
+const cacheName = "padelstar-v376";
 
 const appShell = [
   "./",
@@ -27,7 +27,7 @@ const appShell = [
   "./styles/feedback.css?v=padelstar-feedback-3",
   "./styles/captcha.css?v=padelstar-captcha-1",
   "./styles/info-dialog.css?v=padelstar-info-dialog-4",
-  "./styles/notification-center.css?v=padelstar-notification-center-8",
+  "./styles/notification-center.css?v=padelstar-notification-center-9",
   "./styles/theme-toggle.css?v=padelstar-color-mode-2",
   "./styles/scorer-panel.css?v=padelstar-scorer-panel-8",
   "./styles/settings-rows.css?v=padelstar-settings-rows-2",
@@ -107,17 +107,15 @@ const appShell = [
   "./app/ui-feedback.js?v=padelstar-ui-feedback-2",
   "./app/notification-system.js?v=padelstar-notification-system-3",
   "./app/color-mode.js?v=padelstar-color-mode-3",
-  "./app/notification-center.js?v=padelstar-notification-center-8",
+  "./app/notification-center.js?v=padelstar-notification-center-9",
   "./app/push-preferences.js?v=padelstar-push-preferences-1",
   "./app/expiry-notice.js?v=padelstar-expiry-notice-1",
-  "./app/notification-center-ui.js?v=padelstar-notification-center-8",
+  "./app/notification-center-ui.js?v=padelstar-notification-center-9",
   "./app/system-admin.js?v=padelstar-system-admin-4",
   "./app/system-two-factor.js?v=padelstar-system-two-factor-1",
   "./app/invitations.js?v=padelstar-invitations-2",
   "./styles/system-admin.css?v=padelstar-system-admin-5",
   "./admin.html",
-  "./assets/sounds/notification1.mp3",
-  "./assets/sounds/notification2.mp3",
   "./app/profile-session.js?v=padelstar-profile-session-4",
   "./app/captcha.js?v=padelstar-captcha-1",
   "./app/account-auth.js?v=padelstar-account-auth-7",

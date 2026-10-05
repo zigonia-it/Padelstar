@@ -1,9 +1,8 @@
-// In-app notifications for a player (Phase 18): what changed for this player between two tournament states, a small
-// store with read/unread and cleanup, and the two Padelstar sounds (notification1 = your next match is ready,
-// notification2 = any other live update for you). The OS/push notifications live in notification-system.js.
+// In-app notifications for a player (Phase 18): what changed for this player between two tournament states and a small
+// store with read/unread and cleanup. Padelstar plays no sounds of its own (developer's decision 2026-10-05); the OS/push
+// notifications in notification-system.js carry the device's sound.
 (function (global) {
   const STORAGE_KEY = "padelstar-notification-center";
-  const SOUND_KEY = "padelstar-sounds";
   const VIBRATION_KEY = "padelstar-vibration";
   const MAX_ITEMS = 50;
   const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -18,7 +17,7 @@
     return null;
   }
 
-  // What is new for `playerId` in `next` compared with `previous`. Returns [{ key, kind, sound, matchId, values }].
+  // What is new for `playerId` in `next` compared with `previous`. Returns [{ key, kind, priority, matchId, values }].
   // Nothing is reported when there is no previous state of the same tournament (opening or switching tournament is not news).
   function detect(previous, next, playerId) {
     if (!playerId || !previous || !next || previous.id !== next.id) return [];
@@ -31,35 +30,35 @@
       const values = { court: match.courtName ?? "", teams: `${match.teamOne?.displayName ?? ""} – ${match.teamTwo?.displayName ?? ""}` };
 
       if (match.state === "playing" && old?.state !== "playing") {
-        updates.push({ key: `ready:${match.id}`, kind: "matchReady", sound: 1, matchId: match.id, values });
+        updates.push({ key: `ready:${match.id}`, kind: "matchReady", priority: 1, matchId: match.id, values });
       }
       if (match.state === "awaitingApproval" && match.approval?.status === "pending") {
         const approvals = match.approval.approvals ?? [];
         const mine = approvals.some((entry) => entry.teamIndex === teamIndex);
         const wasPending = old?.state === "awaitingApproval" && old.approval?.status === "pending" && old.approval?.submittedAt === match.approval.submittedAt;
         if (!mine && !wasPending) {
-          updates.push({ key: `approval:${match.id}:${match.approval.submittedAt ?? ""}`, kind: "approvalNeeded", sound: 2, matchId: match.id, values });
+          updates.push({ key: `approval:${match.id}:${match.approval.submittedAt ?? ""}`, kind: "approvalNeeded", priority: 2, matchId: match.id, values });
         }
       }
       if (match.state === "awaitingWithdrawalDecision" && match.withdrawal?.status === "pending" && match.withdrawal.teammateId === playerId
         && old?.state !== "awaitingWithdrawalDecision") {
-        updates.push({ key: `withdrawal:${match.id}`, kind: "withdrawalDecision", sound: 2, matchId: match.id, values: { ...values, absent: match.withdrawal.absent?.name ?? "" } });
+        updates.push({ key: `withdrawal:${match.id}`, kind: "withdrawalDecision", priority: 2, matchId: match.id, values: { ...values, absent: match.withdrawal.absent?.name ?? "" } });
       }
       const corrections = match.correctionHistory?.length ?? 0;
       if (corrections > (old?.correctionHistory?.length ?? 0)) {
-        updates.push({ key: `corrected:${match.id}:${corrections}`, kind: "resultCorrected", sound: 2, matchId: match.id, values });
+        updates.push({ key: `corrected:${match.id}:${corrections}`, kind: "resultCorrected", priority: 2, matchId: match.id, values });
       }
     }
     if (next.status === "Avsluttet" && previous.status !== "Avsluttet") {
-      updates.push({ key: `finished:${next.id}`, kind: "tournamentFinished", sound: 2, matchId: null, values: {} });
+      updates.push({ key: `finished:${next.id}`, kind: "tournamentFinished", priority: 2, matchId: null, values: {} });
     }
     return updates;
   }
 
-  // The sound to play for a batch of updates: notification1 wins over notification2, nothing when there is nothing.
-  function soundFor(updates) {
+  // The vibration pattern for a batch of updates: 1 (your match is ready) wins over 2, nothing when there is nothing.
+  function vibrationFor(updates) {
     if (!updates.length) return null;
-    return updates.some((update) => update.sound === 1) ? 1 : 2;
+    return updates.some((update) => update.priority === 1) ? 1 : 2;
   }
 
   function createStore({ storage, now = () => Date.now() } = {}) {
@@ -130,14 +129,6 @@
     return { add, list, unreadCount, markRead, markAllRead, prune };
   }
 
-  function soundsEnabled(storage) {
-    try { return storage?.getItem(SOUND_KEY) !== "off"; } catch { return true; }
-  }
-
-  function setSoundsEnabled(storage, enabled) {
-    try { storage?.setItem(SOUND_KEY, enabled ? "on" : "off"); } catch { /* ignore */ }
-  }
-
   function vibrationEnabled(storage) {
     try { return storage?.getItem(VIBRATION_KEY) !== "off"; } catch { return true; }
   }
@@ -151,58 +142,11 @@
     return typeof navigatorRef?.vibrate === "function";
   }
 
-  // notification1 (your match is ready) is a double pulse, notification2 a single short one.
+  // Pattern 1 (your match is ready) is a double pulse, pattern 2 a single short one.
   function vibrate(number, navigatorRef = global.navigator) {
     if (!vibrationSupported(navigatorRef) || ![1, 2].includes(number)) return false;
     try { return Boolean(navigatorRef.vibrate(number === 1 ? [200, 100, 200] : [120])); } catch { return false; }
   }
 
-  // iOS plays sound only from an audio element that a tap has started once. A new Audio made when a live update
-  // arrived was refused without an error, so phones showed the notification but stayed silent (field test 2026-10-04;
-  // the Mac allows it). The two elements are made once, unlocked silently on the first tap (unlockSounds) and reused.
-  // An <audio> element also plays with the ring switch on silent, unlike Web Audio.
-  let soundCache = { AudioClass: null, elements: {} };
-  function soundElement(number, AudioClass, baseUrl) {
-    if (soundCache.AudioClass !== AudioClass) soundCache = { AudioClass, elements: {} };
-    if (!soundCache.elements[number]) {
-      const probe = new AudioClass();
-      const extension = probe.canPlayType?.("audio/mpeg") ? "mp3" : "m4a";
-      const audio = new AudioClass(`${baseUrl}notification${number}.${extension}`);
-      audio.preload = "auto";
-      soundCache.elements[number] = audio;
-    }
-    return soundCache.elements[number];
-  }
-
-  // Call from a tap: starts both sounds muted and stops them at once, so later plays from live updates are allowed.
-  function unlockSounds({ AudioClass = global.Audio, baseUrl = "assets/sounds/" } = {}) {
-    if (!AudioClass) return false;
-    for (const number of [1, 2]) {
-      try {
-        const audio = soundElement(number, AudioClass, baseUrl);
-        audio.muted = true;
-        const reset = () => { audio.pause?.(); try { audio.currentTime = 0; } catch { /* not loaded yet */ } audio.muted = false; };
-        const started = audio.play?.();
-        if (started?.then) started.then(reset, () => { audio.muted = false; });
-        else reset();
-      } catch { /* no audio on this device */ }
-    }
-    return true;
-  }
-
-  // Plays one of the two sounds. Browsers may refuse until the person has interacted with the page: that is not an error.
-  function playSound(number, { AudioClass = global.Audio, baseUrl = "assets/sounds/" } = {}) {
-    if (!AudioClass || ![1, 2].includes(number)) return false;
-    try {
-      const audio = soundElement(number, AudioClass, baseUrl);
-      audio.muted = false;
-      audio.volume = 0.8;
-      try { audio.currentTime = 0; } catch { /* not loaded yet */ }
-      const played = audio.play?.();
-      played?.catch?.(() => {});
-      return true;
-    } catch { return false; }
-  }
-
-  global.PadelstarNotificationCenter = { detect, soundFor, createStore, soundsEnabled, setSoundsEnabled, vibrationEnabled, setVibrationEnabled, vibrationSupported, vibrate, playSound, unlockSounds, STORAGE_KEY, SOUND_KEY, VIBRATION_KEY, MAX_ITEMS, MAX_AGE_MS };
+  global.PadelstarNotificationCenter = { detect, vibrationFor, createStore, vibrationEnabled, setVibrationEnabled, vibrationSupported, vibrate, STORAGE_KEY, VIBRATION_KEY, MAX_ITEMS, MAX_AGE_MS };
 })(window);
