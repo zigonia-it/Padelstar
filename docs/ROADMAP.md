@@ -603,7 +603,7 @@ Not decided / later: push categories (Phase 18), Cup time overrides (Phase 14), 
 
 ## Additional tournaments v.1.2
 - [ ] Additional tournament modes: Americano, Team-Americano, Mexicano, Team-Mexicano, King of the Court, Groups+Playoffs are already exposed in the UI with client-side scheduling logic (`app/tournament-modes.js`) but have no server-side round-advancement RPC (`admin_advance_round_impl` only accepts `roundRobin`) — deactivated in the UI until each is server-wired and verified end-to-end like Round Robin; re-enable one at a time as they pass verification.
-- [ ] Liga tournament format (league setup, match generation, table/ranking, final standings) — pushed out of the v1.0 Monday/RC critical scope per explicit developer decision; Round Robin and Cup remain the v1.0 formats. Revisit once both are fully stable and the Priority 1 phases above are done.
+- [ ] ~~Liga tournament format~~ — moved to v2.0 (League & Social), see `docs/future_development/PADELSTAR – Version 2.0 League & Social Scope.md` and `docs/future_development/league-v2-implementation-plan.md` (developer, 2026-10-05).
 - [ ] Redesign the in-tournament admin UI ("Styring" tab): contextual visibility — hide/collapse settings that can't be changed given the tournament's current state (e.g. court-count/format settings once active) — before considering a fuller redesign.
 - [ ] Player-first UI: "Min neste kamp" (my next match) and "Mine kamper" (my matches) surfaced more prominently than the full tournament overview.
 
@@ -611,7 +611,7 @@ Not decided / later: push categories (Phase 18), Cup time overrides (Phase 14), 
 - [ ] PDF export of standings/results.
 - [ ] Tournament Assistant: rule-based (non-AI) live-insights engine surfacing things like a stuck court, a missing result, playtime imbalance, repeated partner pairings, plus an estimated finish time.
 - [ ] Rating/Elo system as a separate post-hoc calculation layer over raw match results (not mixed into stored scores, so the algorithm can change without rewriting history).
-- [ ] Leagues & seasons: group multiple tournaments into a season with combined points/rating/participation/wins/final standing.
+- [ ] ~~Leagues & seasons~~ — superseded by the v2.0 League scope (season-based individual 2v2 league), see `docs/future_development/league-v2-implementation-plan.md`.
 - [ ] Club/venue entity: group recurring tournaments under a venue for regular groups.
 - [ ] Recurring league automation: auto-generate next week's tournament from a saved template + last week's roster.
 
@@ -649,7 +649,9 @@ Not decided / later: push categories (Phase 18), Cup time overrides (Phase 14), 
 
 ---
 
-# PRIORITY 4 — v2.0.0 Social
+# PRIORITY 4 — v2.0.0 League & Social
+
+- [ ] League v2.0: season-based individual 2v2 league with dynamic, fairness-balanced rounds, timed points, golden point, serve rotation, referees and individual standings. Scope: `docs/future_development/PADELSTAR – Version 2.0 League & Social Scope.md`; build plan: `docs/future_development/league-v2-implementation-plan.md`.
 
 - [ ] Player dashboard: a personal hub beyond a stats page — next match at a glance, avatar/profile picture change, a Discord-style status message; becomes the home the rest of this section attaches to.
 - [ ] Friend requests.
