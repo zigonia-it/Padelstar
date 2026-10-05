@@ -23,8 +23,8 @@ window.PadelstarTournamentRuntime = (() => {
 
     function createScheduledRound(roundPlan, roundNumber) {
       const currentState = state();
-      const plannedMatchups = roundPlan.matchups?.length
-        ? (window.PadelstarTournamentScheduler?.orderMatchups(roundPlan.teams, currentState.schedulerHistory) ?? roundPlan.matchups)
+      const plannedMatchups = roundPlan.allTeamsMeet || roundPlan.matchups?.length
+        ? (window.PadelstarTournamentScheduler?.orderMatchups(roundPlan.teams, currentState.schedulerHistory) ?? window.PadelstarTournamentEngine.roundPlanMatchups(roundPlan))
         : [];
       const queuedMatchups = plannedMatchups.length && window.PadelstarTournamentScheduler
         ? window.PadelstarTournamentScheduler.createQueue(plannedMatchups, Math.max(1, currentState.courts.length)).flat()

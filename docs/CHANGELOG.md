@@ -6,6 +6,10 @@ Only verified completed changes belong here.
 
 ## Unreleased
 
+### Fixed
+
+- "Opprett turnering" did nothing for a large Round Robin (reported with 40 players): the saved match plan copied every player into every team pairing (about 10 MB for 40 players), the browser refused to store it and the create step stopped silently. The plan now keeps the teams and rebuilds the pairings when a round starts (about 0.5 MB for 40 players), older saved plans are slimmed when loaded, the device's tournament list drops its oldest entries when the browser storage is full, and a failed save on the device no longer stops create, start or scoring. Verified in Chromium: the reported setup (Round Robin, 1 court, 40 players, points to 1, 1 minute) now opens the lobby.
+
 ## 1.0.0
 
 Released 2026-10-05 on the developer's explicit instruction ("merge this into the live webapp and publish as version 1.0.0") after reviewing the redesign on the Vercel preview (PR #41). Verified: the automated test suite, the colour audit (no colour literals outside `styles/tokens.css`), the asset-version check, a contrast audit with 0 failures on seven screens in both themes, and Playwright browser flows (home, join, create wizard, lobby, Styring, Kamper, Tabell, player view, scorepad, TV board, account, guide/privacy popups) at 390, 768 and 1440 px in Daylight and Floodlight with no console errors, failed requests or horizontal overflow.

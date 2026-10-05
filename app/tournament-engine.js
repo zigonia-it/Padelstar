@@ -3,11 +3,25 @@ window.PadelstarTournamentEngine = (() => {
     const activePlayers = players.filter((player) => player.active && player.availability !== "away");
     if (format === "cup") return [];
     if (window.PadelstarTournamentModes && format !== "roundRobin") {
-      return window.PadelstarTournamentModes.build(players, format, { roundRobin: (roster) => roster.length < 4 ? generateSinglesRounds(roster) : generatePartnerRounds(roster), standings: options.standings ?? [], history: options.history ?? {} });
+      return window.PadelstarTournamentModes.build(players, format, { roundRobin: (roster) => roster.length < 4 ? generateSinglesRounds(roster) : generatePartnerRounds(roster), standings: options.standings ?? [], history: options.history ?? {} }).map(compactRoundPlan);
     }
-    return activePlayers.length < 4
+    return (activePlayers.length < 4
       ? generateSinglesRounds(activePlayers)
-      : generatePartnerRounds(activePlayers);
+      : generatePartnerRounds(activePlayers)).map(compactRoundPlan);
+  }
+
+  // A saved plan keeps only a flag for "every team meets every other team": the matchups themselves are
+  // rebuilt from the teams when the round starts. Storing them copied every player into every pairing,
+  // which for 40 players was close to 10 MB and overflowed localStorage, so creating the tournament failed.
+  function compactRoundPlan(roundPlan) {
+    if (!roundPlan || !Array.isArray(roundPlan.matchups)) return roundPlan;
+    const { matchups, ...plan } = roundPlan;
+    return { ...plan, allTeamsMeet: matchups.length > 0 };
+  }
+
+  function roundPlanMatchups(roundPlan) {
+    if (Array.isArray(roundPlan?.matchups)) return roundPlan.matchups;
+    return roundPlan?.allTeamsMeet ? createTeamMatchups(roundPlan.teams ?? []) : [];
   }
 
   function generateSinglesRounds(players) {
@@ -109,6 +123,8 @@ window.PadelstarTournamentEngine = (() => {
 
   return {
     buildSchedule,
+    compactRoundPlan,
+    roundPlanMatchups,
     generateSinglesRounds,
     generatePartnerRounds,
     generateRoundMatches,

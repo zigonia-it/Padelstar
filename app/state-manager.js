@@ -14,6 +14,9 @@ window.PadelstarState = (() => {
     nextState.players ??= [];
     nextState.courts ??= structuredClone(defaults.courts);
     nextState.schedule ??= helpers.buildSchedule(nextState.players, nextState.settings.format);
+    if (Array.isArray(nextState.schedule) && window.PadelstarTournamentEngine?.compactRoundPlan) {
+      nextState.schedule = nextState.schedule.map(window.PadelstarTournamentEngine.compactRoundPlan);
+    }
     nextState.schedulerHistory = {
       partners: {},
       opponents: {},

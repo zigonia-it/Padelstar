@@ -1438,13 +1438,18 @@ function persistLocalState() {
     persistence.removeKeys([storageKey, recoveryStorageKey]);
     return;
   }
-  tournamentLibrary.upsert(state);
-  persistence.writeTournamentState({
-    state,
-    stateKey: storageKey,
-    recoveryKey: recoveryStorageKey,
-    isValidState: isValidTournamentState,
-  });
+  try {
+    tournamentLibrary.upsert(state);
+    persistence.writeTournamentState({
+      state,
+      stateKey: storageKey,
+      recoveryKey: recoveryStorageKey,
+      isValidState: isValidTournamentState,
+    });
+  } catch (error) {
+    // A full browser storage must not stop create, start or scoring: the server copy still saves.
+    console.warn("Padelstar could not save the tournament on this device", error);
+  }
 }
 
 function openSavedTournament(tournamentId) {
