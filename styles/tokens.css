@@ -181,3 +181,46 @@
   --tap-court: 64px;
   --content-max: 560px;
 }
+
+/* =========================================================
+   MOTION TOKENS - timing and easing for every transition and animation (spec: docs/technical/motion.md)
+   ---------------------------------------------------------
+   Calm off court, quick and clear on court: motion confirms what a tap did or shows where something went.
+   Nothing loops except a live indicator, nothing blocks input, and only transform and opacity are animated.
+   Same in both themes. Under prefers-reduced-motion the distances and scales collapse to nothing, so any rule
+   built from these tokens becomes a short crossfade without extra code; durations stay so state changes still read.
+   ========================================================= */
+:root {
+  /* durations */
+  --motion-instant:   80ms;   /* press feedback: a button or point pad going down */
+  --motion-quick:     140ms;  /* hover, toggles, colour and border changes, tooltips, exits */
+  --motion-base:      220ms;  /* a score digit ticking, a card or toast entering, a view entering */
+  --motion-slow:      360ms;  /* rows reordering in standings, sheets and dialogs, view transitions */
+  --motion-celebrate: 640ms;  /* the one win moment when a match or tournament finishes */
+  --motion-pulse:     1.6s;   /* the live dot and the timer warning; the only looping motion */
+  --motion-stagger:   40ms;   /* delay between items entering one after another (cap the chain at 6 items) */
+
+  /* easings */
+  --ease-standard: cubic-bezier(.2, 0, 0, 1);       /* things that move from A to B on screen (reorder, slide) */
+  --ease-out:      cubic-bezier(.16, 1, .3, 1);     /* things arriving: enter, a new score settling */
+  --ease-in:       cubic-bezier(.4, 0, 1, 1);       /* things leaving: exit, dismiss */
+  --ease-pop:      cubic-bezier(.34, 1.56, .64, 1); /* a small overshoot, only for the score tick and the win moment */
+
+  /* distances and scales */
+  --motion-distance-sm: 6px;   /* a view or card settling in */
+  --motion-distance-md: 16px;  /* a toast or sheet arriving */
+  --motion-scale-press: .97;   /* a pressed button or point pad */
+  --motion-scale-pop:   1.12;  /* a score digit's peak as it ticks */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-celebrate: var(--motion-base);
+    --motion-stagger:   0ms;
+    --ease-pop:         var(--ease-out);
+    --motion-distance-sm: 0px;
+    --motion-distance-md: 0px;
+    --motion-scale-press: 1;
+    --motion-scale-pop:   1;
+  }
+}

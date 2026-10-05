@@ -12,5 +12,6 @@ Expected active files may include:
 - `operations.md`
 - `feedback-setup.md` (feedback form and invitation emails)
 - `captcha-setup.md` (the "I'm not a robot" check)
+- `motion.md` (motion tokens, reduced motion, where animation goes)
 
 Codex should read only the technical document relevant to the current blocker/task.
