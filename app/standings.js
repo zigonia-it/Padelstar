@@ -1,5 +1,5 @@
 window.PadelstarStandings = (() => {
-  function create({ accentStyle, appendEmptyText, avatarMarkup, document, elements, escapeHtml, leaderboardEntries, t }) {
+  function create({ accentStyle, appendEmptyText, avatarMarkup, document, elements, escapeHtml, getSelectedPlayerId, leaderboardEntries, t }) {
     function renderStandings(matches) {
       renderStandingsList(elements.playerStandingsList, matches);
       if (elements.ownerStandingsList) renderStandingsList(elements.ownerStandingsList, matches);
@@ -15,6 +15,8 @@ window.PadelstarStandings = (() => {
       entries.forEach((entry, index) => {
         const item = document.createElement("li");
         item.setAttribute("style", accentStyle(entry.player.accent));
+        // Your own row carries the ball wash (design system: Standings table).
+        if (entry.player.id && entry.player.id === getSelectedPlayerId?.()) item.classList.add("is-me");
         item.innerHTML = `
       <span class="player-list-name">
         <span class="placement-badge">${index + 1}</span>

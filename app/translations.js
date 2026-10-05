@@ -1325,18 +1325,6 @@ for (const [language, values] of Object.entries({
 })) {
   Object.assign(padelstarTranslations[language], values);
 }
-for (const [language, values] of Object.entries({
-  nb: { "footer.beta": "Denne siden er under Betautvikling" },
-  nn: { "footer.beta": "Denne sida er under betautvikling" },
-  en: { "footer.beta": "This site is under beta development" },
-  es: { "footer.beta": "Este sitio está en desarrollo beta" },
-  de: { "footer.beta": "Diese Seite befindet sich in der Beta-Entwicklung" },
-  fr: { "footer.beta": "Ce site est en développement bêta" },
-  sv: { "footer.beta": "Den här sidan är under betautveckling" },
-  da: { "footer.beta": "Denne side er under betaudvikling" },
-})) {
-  Object.assign(padelstarTranslations[language], values);
-}
 Object.assign(padelstarTranslations.nb, { "footer.linksAria": "Bruksanvisning og personvern" });
 // English strings for surfaces that previously fell back to Norwegian.
 Object.assign(padelstarTranslations.en, {
@@ -1855,16 +1843,14 @@ Object.assign(padelstarTranslations.en, {
 // Notification center (Phase 18).
 Object.assign(padelstarTranslations.nb, {
   "notifications.settings.eyebrow": "Denne enheten",
-  "notifications.settings.title": "Varsler og lyd",
+  "notifications.settings.title": "Varsler",
   "notifications.settings.hint": "Velg hva som skjer når noe nytt skjer i turneringen din, for eksempel når kampen din er klar.",
   "expiry.notice": "Turneringen har vært inaktiv i over 30 dager og er markert som utløpt. Den slettes {date} hvis du ikke fortsetter.", "expiry.resume": "Fortsett turneringen", "expiry.resumed": "Turneringen er aktiv igjen.",
   "notifications.push.title": "Push-varsler", "notifications.push.hint": "Velg hvilke meldinger du vil ha når appen er lukket. Valget gjelder denne enheten, og serveren følger det før meldingen sendes.",
   "notifications.push.match": "Kampen min er klar, ny runde", "notifications.push.result": "Resultater som er rettet", "notifications.push.withdrawal": "Lagkameraten min har trukket seg og jeg må velge", "notifications.push.onlyMine": "Bare mine egne kamper (ny runde varsles alltid)",
   "notifications.withdrawalTitle": "Lagkameraten din har trukket seg", "notifications.withdrawalBody": "Velg om du vil spille alene eller gi walkover.",
-  "notifications.settings.sound": "Lyd ved varsler",
   "notifications.settings.vibration": "Vibrasjon ved varsler",
   "notifications.settings.vibrationUnsupported": "Vibrasjon støttes ikke på denne enheten.",
-  "notifications.settings.test": "Test lyd og vibrasjon",
   "nav.systemAdmin": "System",
   "theme.label": "Fargetema",
   "theme.light": "Lys",
@@ -1900,7 +1886,6 @@ Object.assign(padelstarTranslations.nb, {
   "notifications.center.open": "Åpne varsler",
   "notifications.center.openUnread": "Åpne varsler ({count} uleste)",
   "notifications.center.empty": "Ingen varsler ennå.",
-  "notifications.center.sound": "Lyd",
   "notifications.center.markAllRead": "Marker alle som lest",
   "notifications.center.matchReady.title": "Kampen din er klar",
   "notifications.center.matchReady.body": "Gå til {court}. {teams}",
@@ -1915,16 +1900,14 @@ Object.assign(padelstarTranslations.nb, {
 });
 Object.assign(padelstarTranslations.en, {
   "notifications.settings.eyebrow": "This device",
-  "notifications.settings.title": "Notifications and sound",
+  "notifications.settings.title": "Notifications",
   "notifications.settings.hint": "Choose what happens when something new happens in your tournament, for example when your match is ready.",
   "expiry.notice": "This tournament has been inactive for over 30 days and is marked as expired. It will be deleted on {date} unless you continue.", "expiry.resume": "Continue the tournament", "expiry.resumed": "The tournament is active again.",
   "notifications.push.title": "Push notifications", "notifications.push.hint": "Choose which messages you want when the app is closed. The choice applies to this device, and the server follows it before a message is sent.",
   "notifications.push.match": "My match is ready, a new round", "notifications.push.result": "Results that were corrected", "notifications.push.withdrawal": "My teammate withdrew and I must choose", "notifications.push.onlyMine": "Only my own matches (a new round is always announced)",
   "notifications.withdrawalTitle": "Your teammate has withdrawn", "notifications.withdrawalBody": "Choose whether to play alone or give a walkover.",
-  "notifications.settings.sound": "Sound for notifications",
   "notifications.settings.vibration": "Vibration for notifications",
   "notifications.settings.vibrationUnsupported": "Vibration is not supported on this device.",
-  "notifications.settings.test": "Test sound and vibration",
   "nav.systemAdmin": "System",
   "theme.label": "Colour theme",
   "theme.light": "Light",
@@ -1960,7 +1943,6 @@ Object.assign(padelstarTranslations.en, {
   "notifications.center.open": "Open notifications",
   "notifications.center.openUnread": "Open notifications ({count} unread)",
   "notifications.center.empty": "No notifications yet.",
-  "notifications.center.sound": "Sound",
   "notifications.center.markAllRead": "Mark all as read",
   "notifications.center.matchReady.title": "Your match is ready",
   "notifications.center.matchReady.body": "Go to {court}. {teams}",
@@ -2053,6 +2035,22 @@ Object.assign(padelstarTranslations.en, {
   "round.autoStarted": "Round {finished} is complete. Round {round} has started.",
   "round.allRoundsFinished": "All rounds have been played. You can finish the tournament.",
 });
+Object.assign(padelstarTranslations.nb, {"home.joinEyebrow": "Bli med · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Lim inn koden eller lenken du fikk fra arrangøren.", "home.joinInvalid": "Skriv inn den åtte tegn lange koden fra arrangøren, eller lim inn lenken.", "home.heroAlt": "Padelspiller klar ved grunnlinjen på en blå bane"});
+Object.assign(padelstarTranslations.nn, {"home.joinEyebrow": "Bli med · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Lim inn koden eller lenkja du fekk frå arrangøren.", "home.joinInvalid": "Skriv inn den åtte teikn lange koden frå arrangøren, eller lim inn lenkja.", "home.heroAlt": "Padelspelar klar ved grunnlinja på ei blå bane"});
+Object.assign(padelstarTranslations.en, {"home.joinEyebrow": "Join · tournament code", "home.joinPlaceholder": "CODE", "home.joinHint": "Paste the code or link you got from the organiser.", "home.joinInvalid": "Enter the eight-character code from the organiser, or paste the link.", "home.heroAlt": "Padel player ready at the baseline on a blue court"});
+Object.assign(padelstarTranslations.es, {"home.joinEyebrow": "Unirse · código del torneo", "home.joinPlaceholder": "CÓDIGO", "home.joinHint": "Pega el código o el enlace que te dio el organizador.", "home.joinInvalid": "Introduce el código de ocho caracteres del organizador o pega el enlace.", "home.heroAlt": "Jugador de pádel preparado en la línea de fondo de una pista azul"});
+Object.assign(padelstarTranslations.de, {"home.joinEyebrow": "Beitreten · Turniercode", "home.joinPlaceholder": "CODE", "home.joinHint": "Füge den Code oder Link vom Veranstalter ein.", "home.joinInvalid": "Gib den achtstelligen Code vom Veranstalter ein oder füge den Link ein.", "home.heroAlt": "Padelspieler bereit an der Grundlinie auf einem blauen Platz"});
+Object.assign(padelstarTranslations.fr, {"home.joinEyebrow": "Rejoindre · code du tournoi", "home.joinPlaceholder": "CODE", "home.joinHint": "Colle le code ou le lien reçu de l’organisateur.", "home.joinInvalid": "Saisis le code à huit caractères de l’organisateur ou colle le lien.", "home.heroAlt": "Joueur de padel prêt sur la ligne de fond d’un court bleu"});
+Object.assign(padelstarTranslations.sv, {"home.joinEyebrow": "Gå med · turneringskod", "home.joinPlaceholder": "KOD", "home.joinHint": "Klistra in koden eller länken du fick av arrangören.", "home.joinInvalid": "Skriv in den åtta tecken långa koden från arrangören eller klistra in länken.", "home.heroAlt": "Padelspelare redo vid baslinjen på en blå bana"});
+Object.assign(padelstarTranslations.da, {"home.joinEyebrow": "Deltag · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Indsæt koden eller linket, du fik fra arrangøren.", "home.joinInvalid": "Skriv den otte tegn lange kode fra arrangøren, eller indsæt linket.", "home.heroAlt": "Padelspiller klar ved baglinjen på en blå bane"});
+Object.assign(padelstarTranslations.nb, {"player.yourMatch": "Din kamp", "actions.keepScore": "Før poeng", "common.live": "Live", "score.tapForPoint": "Trykk for poeng", "nav.today": "I dag", "player.tabsAria": "Turnering"});
+Object.assign(padelstarTranslations.nn, {"player.yourMatch": "Kampen din", "actions.keepScore": "Før poeng", "common.live": "Live", "score.tapForPoint": "Trykk for poeng", "nav.today": "I dag", "player.tabsAria": "Turnering"});
+Object.assign(padelstarTranslations.en, {"player.yourMatch": "Your match", "actions.keepScore": "Keep score", "common.live": "Live", "score.tapForPoint": "Tap for a point", "nav.today": "Today", "player.tabsAria": "Tournament"});
+Object.assign(padelstarTranslations.es, {"player.yourMatch": "Tu partido", "actions.keepScore": "Anotar puntos", "common.live": "En vivo", "score.tapForPoint": "Toca para sumar", "nav.today": "Hoy", "player.tabsAria": "Torneo"});
+Object.assign(padelstarTranslations.de, {"player.yourMatch": "Dein Match", "actions.keepScore": "Punkte zählen", "common.live": "Live", "score.tapForPoint": "Tippen für Punkt", "nav.today": "Heute", "player.tabsAria": "Turnier"});
+Object.assign(padelstarTranslations.fr, {"player.yourMatch": "Ton match", "actions.keepScore": "Compter les points", "common.live": "En direct", "score.tapForPoint": "Touchez pour un point", "nav.today": "Aujourd'hui", "player.tabsAria": "Tournoi"});
+Object.assign(padelstarTranslations.sv, {"player.yourMatch": "Din match", "actions.keepScore": "För poäng", "common.live": "Live", "score.tapForPoint": "Tryck för poäng", "nav.today": "I dag", "player.tabsAria": "Turnering"});
+Object.assign(padelstarTranslations.da, {"player.yourMatch": "Din kamp", "actions.keepScore": "Før point", "common.live": "Live", "score.tapForPoint": "Tryk for point", "nav.today": "I dag", "player.tabsAria": "Turnering"});
 window.PadelstarTranslations = padelstarTranslations;
 window.PadelstarI18n = {
   fallbackLanguage,

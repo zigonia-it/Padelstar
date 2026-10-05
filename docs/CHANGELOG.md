@@ -6,6 +6,30 @@ Only verified completed changes belong here.
 
 ## Unreleased
 
+## 1.0.0
+
+Released 2026-10-05 on the developer's explicit instruction ("merge this into the live webapp and publish as version 1.0.0") after reviewing the redesign on the Vercel preview (PR #41). Verified: the automated test suite, the colour audit (no colour literals outside `styles/tokens.css`), the asset-version check, a contrast audit with 0 failures on seven screens in both themes, and Playwright browser flows (home, join, create wizard, lobby, Styring, Kamper, Tabell, player view, scorepad, TV board, account, guide/privacy popups) at 390, 768 and 1440 px in Daylight and Floodlight with no console errors, failed requests or horizontal overflow.
+
+### Changed
+- **The Padelstar 1.0 redesign** from the Claude Design system and live prototype: the new logo (wordmark + ball, one image per theme) and app icons, Daylight and Floodlight themes on one token set (`styles/tokens.css`, legacy names aliased), new fonts, the floating nav pill, a photo home with a join card that accepts a code or a pasted link (`app/home-join.js`), Unsplash photography on home and the create/join pages, an ink bottom tab bar for the workspace, flat cards and pill buttons (`styles/redesign.css`, `styles/tv-redesign.css`, loaded last).
+- **Player view**: your match is a hero card (your team, the big score, the opponents) with one "Før poeng" button that opens the scorepad; an I dag / Kamper / Tabell tab bar on phones (`app/player-tabs.js`).
+- **Scorepad**: close and undo in the top bar, two "Trykk for poeng" halves (stacked on phones), the facts in one row.
+- **Standings** as a table: the leader's rank on the ball, your own row highlighted.
+- **TV board**: courts left, table right, the leading score bright and the other muted, heavier section headings and tags, upcoming matches no longer squashed.
+- **Players have no colour or avatar any more** (developer's decision): names are plain ink everywhere; the colour picker and avatar preview are hidden and the saved accent stays in the data.
+- **The theme switch** shows only the sun and the moon (the words stay for screen readers); the version sits in a ball-green pill beside the logo.
+- **The app icon's ball** nearly fills the icon (maskable icon keeps the safe zone).
+- **No in-app notification sounds** (developer's decision): the browser's own notifications carry the device's sound; the bell, the toast and vibration stay. The sound switches, the test button and `assets/sounds/` are gone.
+- The footer no longer says the site is in beta.
+
+### Fixed
+- **The guide and privacy pages opened as full pages instead of the popup on the live site.** The Content-Security-Policy allowed frames only from Cloudflare Turnstile (`frame-src https://challenges.cloudflare.com`), so the popup's frame of our own page was blocked and the link fell back to a normal page. `frame-src` now also allows `'self'`. Verified under the production headers locally (blocked before, popup after).
+- The logo box had the old square icon's 52–60 px width, so the version label was drawn under the wordmark.
+
+### Known
+- Login on Vercel preview addresses fails at the "I'm not a robot" check: the Turnstile widget allows only padelstar.app. Production is unaffected.
+- `docs/ROADMAP.md` Phase 30 lists the Definition-of-Done items that were still open at release.
+
 ## 0.17.3
 
 A Round Robin round starts the next one by itself (developer's decision 2026-10-05). Verified: 576 automated tests, PGlite `auto-advance-round` 18/18, the migration applied live, and a 4-player Round Robin played through on the real database.

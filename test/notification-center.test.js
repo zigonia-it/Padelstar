@@ -35,9 +35,9 @@ test("my match becoming ready is notification 1, other matches are ignored", () 
   const after = tournament([match("m1", "playing"), match("m2", "playing", { teamOne: team("x", "y") })]);
   const updates = center.detect(before, after, ME);
   assert.deepEqual(kinds(updates), ["matchReady"]);
-  assert.equal(updates[0].sound, 1);
+  assert.equal(updates[0].priority, 1);
   assert.equal(updates[0].values.court, "Bane 1");
-  assert.equal(center.soundFor(updates), 1);
+  assert.equal(center.vibrationFor(updates), 1);
 });
 
 test("a result waiting for my team's approval is notification 2, once per submission", () => {
@@ -45,7 +45,7 @@ test("a result waiting for my team's approval is notification 2, once per submis
   const pending = tournament([match("m1", "awaitingApproval", { approval: { status: "pending", submittedAt: "t1", approvals: [{ teamIndex: 1 }] } })]);
   const first = center.detect(before, pending, ME);
   assert.deepEqual(kinds(first), ["approvalNeeded"]);
-  assert.equal(first[0].sound, 2);
+  assert.equal(first[0].priority, 2);
   assert.deepEqual(center.detect(pending, pending, ME), [], "the same submission is not announced again");
   const resubmitted = tournament([match("m1", "awaitingApproval", { approval: { status: "pending", submittedAt: "t2", approvals: [{ teamIndex: 1 }] } })]);
   assert.deepEqual(kinds(center.detect(pending, resubmitted, ME)), ["approvalNeeded"], "a corrected proposal is new");
@@ -68,9 +68,9 @@ test("a withdrawn teammate asks me to decide; a correction and the end are annou
   const ended = { ...finished, status: "Avsluttet" };
   const end = center.detect(finished, ended, ME);
   assert.deepEqual(kinds(end), ["tournamentFinished"]);
-  assert.equal(center.soundFor([...decide, ...end]), 2);
-  assert.equal(center.soundFor([]), null);
-  assert.equal(center.soundFor([{ sound: 2 }, { sound: 1 }]), 1, "notification 1 wins when both occur");
+  assert.equal(center.vibrationFor([...decide, ...end]), 2);
+  assert.equal(center.vibrationFor([]), null);
+  assert.equal(center.vibrationFor([{ priority: 2 }, { priority: 1 }]), 1, "pattern 1 wins when both occur");
 });
 
 function storage() {
@@ -81,7 +81,7 @@ function storage() {
 test("the store keeps new items, ignores duplicates, and tracks read/unread per item", () => {
   let now = 1_000;
   const store = center.createStore({ storage: storage(), now: () => now });
-  const update = (key) => ({ key, kind: "matchReady", sound: 1, matchId: "m1", values: {} });
+  const update = (key) => ({ key, kind: "matchReady", priority: 1, matchId: "m1", values: {} });
   const fresh = store.add("t1", ME, [update("a"), update("b"), update("a")]);
   assert.equal(fresh.length, 2, "the duplicate key is dropped");
   assert.equal(store.add("t1", ME, [update("a")]).length, 0, "already stored");
@@ -101,7 +101,7 @@ test("cleanup drops old items and items of other tournaments or players, and the
   let now = 1_000_000;
   const mem = storage();
   const store = center.createStore({ storage: mem, now: () => now });
-  const update = (key) => ({ key, kind: "matchReady", sound: 1, matchId: null, values: {} });
+  const update = (key) => ({ key, kind: "matchReady", priority: 1, matchId: null, values: {} });
   store.add("t1", ME, [update("old")]);
   now += center.MAX_AGE_MS + 1;
   store.add("t1", ME, [update("fresh")]);
@@ -115,53 +115,10 @@ test("cleanup drops old items and items of other tournaments or players, and the
   assert.doesNotThrow(() => center.createStore({ storage: { getItem() { throw new Error("blocked"); }, setItem() { throw new Error("blocked"); } } }).add("t1", ME, [update("x")]));
 });
 
-test("sounds: default on, can be switched off, and each number maps to its file", () => {
-  const mem = storage();
-  assert.equal(center.soundsEnabled(mem), true);
-  center.setSoundsEnabled(mem, false);
-  assert.equal(center.soundsEnabled(mem), false);
-  center.setSoundsEnabled(mem, true);
-  assert.equal(center.soundsEnabled(mem), true);
-  const played = [];
-  class FakeAudio {
-    constructor(src) { this.src = src; if (src) played.push(src); }
-    canPlayType(type) { return type === "audio/mpeg" ? "maybe" : ""; }
-    play() { return Promise.reject(new Error("autoplay blocked")); }
-  }
-  assert.equal(center.playSound(1, { AudioClass: FakeAudio }), true);
-  assert.equal(center.playSound(2, { AudioClass: FakeAudio }), true);
-  assert.equal(center.playSound(3, { AudioClass: FakeAudio }), false);
-  assert.deepEqual(played, ["assets/sounds/notification1.mp3", "assets/sounds/notification2.mp3"]);
-  class NoMp3 extends FakeAudio { canPlayType() { return ""; } }
-  played.length = 0;
-  center.playSound(1, { AudioClass: NoMp3 });
-  assert.deepEqual(played, ["assets/sounds/notification1.m4a"], "falls back to AAC where MP3 is unsupported");
-});
-
-test("sounds are reused and unlocked by a tap, so iOS lets a live update play them (field test 2026-10-04)", async () => {
-  const made = [];
-  const calls = [];
-  class TapAudio {
-    constructor(src) { this.src = src; this.muted = false; this.currentTime = 5; if (src) made.push(this); }
-    canPlayType(type) { return type === "audio/mpeg" ? "maybe" : ""; }
-    play() { calls.push(["play", this.src, this.muted]); return Promise.resolve(); }
-    pause() { calls.push(["pause", this.src]); }
-  }
-  assert.equal(center.unlockSounds({ AudioClass: TapAudio }), true);
-  await new Promise((resolve) => setTimeout(resolve, 0));
-  assert.equal(made.length, 2, "one element per sound");
-  assert.ok(calls.some(([action, , muted]) => action === "play" && muted === true), "the unlock plays muted");
-  assert.ok(made.every((audio) => audio.muted === false && audio.currentTime === 0), "and leaves both ready and audible");
-  center.playSound(1, { AudioClass: TapAudio });
-  center.playSound(1, { AudioClass: TapAudio });
-  assert.equal(made.length, 2, "a live update reuses the unlocked element instead of making a new one");
-  assert.deepEqual(calls.filter(([action, , muted]) => action === "play" && muted === false).map(([, src]) => src), ["assets/sounds/notification1.mp3", "assets/sounds/notification1.mp3"]);
-});
-
-test("the two sound files exist", () => {
-  for (const file of ["notification1.mp3", "notification1.m4a", "notification2.mp3", "notification2.m4a"]) {
-    assert.ok(fs.statSync(path.join(__dirname, "..", "assets", "sounds", file)).size > 10_000, file);
-  }
+test("Padelstar plays no sounds of its own: the browser's notifications carry the sound (2026-10-05)", () => {
+  for (const name of ["playSound", "unlockSounds", "soundsEnabled", "setSoundsEnabled"]) assert.equal(center[name], undefined, name);
+  assert.equal(fs.existsSync(path.join(__dirname, "..", "assets", "sounds")), false);
+  assert.doesNotMatch(fs.readFileSync(path.join(__dirname, "..", "service-worker.js"), "utf8"), /assets\/sounds\//);
 });
 
 test("vibration: a preference that defaults on, a double pulse for notification 1, and a quiet no-op where unsupported", () => {

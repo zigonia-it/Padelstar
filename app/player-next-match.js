@@ -14,6 +14,7 @@ window.PadelstarPlayerNextMatch = (() => {
     getState,
     matchContextText,
     notifyPlayerMatch,
+    openLargeScore,
     playerPlacement,
     playerTournamentState,
     scoreSummary,
@@ -130,28 +131,45 @@ window.PadelstarPlayerNextMatch = (() => {
       const ownTeam = isTeamOne ? match.teamOne : match.teamTwo;
       const opponents = isTeamOne ? match.teamTwo : match.teamOne;
       const teammate = ownTeam.players.find((item) => item.id !== player.id);
+      const ownNames = ownTeam.players.map((item) => escapeHtml(item.name)).join(" & ");
       const opponentNames = opponents.players.map((opponent) => escapeHtml(opponent.name)).join(" & ");
-      const statusLabel = playerState.kind === "playing" ? t("player.playingNow") : t("player.nextMatch");
       const matchesAhead = playerState.kind === "waiting" && !match.courtName
         ? matches.filter((otherMatch) => otherMatch.state === "waiting" && (otherMatch.queuePosition ?? 0) < (match.queuePosition ?? 0)).length
         : 0;
       const isPlaying = playerState.kind === "playing";
+      const courtText = escapeHtml(match.courtName ?? t("tournament.courtComing"));
+      // The NextMatch hero (design system): own team first, the current set big, one ball action that opens the scorepad.
+      const ownKey = isTeamOne ? "teamOne" : "teamTwo";
+      const opponentKey = isTeamOne ? "teamTwo" : "teamOne";
+      const ownScore = match.currentSet?.[ownKey] ?? 0;
+      const opponentScore = match.currentSet?.[opponentKey] ?? 0;
 
       elements.playerNextMatch.innerHTML = `
-    <p class="eyebrow">${statusLabel}</p>
-    <h3>${escapeHtml(match.courtName ?? t("tournament.courtComing"))}</h3>
-    ${matchesAhead > 0 ? `<p class="hint">${t("player.matchesAhead", { count: matchesAhead })}</p>` : ""}
-    <div class="player-now-grid">
-      <div><span>${t("player.teammate")}</span><strong>${teammate ? escapeHtml(teammate.name) : t("common.single")}</strong></div>
-      <div><span>${t("player.opponents")}</span><strong>${opponentNames}</strong></div>
+    <div class="next-match-head">
+      <p class="eyebrow">${isPlaying ? t("player.yourMatch") : t("player.nextMatch")} · ${courtText}</p>
+      <span class="ps-tag ps-tag--ball">${isPlaying ? `<span class="next-match-live-dot" aria-hidden="true"></span>${t("common.live")}` : t("common.waiting")}</span>
     </div>
+    ${matchesAhead > 0 ? `<p class="hint">${t("player.matchesAhead", { count: matchesAhead })}</p>` : ""}
+    <div class="next-match-teams">
+      <span class="next-match-team">${ownNames}</span>
+      ${isPlaying
+        ? `<span class="next-match-score" aria-label="${ownScore}–${opponentScore}">${ownScore}<span aria-hidden="true">:</span>${opponentScore}</span>`
+        : `<span class="next-match-vs">${t("tv.versus")}</span>`}
+      <span class="next-match-team next-match-team-opponents">${opponentNames}</span>
+    </div>
+    ${isPlaying ? `<button class="ps-btn ps-btn--ball ps-btn--lg ps-btn--block next-match-keep-score" type="button">${t("actions.keepScore")}</button>` : ""}
     ${isPlaying ? `<p class="hint">${timerMarkup(match)}</p>` : ""}
-    ${isPlaying ? scoreboardTableMarkup(match, true) : ""}
+    ${isPlaying ? scoreboardTableMarkup(match, true) : `
+    <div class="player-now-grid">
+      <div><span>${t("common.court")}</span><strong>${courtText}</strong></div>
+      <div><span>${t("player.teammate")}</span><strong>${teammate ? escapeHtml(teammate.name) : t("common.single")}</strong></div>
+    </div>`}
     <div class="next-match-summary">
       <span>${escapeHtml(matchContextText(match))}</span>
       <span>${scoreSummary(match)}</span>
     </div>`;
 
+      elements.playerNextMatch.querySelector(".next-match-keep-score")?.addEventListener("click", () => openLargeScore?.(match.id));
       if (isPlaying) bindScoreboardTable(elements.playerNextMatch, match, true);
     }
 

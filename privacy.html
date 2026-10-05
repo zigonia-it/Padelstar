@@ -4,25 +4,26 @@
 <head>
   <script>if (/[?&]embed=1\b/.test(location.search)) document.documentElement.classList.add("embedded");</script><script>(function(){try{var t=localStorage.getItem("padelstar-theme");var m=(t==="light"||t==="dark")?t:(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.dataset.theme=m}catch(e){document.documentElement.dataset.theme="dark"}})();</script><meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1b2438">
-  <meta name="description" content="Personvern for Padelstar beta.">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Personvern for Padelstar.">
   <meta name="robots" content="noindex">
   <title>Personvern - Padelstar</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="assets/icons/padelstar-icon.png">
-  <link rel="icon" href="assets/icons/padelstar-icon.png" type="image/png">
-  <link rel="stylesheet" href="styles/tokens.css?v=padelstar-tokens-2">
-  <link rel="stylesheet" href="styles/base.css?v=padelstar-base-9">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/icons/favicon-64.png" type="image/png">
+  <link rel="stylesheet" href="styles/tokens.css?v=padelstar-tokens-4">
+  <link rel="stylesheet" href="styles/base.css?v=padelstar-base-10">
   <link rel="stylesheet" href="styles/layout.css?v=padelstar-layout-10">
   <link rel="stylesheet" href="styles/components.css?v=padelstar-components-25">
   <link rel="stylesheet" href="styles/modules.css?v=padelstar-modules-16">
-  <link rel="stylesheet" href="styles/styles.css?v=padelstar-ui-105">
+  <link rel="stylesheet" href="styles/styles.css?v=padelstar-ui-106">
   <link rel="stylesheet" href="styles/responsive.css?v=padelstar-responsive-6">
   <link rel="stylesheet" href="styles/ui-consistency.css?v=padelstar-ui-consistency-55">
   <link rel="stylesheet" href="styles/privacy.css?v=padelstar-privacy-8">
-  <script defer src="app/translations.js?v=padelstar-i18n-69"></script>
+  <link rel="stylesheet" href="styles/redesign.css?v=padelstar-redesign-4">
+  <script defer src="app/translations.js?v=padelstar-i18n-70"></script>
   <script defer src="app/page-language.js?v=padelstar-page-language-1"></script>
-  <script defer src="app/privacy-i18n.js?v=padelstar-privacy-i18n-10"></script>
+  <script defer src="app/privacy-i18n.js?v=padelstar-privacy-i18n-11"></script>
 </head>
 
 <body data-theme="classic">
@@ -30,8 +31,7 @@
     <header class="privacy-header">
       <div class="brand-lockup">
         <a class="brand-home-button" href="./" data-privacy-aria-label="back">
-          <img class="brand-logo" src="assets/icons/padelstar-icon.png" alt="" width="3000" height="3000">
-          <img class="brand-wordmark" src="assets/logos/main_logo_without_icon.png" alt="Padelstar" width="1500" height="352">
+          <span class="ps-logo brand-logo"><img class="logo-on-light" src="assets/brand/padelstar-logo-dark.webp" alt="Padelstar" width="928" height="180"><img class="logo-on-dark" src="assets/brand/padelstar-logo-light.webp" alt="Padelstar" width="928" height="180"></span>
         </a>
       </div>
       <div class="topbar-actions">
@@ -71,12 +71,12 @@
       })();
     </script>
     <article class="privacy-document" aria-labelledby="privacyTitle"><button class="embedded-close" type="button" aria-label="Lukk" data-privacy-aria-label="close"><span aria-hidden="true">&times;</span></button>
-      <p class="eyebrow" data-privacy-i18n="beta">Beta</p>
+      <p class="eyebrow" data-privacy-i18n="beta">Padelstar</p>
       <h1 id="privacyTitle" data-privacy-i18n="title">Personvern</h1>
-      <p data-privacy-i18n="intro">Padelstar er en betaversjon for å opprette og følge små padelturneringer. Her forklarer vi enkelt hva appen lagrer, hvorfor, hvor lenge og hvilke rettigheter du har.</p>
+      <p data-privacy-i18n="intro">Padelstar er en app for å opprette og følge små padelturneringer. Her forklarer vi enkelt hva appen lagrer, hvorfor, hvor lenge og hvilke rettigheter du har.</p>
 
       <h2 data-privacy-i18n="responsible">Hvem er ansvarlig?</h2>
-      <p><span data-privacy-i18n="responsibleText">Foreløpig er Sigurd Steen Grødem / Zigonia IT behandlingsansvarlig for betaen. Spørsmål om personvern kan sendes til</span> <a href="mailto:sigurd.grodem@live.no">sigurd.grodem@live.no</a>.</p>
+      <p><span data-privacy-i18n="responsibleText">Sigurd Steen Grødem / Zigonia IT er behandlingsansvarlig. Spørsmål om personvern kan sendes til</span> <a href="mailto:sigurd.grodem@live.no">sigurd.grodem@live.no</a>.</p>
 
       <h2 data-privacy-i18n="data">Hvilke opplysninger brukes?</h2>
       <p data-privacy-i18n="dataText">Vi lagrer det som trengs for at turneringen skal fungere: turneringsnavn, invitasjonskode, spillernavn, avatar og farge, kamper og resultater, og hvem som er admin og hvem som er spiller. Har du en lokal brukerprofil, lagres visningsnavnet og valgene dine på enheten din. Slår du på varsler, lagres et varslingsabonnement for den turneringen og spilleren.</p>

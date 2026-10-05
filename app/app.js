@@ -29,9 +29,12 @@ const legacyAccentMap = accentSystem.legacyAccentMap;
 const accents = accentSystem.accents;
 const accentPicker = window.PadelstarAccentPicker.create({ palette: playerAccentPalette });
 const avatarSystem = window.PadelstarAvatarSystem;
+// Padelstar 1.0: players have no colour of their own any more (developer's decision 2026-10-05). The stored accent stays
+// in the data, but every accent variable resolves to the neutral ink of the theme.
+const NEUTRAL_PLAYER_STYLE = "--player-accent: var(--ink-muted); --player-accent-light: var(--ink-body); --player-accent-dark: var(--ink-heading); --player-accent-rgb: var(--ink-muted-rgb); --gem-fill: var(--ink-muted); --gem-ink: var(--ink-heading); --gem-tint: transparent;";
 const playerVisuals = window.PadelstarPlayerVisuals.create({
   avatarUrl: (player) => avatarSystem.url(player),
-  accentStyle: (accent) => accentSystem.accentStyle(accent),
+  accentStyle: () => NEUTRAL_PLAYER_STYLE,
   escapeHtml: (value) => escapeHtml(value),
 });
 const defaultAvatarId = avatarSystem.defaultAvatarId;
@@ -436,6 +439,7 @@ const standings = window.PadelstarStandings.create({
   document,
   elements,
   escapeHtml: (value) => escapeHtml(value),
+  getSelectedPlayerId: () => state.selectedPlayerId,
   leaderboardEntries: (matches) => leaderboardEntries(matches),
   t: (key, values) => t(key, values),
 });
@@ -521,6 +525,7 @@ const playerNextMatch = window.PadelstarPlayerNextMatch.create({
   getState: () => state,
   matchContextText: (match) => matchContextText(match),
   notifyPlayerMatch: (match, kind) => notifyPlayerMatch(match, kind),
+  openLargeScore: (matchId) => openLargeScore(matchId),
   playerPlacement: (player, matches) => playerPlacement(player, matches),
   playerTournamentState: (player, matches) => playerTournamentState(player, matches),
   scoreSummary: (match) => scoreSummary(match),
@@ -551,6 +556,14 @@ const playerControls = window.PadelstarPlayerControls.create({
 });
 const largeScore = window.PadelstarLargeScore.create({
   awardTennisPoint: (match, teamIndex) => awardTennisPoint(match, teamIndex),
+  // Same rule as the scoreboard's minus button: a player in the match undoes through the scorer queue, an admin reopens.
+  undoLastPoint: (match) => {
+    if (currentLocalRole() === "player" && matchIncludesPlayer(match, state.selectedPlayerId)) {
+      if (match.undoStack?.length) void remotePlayerScore.scorerAction(match.id, "undo");
+      return;
+    }
+    reopenMatch(match);
+  },
   closeLargeScore: () => closeLargeScore(),
   elements,
   escapeHtml: (value) => escapeHtml(value),
@@ -1117,6 +1130,13 @@ async function handleTournamentMissing() {
 function initializeNavigation() {
   window.PadelstarNavigation?.initialize({ showModule, translate: t });
   window.PadelstarWorkspaceRail?.initialize({ showModule, activateAdminPanel });
+  window.PadelstarHomeJoin?.initialize({
+    form: document.querySelector("#homeJoinForm"),
+    translate: t,
+    prefillJoinForm,
+    showModule,
+    focusJoinName: () => window.requestAnimationFrame?.(() => elements.joinTournamentForm?.elements.playerName?.focus()),
+  });
 }
 
 function bindSupabaseReady() {
@@ -2173,8 +2193,8 @@ function teamDisplay(team, variant = "default") {
   return playerVisuals.teamDisplay(team, variant);
 }
 
-function accentStyle(accent) {
-  return accentSystem.accentStyle(accent);
+function accentStyle() {
+  return NEUTRAL_PLAYER_STYLE;
 }
 
 function teamAccentStyle(team) {

@@ -5,18 +5,19 @@
   <script>(function(){try{var t=localStorage.getItem("padelstar-theme");var m=(t==="light"||t==="dark")?t:(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.dataset.theme=m}catch(e){document.documentElement.dataset.theme="dark"}})();</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1b2438">
+  <meta name="theme-color" content="#0b0b0b">
   <title>Padelstar TV</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="assets/icons/padelstar-icon.png" type="image/png">
-  <link rel="stylesheet" href="styles/tokens.css?v=padelstar-tokens-2">
-  <link rel="stylesheet" href="styles/tv.css?v=padelstar-tv-18">
+  <link rel="icon" href="assets/icons/favicon-64.png" type="image/png">
+  <link rel="stylesheet" href="styles/tokens.css?v=padelstar-tokens-4">
+  <link rel="stylesheet" href="styles/tv.css?v=padelstar-tv-19">
+  <link rel="stylesheet" href="styles/tv-redesign.css?v=padelstar-tv-redesign-4">
 </head>
 
 <body class="tv-page">
   <main class="tv-app" aria-live="polite">
     <header class="tv-header">
-      <img class="tv-brand" src="assets/logos/tv-brand.png" alt="Padelstar">
+      <span class="tv-brand"><img class="logo-on-light" src="assets/brand/padelstar-logo-dark.webp" alt="Padelstar" width="928" height="180"><img class="logo-on-dark" src="assets/brand/padelstar-logo-light.webp" alt="Padelstar" width="928" height="180"></span>
       <span class="tv-header-lines" aria-hidden="true"></span>
       <div class="tv-title-wrap"><span id="tvRoundLabel" data-tv-i18n="tv.round" data-tv-values='{"round":1}'>RUNDE 1</span>
         <h1 id="tvTournamentTitle">PADELSTAR</h1>
@@ -70,10 +71,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app/accent-system.js?v=padelstar-accent-system-2"></script>
   <script src="app/player-visuals.js?v=padelstar-player-visuals-3"></script>
-  <script src="app/translations.js?v=padelstar-i18n-69"></script>
+  <script src="app/translations.js?v=padelstar-i18n-70"></script>
   <script src="app/scoring-engine.js?v=padelstar-scoring-7"></script>
-  <script src="app/color-mode.js?v=padelstar-color-mode-2"></script>
-  <script src="app/tv-mode.js?v=padelstar-tv-mode-12"></script>
+  <script src="app/color-mode.js?v=padelstar-color-mode-3"></script>
+  <script src="app/tv-mode.js?v=padelstar-tv-mode-13"></script>
 </body>
 
 </html>

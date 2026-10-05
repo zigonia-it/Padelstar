@@ -153,6 +153,7 @@
       largeScoreBoard: document.querySelector("#largeScoreBoard"),
       largeScoreActions: document.querySelector("#largeScoreActions"),
       closeLargeScoreButton: document.querySelector("#closeLargeScoreButton"),
+      largeScoreUndoButton: document.querySelector("#largeScoreUndoButton"),
       setScoreDialog: document.querySelector("#setScoreDialog"),
       setScoreTitle: document.querySelector("#setScoreTitle"),
       setScoreContext: document.querySelector("#setScoreContext"),

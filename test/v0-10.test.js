@@ -148,7 +148,9 @@ test("the check is wired in: dialog, script, styles, precache, CSP for Cloudflar
   assert.match(worker, /app\/captcha\.js/); assert.match(worker, /styles\/captcha\.css/);
   const csp = JSON.parse(read("vercel.json")).headers.flatMap((h) => h.headers).find((h) => h.key === "Content-Security-Policy").value;
   assert.match(csp, /script-src[^;]*https:\/\/challenges\.cloudflare\.com/);
-  assert.match(csp, /frame-src https:\/\/challenges\.cloudflare\.com/);
+  assert.match(csp, /frame-src[^;]*https:\/\/challenges\.cloudflare\.com/);
+  // the guide and privacy popups frame our own pages: without 'self' the CSP blocks them and the link falls back to a full page
+  assert.match(csp, /frame-src 'self'/);
   assert.match(read("supabase-config.js"), /captchaSiteKey: "(0x4[A-Za-z0-9_-]{15,40})?"/, "a Turnstile site key (public) or empty = off");
   assert.match(read("privacy.html"), /data-privacy-i18n="serviceTurnstile"/);
   assert.match(read("app", "privacy-i18n.js"), /serviceTurnstile: "Cloudflare Turnstile: robotkontrollen/);
@@ -158,11 +160,9 @@ test("the check is wired in: dialog, script, styles, precache, CSP for Cloudflar
   assert.ok(fs.existsSync(path.join(root, "docs", "technical", "captcha-setup.md")));
 });
 
-test("the footer says the site is under beta development, in every language", () => {
+test("1.0.0: the footer no longer says the site is in beta", () => {
   const html = read("index.html");
-  assert.match(html, /<span data-i18n="footer\.developedBy">[^<]*<\/span> ·\s*<span data-i18n="footer\.beta">Denne siden er under Betautvikling<\/span> ·/);
-  const i18n = vm.createContext({ window: {} });
-  vm.runInContext(read("app", "translations.js"), i18n);
-  for (const language of ["nb", "nn", "en", "es", "de", "fr", "sv", "da"]) assert.ok(i18n.window.PadelstarTranslations[language]["footer.beta"], language);
-  assert.equal(i18n.window.PadelstarTranslations.en["footer.beta"], "This site is under beta development");
+  assert.doesNotMatch(html, /footer\.beta|Betautvikling/);
+  assert.match(html, /<span data-i18n="footer\.developedBy">[^<]*<\/span> ·\s*<span data-i18n="footer\.copyrightPrefix">/);
+  assert.doesNotMatch(read("app", "translations.js"), /"footer\.beta"/);
 });

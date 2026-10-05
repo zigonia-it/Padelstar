@@ -1,23 +1,20 @@
-// The bell in the header and the notification center dialog (Phase 18). The pure logic (what is news, the store, the
-// sounds) is in notification-center.js; this file connects it to the page and to the remote state updates.
+// The bell in the header and the notification center dialog (Phase 18). The pure logic (what is news, the store) is in
+// notification-center.js; this file connects it to the page and to the remote state updates. Padelstar plays no sounds
+// of its own (developer's decision 2026-10-05): the browser's own notifications carry the sound, so nothing doubles up.
 (function (global) {
-  function create({ document, storage, getState, isSpectator = () => false, t, showToast, showModule, playSound, vibrate, now }) {
+  function create({ document, storage, getState, isSpectator = () => false, t, showToast, showModule, vibrate, now }) {
     const lib = global.PadelstarNotificationCenter;
     const store = lib.createStore({ storage, now });
     const bell = document.querySelector("#notificationBellButton");
     const badge = document.querySelector("#notificationBellBadge");
     const dialog = document.querySelector("#notificationCenterDialog");
     const list = document.querySelector("#notificationCenterList");
-    const soundToggle = document.querySelector("#notificationSoundToggle");
     const markAll = document.querySelector("#notificationMarkAllRead");
     const closeButton = document.querySelector("#notificationCenterClose");
-    const play = playSound ?? ((number) => lib.playSound(number));
     const buzz = vibrate ?? ((number) => lib.vibrate(number));
     const settings = {
-      sound: document.querySelector("#notificationSettingsSound"),
       vibration: document.querySelector("#notificationSettingsVibration"),
       hint: document.querySelector("#notificationSettingsVibrationHint"),
-      test: document.querySelector("#notificationSettingsTest"),
     };
 
     const playerId = () => getState().selectedPlayerId ?? null;
@@ -79,7 +76,6 @@
         row.append(button);
         list.append(row);
       }
-      if (soundToggle) soundToggle.checked = lib.soundsEnabled(storage);
       if (markAll) markAll.disabled = !items.some((item) => !item.read);
     }
 
@@ -97,20 +93,16 @@
         const updates = lib.detect(previous, next, id);
         const fresh = store.add(next.id, id, updates);
         if (fresh.length) {
-          const sound = lib.soundFor(fresh);
-          if (sound && lib.soundsEnabled(storage)) play(sound);
-          if (sound && lib.vibrationEnabled(storage)) buzz(sound);
+          const pattern = lib.vibrationFor(fresh);
+          if (pattern && lib.vibrationEnabled(storage)) buzz(pattern);
           showToast?.(text(fresh[0]).title, "status-message-success");
         }
         return fresh;
       } catch { return []; }
     }
 
-    // The settings panel on the profile page and the switch in the notification center are the same preference.
+    // The vibration switch on the profile page.
     function syncSettings() {
-      const soundOn = lib.soundsEnabled(storage);
-      if (settings.sound) settings.sound.checked = soundOn;
-      if (soundToggle) soundToggle.checked = soundOn;
       if (settings.vibration) {
         const supported = lib.vibrationSupported();
         settings.vibration.checked = supported && lib.vibrationEnabled(storage);
@@ -120,24 +112,8 @@
     }
 
     function bindSettings() {
-      settings.sound?.addEventListener("change", () => { lib.setSoundsEnabled(storage, settings.sound.checked); syncSettings(); });
       settings.vibration?.addEventListener("change", () => { lib.setVibrationEnabled(storage, settings.vibration.checked); syncSettings(); });
-      // "Test" plays exactly what the settings would do for a real notification
-      settings.test?.addEventListener("click", () => {
-        if (lib.soundsEnabled(storage)) play(1);
-        if (lib.vibrationEnabled(storage)) buzz(1);
-      });
       syncSettings();
-    }
-
-    // iOS allows a live update to play a sound only after a tap has started that audio element once (see unlockSounds);
-    // the first tap after opening, or after coming back to the app, unlocks both sounds again.
-    function bindSoundUnlock() {
-      if (playSound || !lib.unlockSounds) return;
-      let locked = true;
-      const unlock = () => { if (!locked) return; locked = false; lib.unlockSounds(); };
-      for (const type of ["pointerdown", "touchend", "keydown"]) document.addEventListener?.(type, unlock, { capture: true, passive: true });
-      document.addEventListener?.("visibilitychange", () => { if (document.visibilityState === "visible") locked = true; });
     }
 
     function bind() {
@@ -145,9 +121,7 @@
       closeButton?.addEventListener("click", () => dialog?.close?.());
       dialog?.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
       markAll?.addEventListener("click", () => { store.markAllRead(tournamentId(), playerId()); render(); renderList(); });
-      soundToggle?.addEventListener("change", () => { lib.setSoundsEnabled(storage, soundToggle.checked); syncSettings(); });
       bindSettings();
-      bindSoundUnlock();
       if (active()) store.prune(tournamentId(), playerId());
       render();
     }

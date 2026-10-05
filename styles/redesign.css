@@ -1,0 +1,1117 @@
+/* =========================================================
+   PADELSTAR 1.0 — the redesign layer
+   ---------------------------------------------------------
+   Source: the "Padelstar" design system and the "Padelstar – live prototype" canvas (claude.ai artifacts,
+   2026-10-04/05). Calm and editorial off court, loud and simple on court: photography in soft frames,
+   big tight headlines, pill controls, numbers with small labels, and one brand colour, padel-ball yellow.
+
+   This file loads last. It holds
+   1. the ps-* component classes from the design system's bundle (new markup uses them directly), and
+   2. the restyle of the existing app markup onto the same language (pills, flat cards, floating nav).
+   Every colour, radius and shadow is a token from styles/tokens.css (scripts/color-audit.js).
+   Selectors on existing markup carry body[data-theme] so they win over the older layers at equal weight.
+   ========================================================= */
+
+/* ---------- Logo: the supplied wordmark + ball, one image per ground ---------- */
+/* the image gets its height in pixels and its width from its own ratio, so the box is always as wide as the wordmark
+   (no percentage or aspect-ratio sizing, which older Safari resolves to zero) */
+.ps-logo { --logo-h: 26px; display: inline-flex; align-items: center; width: auto; height: var(--logo-h); max-width: none; max-height: none; flex: none; filter: none; }
+.ps-logo img { display: block; width: auto; max-width: none; height: var(--logo-h); }
+.ps-logo .logo-on-dark { display: none; }
+[data-theme="dark"] .ps-logo .logo-on-light { display: none; }
+[data-theme="dark"] .ps-logo .logo-on-dark { display: block; }
+.ps-logo--lg { --logo-h: 34px; }
+
+/* ---------- Design-system primitives (bundle.css, Padelstar namespace) ---------- */
+.ps-num { font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+.ps-display { font-family: var(--font-display); }
+.ps-eyebrow { font: 700 12px/16px var(--font-ui); letter-spacing: 1.4px; text-transform: uppercase; color: var(--ink-muted); }
+.ps-muted { color: var(--ink-muted); }
+
+.ps-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--tap-min); padding: 0 var(--space-6);
+  border-radius: var(--radius-pill); border: 0; cursor: pointer;
+  font: 700 15px/20px var(--font-ui); letter-spacing: 0; text-decoration: none; white-space: nowrap;
+  transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+}
+.ps-btn:active { transform: translateY(1px); box-shadow: none; }
+.ps-btn--ball { background: var(--ball); color: var(--on-ball); box-shadow: var(--shadow-press); }
+.ps-btn--ink { background: var(--surface-inverse); color: var(--on-inverse); }
+.ps-btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--border-control); }
+.ps-btn--quiet { background: var(--surface-raised); color: var(--ink); }
+.ps-btn--lg { min-height: var(--tap-court); padding: 0 var(--space-7); font-size: 17px; }
+.ps-btn--block { width: 100%; }
+.ps-btn--icon { width: var(--tap-min); padding: 0; }
+.ps-btn[disabled] { background: var(--surface-sunken); color: var(--ink-disabled); box-shadow: none; cursor: not-allowed; }
+.ps-btn .ps-arrow { width: 28px; height: 28px; margin-right: -14px; border-radius: var(--radius-pill); display: grid; place-items: center; background: var(--on-ball); color: var(--ball); font-size: 14px; }
+.ps-btn--ink .ps-arrow { background: var(--ball); color: var(--on-ball); }
+
+.ps-tag {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px;
+  border-radius: var(--radius-pill); background: var(--surface-card); color: var(--ink);
+  font: 700 12px/16px var(--font-ui); letter-spacing: 1.2px; text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.ps-tag--ball { background: var(--ball); color: var(--on-ball); box-shadow: none; }
+.ps-tag--ink { background: var(--surface-inverse); color: var(--on-inverse); box-shadow: none; }
+.ps-tag--live { color: var(--live); }
+.ps-tag--live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--live); animation: ps-pulse 1.6s ease-in-out infinite; }
+.ps-tag--positive { color: var(--positive); }
+.ps-tag--warning { color: var(--warning); }
+.ps-tag--court { color: var(--court); }
+@keyframes ps-pulse { 50% { opacity: .35; } }
+
+.ps-card { background: var(--surface-card); border-radius: var(--radius-md); padding: var(--space-5); }
+.ps-card--hero { border-radius: var(--radius-lg); padding: var(--space-6); }
+.ps-card--inverse { background: var(--surface-inverse); color: var(--on-inverse); }
+
+.ps-photo { position: relative; overflow: hidden; margin: 0; border-radius: var(--radius-lg); background: var(--surface-sunken); }
+.ps-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ps-photo__caption { position: absolute; left: var(--space-4); right: var(--space-4); bottom: var(--space-4); background: var(--surface-card); color: var(--ink); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-tag--live::before { animation: none; }
+}
+
+/* =========================================================
+   1. PAGE, TYPE, FOCUS
+   ========================================================= */
+
+body[data-theme],
+body[data-theme] .app-shell {
+  background: var(--surface-page);
+  color: var(--ink-body);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+/* the old diagonal-line texture and the washed-out court photo behind every screen are retired:
+   the page is a calm ground, photography lives in frames */
+body[data-theme]::before,
+body[data-theme]::after { content: none; display: none; }
+
+body[data-theme] h1,
+body[data-theme] h2,
+body[data-theme] h3,
+body[data-theme] h4 {
+  color: var(--ink-heading);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  text-shadow: none;
+}
+body[data-theme] .eyebrow {
+  color: var(--ink-muted);
+  font: 700 12px/16px var(--font-ui);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+body[data-theme] .hint,
+body[data-theme] .field-hint { color: var(--ink-muted); }
+body[data-theme] p { text-shadow: none; }
+
+body[data-theme] :focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* every score, rank, time and stat uses tabular numerals so numbers don't jump as they change */
+body[data-theme] .score,
+body[data-theme] .standing-stats,
+body[data-theme] .placement-badge,
+body[data-theme] .podium-points,
+body[data-theme] .large-score-team,
+body[data-theme] .overview-stats,
+body[data-theme] [class*="score"] strong { font-variant-numeric: tabular-nums; }
+
+/* =========================================================
+   2. TOP NAV PILL (NavBar)
+   wordmark on the left; status, notifications, theme and the menu on the right. It floats, so it carries
+   --shadow-float. The menu stays (it holds language, theme, feedback and TV), drawn as a sheet under the pill.
+   ========================================================= */
+
+body[data-theme] .topbar {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: min(1280px, calc(100% - 2 * var(--space-4)));
+  min-height: 60px;
+  margin: 12px auto 0;
+  padding: 6px 8px 6px 20px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-float);
+  backdrop-filter: none;
+}
+body[data-theme] .brand-lockup { display: flex; align-items: center; gap: var(--space-3); flex: 0 0 auto; min-width: 0; }
+body[data-theme] .brand-home-button {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: transparent; box-shadow: none;
+}
+body[data-theme] .brand-home-button:not(:disabled):hover { transform: none; }
+/* the old square-icon rules fixed .brand-logo at 52–60px wide, which clipped the box and drew the version under the wordmark */
+body[data-theme] .brand-home-button .ps-logo { --logo-h: 26px; width: auto; height: var(--logo-h); max-width: none; max-height: none; flex: none; filter: none; }
+/* the version sits in a small ball-green pill (the join button's colour) beside the logo (brand-lockup restated to outweigh ui-consistency's classic rule) */
+body[data-theme] .version,
+body[data-theme] .brand-lockup .version {
+  display: inline-flex; align-items: center; order: 0; margin: 0; padding: 5px 10px; border: 1px solid var(--hairline); border-radius: var(--radius-pill);
+  background: var(--ball); color: var(--on-ball); border-color: transparent; white-space: nowrap;
+  font: 800 11px/1 var(--font-ui); letter-spacing: .4px; text-transform: none;
+}
+body[data-theme] .brand-lockup .version:empty { display: none; }
+body[data-theme] .topbar-actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); flex: 1 1 auto; min-width: 0; }
+body[data-theme] .app-menu { gap: 2px; padding: 0; border: 0; background: transparent; box-shadow: none; }
+body[data-theme] .app-menu .module-link {
+  min-height: 40px; padding: 0 14px; border: 0; border-radius: var(--radius-pill);
+  background: transparent; color: var(--ink-body); font: 700 14px/1 var(--font-ui); box-shadow: none; text-shadow: none;
+}
+body[data-theme] .app-menu .module-link:hover { background: var(--surface-raised); color: var(--ink-heading); transform: none; }
+body[data-theme] .app-menu .module-link.active,
+body[data-theme] .app-menu .module-link[aria-current="page"] { background: var(--surface-inverse); color: var(--on-inverse); }
+
+body[data-theme] .status-pill {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px;
+  border: 0; border-radius: var(--radius-pill); background: transparent; box-shadow: none;
+  color: var(--positive); font: 600 13px/1 var(--font-ui); white-space: nowrap;
+}
+body[data-theme] .status-pill::before { width: 8px; height: 8px; flex-basis: 8px; box-shadow: none; }
+body[data-theme] .status-pill.offline { color: var(--ink-muted); }
+body[data-theme] .status-pill[data-status="connecting"],
+body[data-theme] .status-pill[data-status="reconnecting"] { color: var(--warning); }
+body[data-theme] .status-pill[data-status="error"],
+body[data-theme] .status-pill[data-status="disconnected"] { color: var(--negative); }
+
+body[data-theme] .notification-bell,
+body[data-theme] .app-menu-toggle {
+  display: inline-grid; place-items: center; width: 44px; min-width: 44px; height: 44px; min-height: 44px; padding: 0;
+  border: 0; border-radius: var(--radius-pill); background: var(--surface-raised); color: var(--ink-heading); box-shadow: none;
+}
+body[data-theme] .notification-bell.hidden { display: none; }
+body[data-theme] .notification-bell svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+body[data-theme] .notification-bell-badge { background: var(--ball); color: var(--on-ball); box-shadow: 0 0 0 2px var(--surface-card); }
+body[data-theme] .app-menu-toggle span { width: 18px; height: 2px; border-radius: 2px; background: currentColor; box-shadow: none; }
+body[data-theme] .app-menu-toggle:not(:disabled):hover,
+body[data-theme] .notification-bell:not(:disabled):hover { transform: none; background: var(--surface-sunken); }
+
+body[data-theme] .theme-toggle {
+  display: inline-flex; gap: 4px; padding: 4px; border: 0; border-radius: var(--radius-pill); background: var(--surface-sunken); box-shadow: none;
+}
+body[data-theme] .theme-toggle-option {
+  min-height: 34px; padding: 0 12px; border: 0; border-radius: var(--radius-pill); background: transparent;
+  color: var(--ink-muted); font: 700 13px/1 var(--font-ui); box-shadow: none;
+}
+body[data-theme] .theme-toggle-option[aria-pressed="true"] { background: var(--surface-card); color: var(--ink-heading); box-shadow: var(--shadow-press); }
+body[data-theme] .theme-toggle-option:not(:disabled):hover { transform: none; color: var(--ink-heading); }
+
+body[data-theme] .language-current {
+  min-height: 40px; padding: 0 12px; border: 0; border-radius: var(--radius-pill); background: var(--surface-raised); color: var(--ink-heading); box-shadow: none;
+}
+body[data-theme] .language-options {
+  border: 0; border-radius: var(--radius-md); background: var(--surface-card); box-shadow: var(--shadow-float);
+}
+
+/* phones and small tablets: the links fold into a sheet that drops under the pill */
+@media (max-width: 900px) {
+  body[data-theme] .topbar { padding: 6px 6px 6px 18px; min-height: 56px; }
+  body[data-theme] .brand-home-button .ps-logo { --logo-h: 22px; }
+  body[data-theme] .version, body[data-theme] .brand-lockup .version { display: none; }
+  body[data-theme] .topbar-actions > .theme-toggle { display: none; }
+  body[data-theme] .menu-drawer { display: none; }
+  body[data-theme].app-menu-open .menu-drawer {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+    display: grid; gap: var(--space-3); padding: var(--space-4);
+    border: 0; border-radius: var(--radius-md); background: var(--surface-card); box-shadow: var(--shadow-float);
+  }
+  body[data-theme].app-menu-open .app-menu { display: grid; gap: 4px; width: 100%; }
+  body[data-theme].app-menu-open .app-menu .module-link { justify-content: flex-start; width: 100%; min-height: 48px; padding: 0 16px; text-align: left; }
+  body[data-theme].app-menu-open .app-menu .theme-toggle { display: inline-flex; justify-self: start; margin-top: 4px; }
+}
+@media (min-width: 901px) {
+  body[data-theme] .app-menu-toggle { display: none; }
+  body[data-theme] .app-menu .theme-toggle { display: none; }
+}
+
+/* =========================================================
+   3. BUTTONS — pills. ball = the one main action, ink = the second, ghost = cancel/alternatives,
+   quiet = tools on a card.
+   ========================================================= */
+
+body[data-theme] button,
+body[data-theme] .button {
+  border-radius: var(--radius-pill);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+body[data-theme] button:not(:disabled):hover { transform: none; }
+body[data-theme] button:not(:disabled):active { transform: translateY(1px); }
+
+body[data-theme] .primary,
+body[data-theme] button.primary,
+body[data-theme] .landing-cta:not(.landing-cta-secondary):not(.ps-btn) {
+  min-height: var(--tap-min);
+  padding: 0 var(--space-6);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, var(--btn-primary-from), var(--btn-primary-to));
+  color: var(--btn-primary-ink);
+  box-shadow: var(--btn-primary-shadow);
+  text-shadow: none;
+}
+body[data-theme] .primary:not(:disabled):hover,
+body[data-theme] .landing-cta:not(.landing-cta-secondary):not(.ps-btn):hover:not(:disabled) {
+  border: 0; background: linear-gradient(180deg, var(--btn-primary-from), var(--btn-primary-to)); box-shadow: var(--btn-primary-shadow); filter: brightness(1.03);
+}
+body[data-theme] .primary:not(:disabled):active { box-shadow: none; }
+
+body[data-theme] .secondary,
+body[data-theme] button.secondary,
+body[data-theme] .landing-cta.landing-cta-secondary:not(.ps-btn) {
+  min-height: var(--tap-min);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface-inverse);
+  color: var(--on-inverse);
+  box-shadow: none;
+  text-shadow: none;
+}
+body[data-theme] .secondary:not(:disabled):hover,
+body[data-theme] .landing-cta.landing-cta-secondary:not(.ps-btn):hover:not(:disabled) { border: 0; background: var(--surface-inverse); color: var(--on-inverse); filter: brightness(1.15); }
+
+body[data-theme] .ghost,
+body[data-theme] button.ghost {
+  min-height: var(--tap-min);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-heading);
+  box-shadow: inset 0 0 0 1.5px var(--border-control);
+  text-shadow: none;
+}
+body[data-theme] .ghost:not(:disabled):hover { background: var(--surface-raised); }
+
+body[data-theme] .icon-button,
+body[data-theme] button.icon-button { min-height: 40px; padding: 0 14px; background: var(--surface-raised); color: var(--ink-heading); box-shadow: none; border: 0; }
+
+body[data-theme] .danger-button,
+body[data-theme] button.danger-button,
+body[data-theme] .ghost.danger-button {
+  border: 0; background: transparent; color: var(--negative); box-shadow: inset 0 0 0 1.5px var(--negative);
+}
+body[data-theme] .danger-button:not(:disabled):hover { background: var(--danger-bg); }
+
+body[data-theme] button:disabled,
+body[data-theme] .primary:disabled,
+body[data-theme] .secondary:disabled {
+  opacity: 1;
+  background: var(--surface-sunken);
+  color: var(--ink-disabled);
+  box-shadow: none;
+  filter: none;
+}
+
+/* the design-system buttons keep their own variant, even where an older rule styles every button */
+body[data-theme] .ps-btn { border: 0; text-shadow: none; }
+body[data-theme] .ps-btn--ball { background: var(--ball); color: var(--on-ball); box-shadow: var(--shadow-press); }
+body[data-theme] .ps-btn--ink { background: var(--surface-inverse); color: var(--on-inverse); box-shadow: none; }
+body[data-theme] .ps-btn--ghost { background: transparent; color: var(--ink-heading); box-shadow: inset 0 0 0 1.5px var(--border-control); }
+body[data-theme] .ps-btn--lg { min-height: var(--tap-court); padding: 0 var(--space-7); font-size: 17px; }
+body[data-theme] .ps-btn--block { width: 100%; }
+
+/* =========================================================
+   4. FIELDS
+   ========================================================= */
+
+body[data-theme] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body[data-theme] textarea,
+body[data-theme] select {
+  min-height: var(--tap-min);
+  border: 1.5px solid var(--border-control);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-raised);
+  color: var(--ink-heading);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: none;
+}
+body[data-theme] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body[data-theme] textarea { background-image: none; }
+body[data-theme] select {
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink-heading) 50%),
+    linear-gradient(135deg, var(--ink-heading) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 52%, calc(100% - 15px) 52%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+body[data-theme] input::placeholder,
+body[data-theme] textarea::placeholder { color: var(--ink-disabled); font-weight: 500; }
+body[data-theme] input:focus,
+body[data-theme] textarea:focus,
+body[data-theme] select:focus { border-color: var(--ink-heading); box-shadow: 0 0 0 3px var(--ball-wash); outline: none; }
+body[data-theme] input:focus-visible,
+body[data-theme] textarea:focus-visible,
+body[data-theme] select:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+body[data-theme] input[type="checkbox"],
+body[data-theme] input[type="radio"] { accent-color: var(--ink-heading); }
+body[data-theme] label,
+body[data-theme] legend { color: var(--ink-body); font-family: var(--font-ui); }
+body[data-theme] label > span,
+body[data-theme] .setup-card label > span,
+body[data-theme] .setup-card legend { color: var(--ink-body); font: 600 14px/20px var(--font-ui); }
+body[data-theme] input.switch,
+body[data-theme] input[role="switch"] { accent-color: var(--ink-heading); }
+
+/* =========================================================
+   5. CARDS — flat on the page: no border, no shadow, radius-md
+   ========================================================= */
+
+body[data-theme] .panel,
+body[data-theme] .setup-card,
+body[data-theme] .match-card,
+body[data-theme] .next-match,
+body[data-theme] .landing-feature-card,
+body[data-theme] .resume-panel,
+body[data-theme] .share-box {
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+body[data-theme] .panel-heading h3,
+body[data-theme] .panel > h3 { font: 700 20px/26px var(--font-display); letter-spacing: -0.3px; text-transform: none; }
+
+body[data-theme] .status-chip,
+body[data-theme] .match-status,
+body[data-theme] .match-court,
+body[data-theme] .role-indicator,
+body[data-theme] .join-source-chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 28px; height: auto; padding: 4px 12px;
+  border: 0; border-radius: var(--radius-pill); background: var(--surface-card); color: var(--ink-heading);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  font: 700 12px/16px var(--font-ui); letter-spacing: 1.2px; text-transform: uppercase; text-shadow: none;
+}
+body[data-theme] .match-court { color: var(--court); }
+body[data-theme] .status-chip.playing,
+body[data-theme] .match-status.playing { color: var(--live); }
+body[data-theme] .status-chip.playing::before,
+body[data-theme] .match-status.playing::before {
+  content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--live); animation: ps-pulse 1.6s ease-in-out infinite;
+}
+body[data-theme] .status-chip.finished,
+body[data-theme] .match-status.finished { color: var(--positive); }
+body[data-theme] .status-chip.waiting,
+body[data-theme] .match-status.waiting,
+body[data-theme] .match-status.pending { color: var(--ink-muted); }
+body[data-theme] .role-indicator { background: var(--surface-inverse); color: var(--on-inverse); box-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  body[data-theme] .status-chip.playing::before,
+  body[data-theme] .match-status.playing::before { animation: none; }
+}
+
+body[data-theme] .progress-track { height: 6px; border: 0; border-radius: var(--radius-pill); background: var(--surface-sunken); box-shadow: none; }
+body[data-theme] .progress-track span { border-radius: inherit; background: var(--ball); box-shadow: inset 0 0 0 1px var(--on-ball); }
+
+/* =========================================================
+   6. HOME — photo hero, join card first, then your tournaments, then create
+   ========================================================= */
+
+body[data-theme] #app-main > .start-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: min(1280px, calc(100% - 2 * var(--space-4)));
+  margin: var(--space-4) auto 0;
+  padding: 0;
+}
+body[data-theme] .home-grid { display: contents; }
+body[data-theme] .home-hero { order: 1; height: clamp(250px, 62vw, 340px); }
+body[data-theme] .home-join-card { order: 2; }
+body[data-theme] .start-panel > .resume-panel { order: 3; }
+body[data-theme] .home-actions { order: 4; }
+body[data-theme] .home-grid > .hero-account-hint { order: 5; }
+body[data-theme] .start-panel > .landing-features { order: 6; }
+
+body[data-theme] .home-hero-caption { display: grid; gap: var(--space-2); }
+body[data-theme] .home-hero .hero-title {
+  max-width: none; margin: 0; color: var(--ink-heading);
+  font: 600 28px/30px var(--font-display); letter-spacing: -1px; text-transform: none;
+}
+body[data-theme] .home-hero .hero-description { display: none; margin: 0; color: var(--ink-body); font: 500 16px/24px var(--font-ui); max-width: 52ch; }
+
+body[data-theme] .home-join-card { display: grid; gap: 14px; padding: var(--space-5); }
+body[data-theme] .home-join-card .ps-eyebrow { display: block; }
+body[data-theme] .home-join-input {
+  height: 68px; padding: 0 18px;
+  font: 800 30px/1 var(--font-display) !important;
+  letter-spacing: 8px; text-transform: uppercase; font-variant-numeric: tabular-nums;
+}
+body[data-theme] .home-join-input::placeholder { letter-spacing: 6px; color: var(--ink-disabled); }
+body[data-theme] .home-join-hint { margin: -4px 0 0; color: var(--ink-muted); font: 500 14px/20px var(--font-ui); }
+body[data-theme] .home-join-card.is-invalid .home-join-input { border-color: var(--negative); }
+body[data-theme] .home-join-card.is-invalid .home-join-hint { color: var(--negative); }
+
+body[data-theme] .landing-actions.home-actions { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2); width: 100%; }
+body[data-theme] .landing-actions.home-actions > .landing-cta { width: auto; }
+body[data-theme] .home-grid > .hero-account-hint { margin: 0; padding: 0 var(--space-2); color: var(--ink-muted); font: 500 14px/20px var(--font-ui); text-align: center; }
+
+body[data-theme] .resume-panel { display: grid; gap: var(--space-4); padding: var(--space-5); }
+body[data-theme] .resume-panel h3 { margin: 2px 0 0; font: 700 20px/26px var(--font-display); }
+body[data-theme] .resume-panel .hint { margin: 4px 0 0; }
+body[data-theme] .resume-empty-state { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-5) var(--space-4); border-radius: var(--radius-sm); background: var(--surface-raised); text-align: center; }
+body[data-theme] .resume-empty-state svg { color: var(--ink-muted); }
+body[data-theme] .resume-empty-state h4 { margin: 0; font: 700 17px/22px var(--font-display); }
+body[data-theme] .resume-empty-state p { margin: 0; color: var(--ink-muted); }
+/* the empty state's own create button would be a second create action on the same screen */
+body[data-theme] .resume-empty-state .landing-cta { display: none; }
+
+body[data-theme] .landing-features { display: grid; grid-template-columns: 1fr; gap: var(--space-3); margin: var(--space-4) 0 0; padding: 0; }
+body[data-theme] .landing-feature-card { display: grid; gap: var(--space-2); padding: var(--space-5); }
+body[data-theme] .landing-feature-card h3 { margin: 6px 0 0; font: 700 20px/26px var(--font-display); }
+body[data-theme] .landing-feature-card p { margin: 0; color: var(--ink-body); }
+body[data-theme] .feature-icon {
+  width: 44px; height: 44px; padding: 10px; border-radius: var(--radius-pill);
+  background: var(--ball); color: var(--on-ball); stroke: currentColor; fill: none; stroke-width: 1.8; box-shadow: none;
+}
+
+@media (min-width: 600px) {
+  body[data-theme] .home-hero .hero-description { display: block; }
+  body[data-theme] .home-hero .hero-title { font-size: 40px; line-height: 42px; letter-spacing: -1.6px; }
+  body[data-theme] .landing-features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 900px) {
+  body[data-theme] #app-main > .start-panel { margin-top: var(--space-6); gap: var(--space-5); }
+  body[data-theme] .home-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(340px, 1fr);
+    grid-template-rows: auto auto 1fr;
+    gap: var(--space-4) var(--space-5);
+    order: 1;
+  }
+  body[data-theme] .home-hero { grid-column: 1; grid-row: 1 / span 3; height: auto; min-height: 520px; }
+  body[data-theme] .home-hero .hero-title { font-size: 56px; line-height: 56px; letter-spacing: -2.2px; }
+  body[data-theme] .home-hero-caption { left: var(--space-5); right: auto; bottom: var(--space-5); max-width: min(560px, calc(100% - 2 * var(--space-5))); padding: var(--space-5) var(--space-6); }
+  body[data-theme] .home-join-card { grid-column: 2; grid-row: 1; padding: var(--space-6); border-radius: var(--radius-lg); }
+  body[data-theme] .home-actions { grid-column: 2; grid-row: 2; }
+  body[data-theme] .home-grid > .hero-account-hint { grid-column: 2; grid-row: 3; align-self: start; text-align: left; }
+  body[data-theme] .start-panel > .resume-panel { order: 2; }
+  body[data-theme] .start-panel > .landing-features { order: 3; }
+}
+
+/* =========================================================
+   7. WORKSPACE — header, side rail (AdminRail), bottom TabBar (ink pill)
+   ========================================================= */
+
+body[data-theme].workspace-active,
+body[data-theme].setup-active { background: var(--surface-page); }
+
+body[data-theme] .workspace-header {
+  margin-bottom: var(--space-4);
+  padding: var(--space-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  box-shadow: none;
+}
+body[data-theme] .workspace-header h2 { margin: 2px 0 0; font: 600 28px/32px var(--font-display); letter-spacing: -1px; }
+@media (min-width: 900px) {
+  body[data-theme] .workspace-header h2 { font-size: 40px; line-height: 42px; letter-spacing: -1.6px; }
+}
+
+/* the TV logo belongs to TV mode only (.ps-logo sets display, so restate the hide) */
+body[data-theme] .tv-mode-logo,
+body[data-theme] .tv-mode-wordmark { display: none; }
+.tv-mode body[data-theme] .tv-mode-logo,
+body[data-theme].tv-mode .tv-mode-logo { display: inline-flex; width: auto; --logo-h: clamp(28px, 3vw, 48px); height: var(--logo-h); opacity: 1; filter: none; }
+
+body[data-theme] .workspace-rail-icon { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+body[data-theme] .workspace-rail-item { gap: 10px; border: 0; color: var(--ink-muted); font: 700 14px/1 var(--font-ui); }
+body[data-theme] .workspace-rail-item:hover { color: var(--ink-heading); }
+
+@media (min-width: 860px) {
+  body[data-theme] .workspace-body:not(:has(.workspace-rail.hidden)) { grid-template-columns: 208px minmax(0, 1fr); }
+  body[data-theme] .workspace-rail {
+    top: 96px; gap: 4px; padding: var(--space-3);
+    border: 0; border-radius: var(--radius-md); background: var(--surface-card); box-shadow: none;
+  }
+  body[data-theme] .workspace-rail-item { min-height: 48px; padding: 0 16px; border: 0; border-radius: var(--radius-pill); }
+  body[data-theme] .workspace-rail-item:hover { background: var(--surface-raised); }
+  body[data-theme] .workspace-rail-item.is-active { background: var(--surface-inverse); color: var(--on-inverse); border: 0; }
+  body[data-theme] .workspace-rail-item.is-active .workspace-rail-icon { color: var(--ball); }
+  body[data-theme] .workspace-rail-tv { border: 0; border-top: 0; margin-top: auto; box-shadow: inset 0 1px 0 var(--hairline); border-radius: var(--radius-pill); }
+}
+
+@media not all and (min-width: 860px) {
+  body[data-theme] .workspace-bottom-tabs {
+    position: sticky;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 20;
+    gap: 2px;
+    margin: var(--space-5) 0 0;
+    padding: 6px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--surface-inverse);
+    box-shadow: var(--shadow-float);
+    backdrop-filter: none;
+  }
+  body[data-theme] .workspace-bottom-tabs .workspace-rail-item {
+    min-height: 52px; gap: 3px; padding: 0 2px; border: 0; border-radius: var(--radius-pill);
+    color: color-mix(in srgb, var(--on-inverse) 72%, transparent); font-size: 11px; font-weight: 700;
+  }
+  body[data-theme] .workspace-bottom-tabs .workspace-rail-item:hover { color: var(--on-inverse); background: transparent; }
+  body[data-theme] .workspace-bottom-tabs .workspace-rail-item.is-active { background: var(--ball); color: var(--on-ball); }
+  body[data-theme] .workspace-bottom-tabs .workspace-rail-icon { width: 20px; height: 20px; }
+}
+
+/* =========================================================
+   8. LIVE OVERVIEW, MATCH CARDS (LiveMatchCard / MatchList), SCOREBOARD
+   ========================================================= */
+
+body[data-theme] .live-overview { border: 0; border-radius: var(--radius-md); background: var(--surface-card); box-shadow: none; }
+body[data-theme] .overview-stats strong,
+body[data-theme] .overview-stats b { color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; }
+
+body[data-theme] .match-card { overflow: hidden; }
+body[data-theme] .match-card.match-playing { box-shadow: inset 0 0 0 2px var(--surface-inverse); }
+body[data-theme] .match-card.match-finished { background: var(--surface-raised); }
+body[data-theme] .match-summary { background: transparent; border: 0; }
+body[data-theme] .match-headline { color: var(--ink-heading); font-family: var(--font-display); font-weight: 700; letter-spacing: -0.2px; }
+body[data-theme] .match-summary-score { color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; font-variant-numeric: tabular-nums; }
+body[data-theme] .match-summary-chevron { color: var(--ink-muted); }
+body[data-theme] .scorecard-team h3 { font: 700 12px/16px var(--font-ui); letter-spacing: 1.4px; text-transform: uppercase; color: var(--ink-muted); }
+
+body[data-theme] .scoreboard-table thead th { color: var(--ink-muted); font: 700 11px/16px var(--font-ui); letter-spacing: 1.2px; }
+body[data-theme] .scoreboard-row { background: var(--surface-raised); box-shadow: none; }
+body[data-theme] .scoreboard-row > td:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+body[data-theme] .scoreboard-row > td:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+body[data-theme] .scoreboard-team-name { color: var(--ink-heading); font-family: var(--font-ui); }
+body[data-theme] .scoreboard-cell { color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; font-variant-numeric: tabular-nums; }
+body[data-theme] .scoreboard-point-minus,
+body[data-theme] .scoreboard-point-plus {
+  width: 40px; height: 40px; min-height: 40px; padding: 0; border: 0; border-radius: var(--radius-pill);
+  font: 800 20px/1 var(--font-display); box-shadow: none;
+}
+body[data-theme] .scoreboard-point-minus { background: var(--surface-card); color: var(--ink-heading); box-shadow: inset 0 0 0 1.5px var(--border-control); }
+body[data-theme] .scoreboard-point-plus { background: var(--ball); color: var(--on-ball); }
+body[data-theme] .scoreboard-point-minus:not(:disabled):hover { background: var(--surface-sunken); }
+body[data-theme] .scoreboard-point-plus:not(:disabled):hover { background: var(--ball); filter: brightness(1.04); }
+body[data-theme] .scoreboard-point-minus:disabled,
+body[data-theme] .scoreboard-point-plus:disabled { opacity: 1; background: var(--surface-sunken); color: var(--ink-disabled); box-shadow: none; }
+@media (max-width: 640px) {
+  body[data-theme] .scoreboard-point-minus,
+  body[data-theme] .scoreboard-point-plus { width: 34px; height: 34px; min-height: 34px; font-size: 18px; }
+}
+
+/* NextMatch hero: the player's own match is the one inverse card on the screen */
+body[data-theme] .next-match {
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface-inverse);
+  color: var(--on-inverse);
+}
+body[data-theme] .next-match h3,
+body[data-theme] .next-match h4,
+body[data-theme] .next-match strong { color: var(--on-inverse); }
+body[data-theme] .next-match .eyebrow { color: var(--ball); }
+body[data-theme] .next-match p,
+body[data-theme] .next-match .hint,
+body[data-theme] .next-match small { color: color-mix(in srgb, var(--on-inverse) 72%, transparent); }
+body[data-theme] .next-match .scoreboard-row { background: color-mix(in srgb, var(--on-inverse) 9%, transparent); }
+body[data-theme] .next-match .scoreboard-team-name,
+body[data-theme] .next-match .scoreboard-cell { color: var(--on-inverse); }
+body[data-theme] .next-match .scoreboard-table thead th { color: color-mix(in srgb, var(--on-inverse) 64%, transparent); }
+body[data-theme] .next-match .scoreboard-point-minus { background: transparent; color: var(--on-inverse); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--on-inverse) 40%, transparent); }
+body[data-theme] .next-match .status-chip,
+body[data-theme] .next-match .match-court { background: color-mix(in srgb, var(--on-inverse) 10%, transparent); color: var(--on-inverse); box-shadow: none; }
+
+/* =========================================================
+   9. STANDINGS
+   ========================================================= */
+
+body[data-theme] .standings { gap: 6px; }
+body[data-theme] .standings > li {
+  border: 0; border-radius: var(--radius-sm); background: var(--surface-raised); box-shadow: none;
+}
+body[data-theme] .placement-badge {
+  display: inline-grid; place-items: center; min-width: 32px; height: 32px; border: 0; border-radius: var(--radius-pill);
+  background: var(--surface-card); color: var(--ink-heading); box-shadow: inset 0 0 0 1px var(--hairline);
+  font: 800 15px/1 var(--font-display);
+}
+body[data-theme] .standings > li:first-child .placement-badge { background: var(--ball); color: var(--on-ball); box-shadow: none; }
+body[data-theme] .standing-stats strong { color: var(--ink-heading); font: 800 22px/1 var(--font-display); }
+body[data-theme] .standing-stats small { color: var(--ink-muted); }
+body[data-theme] .player-name-badge { color: var(--ink-heading); }
+
+/* =========================================================
+   10. LARGE SCORE (Scorepad): two halves, inverse and ball; tap a half to score
+   ========================================================= */
+
+body[data-theme] .large-score-dialog { background: var(--surface-page); }
+body[data-theme] .large-score-dialog::backdrop { background: var(--scrim); backdrop-filter: none; }
+body[data-theme] .large-score-surface { background: var(--surface-page); }
+body[data-theme] .large-score-top h2 { color: var(--ink-heading); font-family: var(--font-display); font-weight: 600; letter-spacing: -1px; }
+body[data-theme] .large-score-team {
+  border: 0; border-radius: var(--radius-lg); box-shadow: none;
+  background: var(--surface-inverse); color: var(--on-inverse);
+}
+body[data-theme] .large-score-board > .large-score-team:nth-child(2) { background: var(--ball); color: var(--on-ball); }
+body[data-theme] .large-score-team strong { color: inherit; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.04em; text-shadow: none; }
+body[data-theme] .large-score-team .team-player,
+body[data-theme] .large-score-team .player-name { color: inherit; }
+body[data-theme] .large-score-team small {
+  border: 0; background: color-mix(in srgb, currentColor 12%, transparent); color: inherit; font-family: var(--font-display); font-weight: 800;
+}
+body[data-theme] .large-score-team:not(:disabled):hover { transform: none; filter: brightness(1.04); }
+body[data-theme] .large-score-actions > div { border: 0; border-radius: var(--radius-md); background: var(--surface-card); }
+body[data-theme] .large-score-actions span { color: var(--ink-muted); font: 700 12px/16px var(--font-ui); letter-spacing: 1.2px; }
+body[data-theme] .large-score-actions strong { color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; }
+/* the three facts stay one row on phones too, so both halves of the pad fit the screen */
+body[data-theme] .large-score-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 560px) {
+  body[data-theme] .large-score-actions { gap: 8px; }
+  body[data-theme] .large-score-actions > div { padding: 10px 12px; }
+  body[data-theme] .large-score-actions span { font-size: 10px; letter-spacing: 1px; }
+  body[data-theme] .large-score-actions strong { font-size: 1.05rem; }
+}
+
+/* =========================================================
+   11. CREATE WIZARD (WizardStep) — four ball segments, choice rows
+   ========================================================= */
+
+body[data-theme] .wizard-progress { gap: 6px; }
+body[data-theme] .wizard-progress-bar { height: 6px; border: 0; border-radius: var(--radius-pill); background: var(--surface-sunken); box-shadow: none; }
+body[data-theme] .wizard-progress-bar.is-active,
+body[data-theme] .wizard-progress-bar.is-complete,
+body[data-theme] .wizard-progress-bar.is-done { background: var(--ball); box-shadow: inset 0 0 0 1px var(--on-ball); }
+body[data-theme] .wizard-step-label { color: var(--ink-muted); font: 700 12px/16px var(--font-ui); letter-spacing: 1.4px; text-transform: uppercase; }
+body[data-theme] .format-option {
+  border: 0; border-radius: var(--radius-md); background: var(--surface-raised); box-shadow: inset 0 0 0 1.5px transparent; color: var(--ink-heading);
+}
+body[data-theme] .format-option:hover { background: var(--surface-sunken); }
+body[data-theme] .format-option:has(input:checked) { background: var(--surface-card); box-shadow: inset 0 0 0 2px var(--surface-inverse); }
+body[data-theme] .format-option:has(input:focus-visible) { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+body[data-theme] .wizard-summary { border: 0; border-radius: var(--radius-md); background: var(--surface-raised); box-shadow: none; }
+body[data-theme] .wizard-nav { gap: var(--space-2); }
+
+/* =========================================================
+   12. DIALOGS, SHEETS, TOASTS
+   ========================================================= */
+
+body[data-theme] dialog::backdrop { background: var(--scrim); backdrop-filter: none; }
+body[data-theme] .app-confirm-card,
+body[data-theme] .score-dialog,
+body[data-theme] .info-dialog,
+body[data-theme] .notification-dialog,
+body[data-theme] .install-modal,
+body[data-theme] .feedback-dialog {
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  color: var(--ink-body);
+  box-shadow: var(--shadow-float);
+}
+body[data-theme] .toast,
+body[data-theme] .app-toast {
+  border: 0; border-radius: var(--radius-pill); background: var(--surface-inverse); color: var(--on-inverse); box-shadow: var(--shadow-float);
+}
+
+/* =========================================================
+   13. LOBBY, PODIUM, ACCOUNT
+   ========================================================= */
+
+body[data-theme] .share-box { padding: var(--space-5); }
+body[data-theme] .invite-code,
+body[data-theme] .share-code { color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; letter-spacing: 6px; font-variant-numeric: tabular-nums; }
+body[data-theme] .qr-frame,
+body[data-theme] .share-qr { border: 0; border-radius: var(--radius-md); background: var(--surface-card); box-shadow: inset 0 0 0 1px var(--hairline); }
+
+body[data-theme] .podium-panel { border: 0; border-radius: var(--radius-lg); background: var(--surface-card); box-shadow: none; }
+body[data-theme] .podium-plinth { border: 0; border-radius: var(--radius-sm) var(--radius-sm) 0 0; background: var(--surface-sunken); box-shadow: none; color: var(--ink-heading); }
+body[data-theme] .podium-place-1 .podium-plinth { background: var(--ball); color: var(--on-ball); }
+body[data-theme] .podium-place-2 .podium-plinth { background: var(--surface-inverse); color: var(--on-inverse); }
+
+/* =========================================================
+   14. FOOTER
+   ========================================================= */
+
+body[data-theme] .site-footer { border: 0; background: transparent; box-shadow: none; color: var(--ink-muted); }
+body[data-theme] .site-footer a { color: var(--ink-body); }
+body[data-theme] .site-footer a:hover { color: var(--ink-heading); }
+body[data-theme] .install-app-button { background: var(--surface-inverse); color: var(--on-inverse); border: 0; box-shadow: none; }
+
+/* =========================================================
+   15. TV MODE in the app (tv.html has its own sheet)
+   ========================================================= */
+
+body[data-theme].tv-mode,
+.tv-mode body[data-theme] { background: var(--surface-page); }
+.tv-mode body[data-theme] .workspace-header,
+body[data-theme].tv-mode .workspace-header { padding: 0 0 clamp(6px, 1vh, 12px); border-radius: 0; }
+.tv-mode body[data-theme] .workspace-header h2,
+body[data-theme].tv-mode .workspace-header h2 { text-transform: none; letter-spacing: -0.03em; }
+
+/* =========================================================
+   16. WEIGHT FIXES — older layers style .landing-cta and footer buttons at (0,3,1)+; the design-system
+   variants restate themselves at the same or higher weight so the markup's chosen variant wins.
+   ========================================================= */
+
+body[data-theme] .ps-btn.ps-btn--ball,
+body[data-theme] .ps-btn.ps-btn--ball:hover:not(:disabled) { border: 0; background: var(--ball); color: var(--on-ball); box-shadow: var(--shadow-press); }
+body[data-theme] .ps-btn.ps-btn--ink,
+body[data-theme] .ps-btn.ps-btn--ink:hover:not(:disabled) { border: 0; background: var(--surface-inverse); color: var(--on-inverse); box-shadow: none; }
+body[data-theme] .ps-btn.ps-btn--ghost,
+body[data-theme] .ps-btn.ps-btn--ghost:hover:not(:disabled) { border: 0; background: transparent; color: var(--ink-heading); box-shadow: inset 0 0 0 1.5px var(--border-control); }
+body[data-theme] .ps-btn.ps-btn--ghost:hover:not(:disabled) { background: var(--surface-raised); }
+body[data-theme] .ps-btn.ps-btn--lg { min-height: var(--tap-court); padding: 0 var(--space-6); border-radius: var(--radius-pill); font-size: 17px; }
+
+body[data-theme] .topbar-actions { flex-wrap: nowrap; }
+@media (max-width: 900px) {
+  body[data-theme] .topbar-actions .status-pill { padding: 0 8px; font-size: 12px; }
+}
+
+body[data-theme] .site-footer { width: min(1280px, calc(100% - 2 * var(--space-4))); margin-inline: auto; }
+body[data-theme] .site-footer .install-app-button {
+  min-height: 44px; padding: 0 18px; gap: 8px; border: 0; border-radius: var(--radius-pill);
+  background: var(--surface-card); color: var(--ink-heading); box-shadow: none; font: 700 14px/1 var(--font-ui);
+}
+body[data-theme] .site-footer .install-app-button:hover:not(:disabled) { border: 0; background: var(--surface-raised); box-shadow: none; }
+body[data-theme] .site-footer .install-app-icon { stroke: currentColor; }
+body[data-theme] .footer-links a { border: 0; padding: 8px 4px; color: var(--ink-body); font: 600 14px/1 var(--font-ui); text-decoration: underline; text-decoration-color: var(--hairline); text-underline-offset: 4px; }
+body[data-theme] .footer-links a:hover { color: var(--ink-heading); text-decoration-color: currentColor; }
+body[data-theme] .footer-credit { color: var(--ink-muted); font: 500 13px/20px var(--font-ui); }
+
+/* =========================================================
+   17. MODULE SURFACES — ui-consistency.css reaches these through
+   body:not(.landing-active) .app-module:not(#startView) (id weight), so the same scope is restated here.
+   ========================================================= */
+
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .panel,
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .admin-subtabs {
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  box-shadow: none;
+}
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .panel { padding: var(--space-5); }
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .next-match {
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface-inverse);
+  box-shadow: none;
+  padding: var(--space-5);
+}
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .panel > h3 {
+  font: 700 20px/26px var(--font-display); letter-spacing: -0.3px; text-transform: none; color: var(--ink-heading);
+}
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .match-card {
+  border: 0; border-radius: var(--radius-md); background: var(--surface-raised); box-shadow: none;
+}
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .match-card.match-playing {
+  background: var(--surface-card); box-shadow: inset 0 0 0 2px var(--surface-inverse);
+}
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .status-grid > div,
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .round-summary > div,
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .profile-stat-grid > div,
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .rules-list > div,
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .admin-identity-panel,
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .cup-team-builder,
+body[data-theme]:not(.landing-active) .app-module:not(#startView) .cup-bracket {
+  border: 0; border-radius: var(--radius-sm); background: var(--surface-raised); box-shadow: none;
+}
+/* StatTile: small label over a big number */
+body[data-theme] .round-summary,
+body[data-theme] .live-overview { background: transparent; box-shadow: none; border: 0; }
+body[data-theme] .round-summary > div,
+body[data-theme] .overview-stats > div,
+body[data-theme] .player-now-grid > div,
+body[data-theme] .share-details > div { border: 0; border-radius: var(--radius-sm); background: var(--surface-raised); box-shadow: none; }
+body[data-theme] .round-summary strong,
+body[data-theme] .overview-stats strong,
+body[data-theme] .player-now-grid strong { color: var(--ink-heading); font: 800 28px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+body[data-theme] .round-summary span,
+body[data-theme] .round-summary small { color: var(--ink-muted); }
+
+body[data-theme] .workspace-header h2 { text-transform: none; color: var(--ink-heading); }
+body[data-theme] .workspace-header-actions { justify-content: flex-start; }
+@media (min-width: 700px) { body[data-theme] .workspace-header-actions { justify-content: flex-end; } }
+
+/* match card body: the two teams side by side as flat tiles, controls in a tidy two-column grid */
+body[data-theme] .scorecard-matchup {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); padding: 0; border: 0; background: none;
+}
+body[data-theme] .scorecard-matchup::before { content: none; display: none; }
+body[data-theme] .scorecard-team,
+body[data-theme] .scorecard-team-one,
+body[data-theme] .scorecard-team-two {
+  position: static; grid-row: auto; grid-column: auto; display: grid; gap: var(--space-2); align-content: start;
+  min-height: 0; padding: var(--space-3); border: 0; border-radius: var(--radius-sm);
+  background: var(--surface-card); box-shadow: none;
+}
+body[data-theme] .match-card:not(.match-playing) .scorecard-team { background: var(--surface-card); }
+body[data-theme] .scorecard-team h3 {
+  position: static; transform: none; left: auto; top: auto; width: auto; min-height: 0; margin: 0; padding: 0;
+  border: 0; border-radius: 0; background: none; box-shadow: none; text-align: left;
+}
+body[data-theme] .scorecard-players { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+body[data-theme] .scorecard-players .team-player { display: grid; justify-items: center; gap: 6px; padding: 0; border: 0; text-align: center; }
+body[data-theme] .scorecard-players .scorecard-avatar { width: 44px !important; height: 44px !important; }
+body[data-theme] .scorecard-players .scorecard-avatar .ds-avatar-gem-inner { font-size: 14px !important; }
+body[data-theme] .scorecard-players .team-player-badge {
+  color: var(--ink-heading); font: 700 13px/16px var(--font-ui); letter-spacing: 0; text-transform: none; overflow-wrap: anywhere;
+}
+
+body[data-theme] .match-controls { display: grid; gap: var(--space-3); }
+body[data-theme] .court-edit-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--space-2); }
+body[data-theme] .match-controls .button-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+body[data-theme] .match-controls .button-row > button,
+body[data-theme] .court-edit-row > button,
+body[data-theme] .walkover-row > button {
+  min-height: var(--tap-min); padding: 6px 14px; white-space: normal; line-height: 1.2; font-size: 14px; border-radius: var(--radius-pill);
+}
+body[data-theme] .match-controls .cancel-match-button { grid-column: 1 / -1; }
+body[data-theme] .walkover-row {
+  grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); margin: 0; padding: 0; border: 0;
+}
+body[data-theme] .walkover-row > span { grid-column: 1 / -1; color: var(--ink-muted); font: 700 12px/16px var(--font-ui); letter-spacing: 1.4px; text-transform: uppercase; }
+body[data-theme] .match-card .cancel-match-button,
+body[data-theme] .match-card .walkover-row .walkover-button { border: 0; background: transparent; color: var(--ink-heading); box-shadow: inset 0 0 0 1.5px var(--border-control); }
+body[data-theme] .match-card .cancel-match-button { color: var(--negative); box-shadow: inset 0 0 0 1.5px var(--negative); }
+body[data-theme] .match-card .cancel-match-button:hover:not(:disabled),
+body[data-theme] .match-card .walkover-row .walkover-button:hover:not(:disabled) { background: var(--surface-raised); border: 0; }
+
+/* nav pill: one row everywhere; links (desktop) · status · theme · bell · menu */
+body[data-theme] .topbar-actions,
+body[data-theme].workspace-active .topbar-actions,
+body[data-theme].setup-active .topbar-actions { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; width: auto; margin-left: auto; }
+body[data-theme] .topbar-actions > .menu-drawer { order: 0; }
+body[data-theme] .topbar-actions > .status-pill { order: 1; grid-area: auto; }
+body[data-theme] .topbar-actions > .theme-toggle { order: 2; }
+body[data-theme] .topbar-actions > .notification-bell { order: 3; }
+body[data-theme] .topbar-actions > .app-menu-toggle { order: 4; grid-area: auto; }
+body[data-theme] .match-card::before { content: none; display: none; }
+
+@media (max-width: 640px) {
+  body[data-theme]:not(.landing-active) .app-module:not(#startView) .panel { padding: var(--space-4); }
+  body[data-theme] .match-card { padding: var(--space-4) var(--space-3); }
+  body[data-theme] .scoreboard-row > td { padding: 8px 3px; }
+  body[data-theme] .scoreboard-row > td:first-child { padding-left: 10px; }
+  body[data-theme] .scoreboard-team-name { font-size: 13px; }
+}
+body[data-theme] .match-headline { text-transform: none; }
+body[data-theme] .match-meta { color: var(--ink-muted); font: 700 12px/16px var(--font-ui); letter-spacing: 1.2px; text-transform: uppercase; }
+body[data-theme] .match-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+body[data-theme] .match-meta { width: auto; max-width: none; flex: 1 1 auto; min-width: 0; }
+body[data-theme] .match-top-actions { width: auto; max-width: none; flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
+body[data-theme] .match-headline { font-size: 22px; line-height: 26px; text-align: left; }
+
+/* programmatic focus on a screen title (tabindex=-1) is for screen readers, not a visible ring */
+body[data-theme] [tabindex="-1"]:focus:not(:focus-visible),
+body[data-theme] h1[tabindex="-1"]:focus,
+body[data-theme] h2[tabindex="-1"]:focus { outline: none; }
+body[data-theme]:not(.landing-active) .account-intro h2,
+body[data-theme]:not(.landing-active) .setup-card h2 { text-transform: none; letter-spacing: -0.03em; }
+
+body[data-theme] .player-identity-card { border: 0; border-radius: var(--radius-md); background: var(--surface-raised); box-shadow: none; }
+/* the name keeps its line on phones: the role chips wrap below it instead of squeezing it */
+body[data-theme] .player-identity-card { flex-wrap: wrap; }
+body[data-theme] .player-identity-main { flex: 1 1 10rem; }
+body[data-theme] .player-identity-main strong { overflow-wrap: normal; word-break: normal; }
+body[data-theme] .next-match .player-now-grid > div { border: 0; background: color-mix(in srgb, var(--on-inverse) 9%, transparent); box-shadow: none; }
+body[data-theme] .next-match .player-now-grid span,
+body[data-theme] .next-match .player-now-grid small { color: color-mix(in srgb, var(--on-inverse) 64%, transparent); }
+body[data-theme] .next-match .player-now-grid strong { color: var(--on-inverse); }
+body[data-theme] .compact-list li,
+body[data-theme] .standings li { border: 0; border-radius: var(--radius-sm); background: var(--surface-raised); box-shadow: none; }
+body[data-theme] .compact-list li::before,
+body[data-theme] .standings li::before { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+body[data-theme] .skip-link { border: 0; border-radius: var(--radius-pill); background: var(--surface-inverse); color: var(--on-inverse); transform: translateY(-200%); }
+body[data-theme] .skip-link:focus { transform: translateY(0); }
+body[data-theme] .next-match .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: color-mix(in srgb, var(--on-inverse) 72%, transparent); }
+body[data-theme] .next-match .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--live); }
+body[data-theme] .next-match .scoreboard-table .scoreboard-row { background: color-mix(in srgb, var(--on-inverse) 9%, transparent); }
+body[data-theme] .next-match .scoreboard-table .scoreboard-team-name,
+body[data-theme] .next-match .scoreboard-table .scoreboard-cell { color: var(--on-inverse); }
+
+/* =========================================================
+   18. PHOTOGRAPHY — PhotoCard frames: feature cards on home, the create and join screens
+   ========================================================= */
+
+body[data-theme] .landing-feature-card.has-photo { padding: var(--space-3) var(--space-3) var(--space-5); }
+body[data-theme] .landing-feature-card.has-photo > :not(.landing-feature-photo) { margin-inline: var(--space-3); }
+body[data-theme] .landing-feature-photo { aspect-ratio: 16 / 10; margin: 0 0 var(--space-2); border-radius: var(--radius-sm); }
+body[data-theme] .landing-feature-card.has-photo .feature-icon { margin-top: calc(-1 * var(--space-6)); position: relative; box-shadow: 0 0 0 4px var(--surface-card); }
+
+body[data-theme] .setup-photo { display: none; }
+@media (min-width: 900px) {
+  body[data-theme] .setup-photo { display: block; aspect-ratio: 4 / 5; max-width: 420px; margin-top: var(--space-6); }
+}
+
+/* =========================================================
+   19. INFORMATION PAGES (guide, privacy, system admin) — same nav pill and flat document card
+   ========================================================= */
+
+body[data-theme]:has(.privacy-page) { background: var(--surface-page) !important; background-color: var(--surface-page) !important; color: var(--ink-body); }
+body[data-theme] .privacy-page { width: min(920px, calc(100% - 2 * var(--space-4))); padding-top: 12px; }
+body[data-theme] .privacy-header {
+  position: sticky; top: 12px; z-index: 30;
+  flex-wrap: nowrap; gap: var(--space-2); min-height: 60px; padding: 6px 8px 6px 20px;
+  border: 0; border-radius: var(--radius-pill); background: var(--surface-card); box-shadow: var(--shadow-float);
+}
+body[data-theme] .privacy-header .brand-lockup { flex: 1 1 auto; }
+body[data-theme] .privacy-header .topbar-actions { order: 2; flex: 0 0 auto; margin-left: 0; }
+body[data-theme] .privacy-language { order: 1; display: flex; align-items: center; gap: 0; }
+body[data-theme] .privacy-language > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+body[data-theme] .privacy-language select { min-width: 0; min-height: 40px; padding: 0 34px 0 14px; border: 0; border-radius: var(--radius-pill); background-color: var(--surface-raised); font-size: 14px; }
+body[data-theme] .privacy-document {
+  margin-top: var(--space-4); padding: clamp(24px, 5vw, 48px);
+  border: 0; border-radius: var(--radius-lg); background: var(--surface-card); box-shadow: none;
+}
+body[data-theme] .privacy-document h1 { color: var(--ink-heading); font: 600 clamp(36px, 6vw, 56px)/1.05 var(--font-display); letter-spacing: -0.04em; }
+body[data-theme] .privacy-document h2 { color: var(--ink-heading); font: 700 20px/26px var(--font-display); letter-spacing: -0.3px; }
+body[data-theme] .privacy-document p,
+body[data-theme] .privacy-document li { color: var(--ink-body); font: 500 16px/24px var(--font-ui); }
+body[data-theme] .privacy-document a,
+body[data-theme] .privacy-back-link { color: var(--ink-heading); text-decoration-color: var(--ball-text); }
+@media (min-width: 901px) {
+  body[data-theme] .privacy-header .app-menu-toggle { display: none; }
+  body[data-theme] .privacy-header .menu-drawer { display: contents; }
+}
+body[data-theme] .privacy-header,
+body[data-theme] .privacy-page .privacy-header { flex-direction: row; align-items: center; justify-content: space-between; }
+body[data-theme] .privacy-header .brand-lockup { width: auto; min-width: 0; }
+body[data-theme] .privacy-header > a.secondary {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: var(--radius-pill);
+  background: var(--surface-inverse); color: var(--on-inverse); text-decoration: none; font: 700 14px/1 var(--font-ui); white-space: nowrap;
+}
+@media (max-width: 900px) {
+  body[data-theme] .privacy-header .brand-lockup .ps-logo { --logo-h: 22px; height: var(--logo-h); }
+}
+
+/* =========================================================
+   20. PROTOTYPE LAYOUTS — the live prototype (claude.ai "Padelstar – live prototype")
+   ========================================================= */
+
+/* NextMatch hero: eyebrow + tag, own team · big score · opponents, one ball action */
+body[data-theme] .next-match { display: grid; gap: 18px; }
+body[data-theme] .next-match-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+body[data-theme] .next-match-head .eyebrow { margin: 0; }
+body[data-theme] .next-match-head .eyebrow::before { content: none; }
+body[data-theme] .next-match .next-match-head .eyebrow { color: color-mix(in srgb, var(--on-inverse) 72%, transparent); }
+body[data-theme] .next-match .ps-tag--ball { flex: none; background: var(--ball); color: var(--on-ball); box-shadow: none; }
+body[data-theme] .next-match-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--on-ball); animation: ps-pulse 1.6s ease-in-out infinite; }
+body[data-theme] .next-match-teams { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; }
+body[data-theme] .next-match-team { color: var(--on-inverse); font: 600 20px/24px var(--font-display); letter-spacing: -0.6px; overflow-wrap: anywhere; }
+body[data-theme] .next-match-team-opponents { text-align: right; }
+body[data-theme] .next-match-score { color: var(--on-inverse); font: 800 52px/52px var(--font-display); letter-spacing: -2px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+body[data-theme] .next-match-score > span { padding: 0 4px; opacity: .5; }
+body[data-theme] .next-match-vs { color: color-mix(in srgb, var(--on-inverse) 60%, transparent); font: 800 14px/1 var(--font-ui); letter-spacing: .1em; }
+body[data-theme] .next-match .next-match-keep-score { min-height: var(--tap-court); }
+body[data-theme] .next-match .next-match-summary { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; padding-top: 14px; border-top: 1px solid color-mix(in srgb, var(--on-inverse) 18%, transparent); color: color-mix(in srgb, var(--on-inverse) 72%, transparent); font: 600 13px/18px var(--font-ui); }
+body[data-theme] .next-match > h3 { margin: 0; }
+@media (prefers-reduced-motion: reduce) { body[data-theme] .next-match-live-dot { animation: none; } }
+
+/* Player TabBar: ink pill with a ball active item, phones only */
+body[data-theme] .player-bottom-tabs { display: none; }
+@media not all and (min-width: 860px) {
+  body[data-theme] .player-bottom-tabs:not(.hidden) {
+    position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 20;
+    display: flex; gap: 4px; grid-column: 1 / -1; margin-top: var(--space-2); padding: 6px;
+    border-radius: var(--radius-pill); background: var(--surface-inverse); box-shadow: var(--shadow-float);
+  }
+  body[data-theme] .player-bottom-tabs .workspace-rail-item {
+    flex: 1 1 0; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 0; border: 0; border-radius: var(--radius-pill);
+    background: transparent; color: color-mix(in srgb, var(--on-inverse) 78%, transparent); font: 700 11px/14px var(--font-ui);
+  }
+  body[data-theme] .player-bottom-tabs .workspace-rail-item.is-active { background: var(--ball); color: var(--on-ball); }
+  body[data-theme] .player-bottom-tabs .workspace-rail-icon { width: 22px; height: 22px; }
+}
+body[data-theme] #playerMatchesPanel,
+body[data-theme] #playerStandingsPanel,
+body[data-theme] #playerNextMatch { scroll-margin-top: 92px; }
+
+/* Scorepad: two big halves (ink and ball), close and undo on top */
+body[data-theme] .large-score-top { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-2); }
+body[data-theme] .large-score-heading { display: grid; justify-items: center; gap: 2px; min-width: 0; text-align: center; }
+body[data-theme] .large-score-heading .eyebrow { margin: 0; }
+body[data-theme] .large-score-top h2 { margin: 0; font: 700 15px/20px var(--font-ui); letter-spacing: 0; overflow-wrap: anywhere; }
+body[data-theme] .large-score-close,
+body[data-theme] .large-score-undo {
+  display: grid; place-items: center; width: 48px; min-width: 48px; height: 48px; min-height: 48px; padding: 0;
+  border: 0; border-radius: var(--radius-pill); background: var(--surface-card); color: var(--ink-heading); box-shadow: none;
+}
+body[data-theme] .large-score-close svg,
+body[data-theme] .large-score-undo svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+body[data-theme] .large-score-undo:disabled { background: var(--surface-sunken); color: var(--ink-disabled); }
+body[data-theme] .large-score-team {
+  grid-template-rows: auto minmax(0, 1fr) auto; justify-items: stretch; align-items: end; text-align: left; padding: 20px 24px;
+  box-shadow: var(--shadow-press);
+}
+body[data-theme] .large-score-label { display: grid; gap: 2px; justify-items: start; align-self: start; font: 700 17px/22px var(--font-ui); }
+body[data-theme] .large-score-hint { font: 700 12px/16px var(--font-ui); letter-spacing: 1.4px; text-transform: uppercase; opacity: .72; }
+body[data-theme] .large-score-label .team-player { justify-content: flex-start; }
+body[data-theme] .large-score-team strong { justify-self: end; font-size: clamp(96px, 24vw, 220px); line-height: .87; letter-spacing: -0.05em; }
+body[data-theme] .large-score-team small { justify-self: end; min-width: 72px; min-height: 44px; font-size: clamp(1.2rem, 4vw, 2rem); }
+body[data-theme] .large-score-team:not(:disabled):active { transform: scale(.985); }
+@media (max-width: 899px) {
+  body[data-theme] .large-score-board { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; gap: 8px; }
+  body[data-theme] .large-score-team { min-height: 0; }
+}
+
+/* Standings (Standings table): rank, name, numbers; the leader's rank on the ball */
+body[data-theme] .standings { display: grid; gap: 0; padding: 0; overflow: hidden; border-radius: var(--radius-md); background: var(--surface-card); }
+body[data-theme] .standings > li,
+body[data-theme] .panel .standings > li {
+  margin: 0; padding: 11px 16px; border: 0; border-radius: 0; border-top: 1px solid var(--hairline); background: transparent; box-shadow: none;
+}
+body[data-theme] .standings > li:first-child { border-top: 0; }
+body[data-theme] .standings > li::before { content: none; display: none; }
+body[data-theme] .standings > li.is-me,
+body[data-theme] .standings > li.current-player,
+body[data-theme] .standings > li.highlight { background: var(--ball-wash); }
+/* muted ink drops under 4.5:1 on the ball wash in Floodlight, so the own row's small print uses body ink */
+body[data-theme] .standings > li.is-me small,
+body[data-theme] .standings > li.is-me span { color: var(--ink-body); }
+body[data-theme] .standings .placement-badge { min-width: 28px; height: 28px; box-shadow: none; background: transparent; }
+body[data-theme] .standings > li:first-child .placement-badge { background: var(--ball); color: var(--on-ball); }
+body[data-theme] .standing-stats strong { font-size: 18px; }
+
+/* ---------- 21. Players without colours or avatars (developer's decision 2026-10-05) ----------
+   The gem avatars and the coloured name chips do not fit the 1.0 design: names are plain ink, no gem, no accent bar. */
+body[data-theme] .ds-avatar-gem,
+body[data-theme] .avatar.ds-avatar-gem { display: none !important; }
+body[data-theme] .team-player,
+body[data-theme] .scorecard-players .team-player { gap: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
+body[data-theme] .team-player-badge,
+body[data-theme] .scorecard-players .team-player-badge,
+body[data-theme] .large-score-label .team-player-badge {
+  min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none;
+  color: inherit; font: inherit; font-weight: 700; text-shadow: none;
+}
+body[data-theme] .team-player + .team-player::before { content: "&"; margin: 0 .35em; color: var(--ink-muted); font-weight: 600; }
+
+/* ---------- 22. Theme switch: the sun and the moon say it; the words stay for screen readers only ---------- */
+body[data-theme] .theme-toggle .theme-toggle-option:has(svg) { gap: 0; min-width: 40px; padding-inline: 10px; justify-content: center; }
+body[data-theme] .theme-toggle .theme-toggle-option:has(svg) > span {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+/* no accent bar on list rows either, and the scorecard keeps a team's names on one line */
+body[data-theme] .compact-list li::before { content: none; display: none; }
+body[data-theme] .player-name-badge { padding: 0; border: 0; background: transparent; box-shadow: none; color: var(--ink-heading); font-weight: 700; }
+body[data-theme] .scorecard-players { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0; }
+body[data-theme] .scorecard-players .team-player { display: inline-flex; }
+body[data-theme] .large-score-label { display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 4px; }
+body[data-theme] .large-score-label .large-score-hint { flex: 0 0 100%; }
+body[data-theme] .large-score-label .team-player { display: inline-flex; font: 700 clamp(20px, 3.2vw, 30px)/1.15 var(--font-display); letter-spacing: -0.02em; }
+body[data-theme] .large-score-label .team-player + .team-player::before { color: inherit; opacity: .55; }
