@@ -1,16 +1,19 @@
 /* =========================================================
    COLOUR TOKENS - the single source of colour for both themes
    ---------------------------------------------------------
-   Dark: a lifted slate navy (not near-black). Light: a soft blue-white page with pure white cards.
-   The two themes were tuned independently: light is NOT an inversion of dark. Same role, different value
-   (accent blue #3d97f0 on dark is #17559f on light).
+   Padelstar 1.0 design system (claude.ai Design System artifact "Padelstar", 2026-10-04):
+   calm and editorial off court, loud and simple on court. One brand colour carries everything: padel-ball yellow.
+   Two first-class themes: Daylight (data-theme="light": warm bone page, white cards) and Floodlight
+   (data-theme="dark": near-black, for evening play and TV).
 
    Rules:
    * Components use var(--token). No hex or rgb() literals for surfaces, borders, ink, accents or buttons in component CSS
      (scripts/color-audit.js counts what is left; test/color-tokens.test.js keeps it from growing).
-   * Cards stay white in light mode. The page does the darkening.
-   * The primary action is a solid deep-blue gradient with white text in light mode; do not reuse the dark theme's pale gradient.
-   * Every text token was checked at 4.5:1 (body) / 3:1 (headline scale) against its real background: test/color-tokens.test.js.
+   * --ball is a fill, never text on a light ground: text on it is --on-ball. When the accent must be text, use --ball-text.
+   * One yellow thing per screen: the single action or state that matters most right now.
+   * --surface-inverse with --on-inverse is the second voice (the ink button, the next-match hero).
+   * Cards sit flat on the page; only floating things (nav pill, tab bar, sheets) carry --shadow-float.
+   * Every text token was checked at 4.5:1 against its real background: test/color-tokens.test.js.
    The theme is set on <html data-theme="dark|light"> by app/color-mode.js (saved in localStorage; the device's
    prefers-color-scheme decides only on the first visit).
    ========================================================= */
@@ -18,112 +21,160 @@
 :root {
   color-scheme: dark;
 
-  /* surfaces */
-  --surface-page:      #1b2438;
-  --surface-card:      #233049;
-  --surface-raised:    #212d45;
-  --surface-sunken:    #19283c;
+  /* surfaces (Floodlight) */
+  --surface-page:      #0b0b0b;
+  --surface-card:      #171717;
+  --surface-raised:    #222222;
+  --surface-sunken:    #2a2a2a;
+  --surface-inverse:   #f5f4f0;
+  --on-inverse:        #0b0b0b;
 
   /* hairlines / borders */
-  --border-subtle:     rgba(159, 207, 255, .108);
-  --border-default:    rgba(159, 207, 255, .18);
-  --border-strong:     rgba(159, 207, 255, .324);
+  --hairline:          rgba(245, 244, 240, .10);
+  --border-subtle:     rgba(245, 244, 240, .10);
+  --border-default:    rgba(245, 244, 240, .16);
+  --border-strong:     #6e6b64;
+  --border-control:    #6e6b64;
 
   /* ink */
-  --ink-heading:       #d5e2f0;
-  --ink-body:          #c2d4e5;
-  --ink-muted:         #9cb0c4;
-  --ink-faint:         #8a9db1;
+  --ink-heading:       #f5f4f0;
+  --ink-body:          #cfccc4;
+  --ink-muted:         #9b988f;
+  --ink-faint:         #9b988f;
+  --ink-disabled:      #5b5953;
 
-  /* accents */
-  --accent-blue:       #3d97f0;
-  --accent-blue-bright:#62b6ff;
-  --accent-cyan:       #17abe4;
-  --positive:          #7ed49e;
-  --negative:          #f2909f;
-  --warning:           #e6c05a;
+  /* the brand accent: padel-ball optic yellow */
+  --ball:              #dcf55a;
+  --on-ball:           #0b0b0b;
+  --ball-text:         #dcf55a;
+  --ball-wash:         rgba(220, 245, 90, .14);
 
-  /* logo-derived: violet rim + chrome ramp. Violet only as the far end of an accent ramp (progress, live-state highlights,
-     the brand gem), never as body text or a large fill. The chrome ramp is for bevel/edge treatments on brand surfaces only. */
-  --accent-violet:     #7848f0;
-  --accent-violet-deep:#4800a8;
-  --chrome-high:       #f0f0f0;
-  --chrome-mid:        #b0d0f0;
-  --chrome-low:        #6080b0;
-  --brand-navy:        #001020;
+  /* states */
+  --live:              #ff6b78;
+  --court:             #8fb8f2;
+  --positive:          #6fe0a4;
+  --negative:          #ff6b78;
+  --warning:           #f2c14e;
+  --focus-ring:        #dcf55a;
+  --scrim:             rgba(0, 0, 0, .64);
 
-  /* accent ramp: blue into the logo's violet rim */
-  --ramp-accent:       linear-gradient(90deg, #3d97f0, #7848f0);
-  --ramp-gem:          linear-gradient(150deg, #62b6ff, #4800a8);
+  /* legacy accent roles, now drawn from the ball family (fills) and the court blue (information) */
+  --accent-blue:       #dcf55a;
+  --accent-blue-bright:#e8f98f;
+  --accent-cyan:       #8fb8f2;
 
-  /* accent as small text: bright on dark, deep on light (the bright accent only passes 3:1 on the light page) */
-  --accent-text:       var(--accent-blue-bright);
+  /* legacy brand ramps from the retired shield logo: now solid ball, so progress bars and gems follow the brand */
+  --accent-violet:     #dcf55a;
+  --accent-violet-deep:#b4cf33;
+  --chrome-high:       #f5f4f0;
+  --chrome-mid:        #cfccc4;
+  --chrome-low:        #6e6b64;
+  --brand-navy:        #0b0b0b;
+  --ramp-accent:       linear-gradient(90deg, #dcf55a, #dcf55a);
+  --ramp-gem:          linear-gradient(150deg, #dcf55a, #b4cf33);
 
-  /* primary action gradient */
-  --btn-primary-from:  #a1d6ff;
-  --btn-primary-to:    #008df9;
-  --btn-primary-ink:   #04121f;
-  --btn-primary-shadow: 0 10px 26px rgba(35, 108, 168, .4);
+  /* accent as small text */
+  --accent-text:       var(--ball-text);
 
-  /* secondary / ghost button washes */
-  --btn-secondary-bg:  linear-gradient(180deg, #5badff0d, #5badff30);
-  --btn-secondary-border: rgba(91, 173, 255, .42);
-  --btn-secondary-ink: #8ecbff;
+  /* primary action: the ball pill */
+  --btn-primary-from:  #dcf55a;
+  --btn-primary-to:    #dcf55a;
+  --btn-primary-ink:   #0b0b0b;
+  --btn-primary-shadow: 0 2px 0 rgba(0, 0, 0, .7);
 
-  /* shadows follow the theme too (a derived role, not a new colour) */
+  /* secondary: the ghost pill */
+  --btn-secondary-bg:  transparent;
+  --btn-secondary-border: #6e6b64;
+  --btn-secondary-ink: #f5f4f0;
+
+  /* depth */
+  --shadow-float:      0 12px 40px rgba(0, 0, 0, .6);
+  --shadow-press:      0 2px 0 rgba(0, 0, 0, .7);
   --shadow-ink:        #000000;
-  /* the accent blue as an r, g, b triplet, only for rgba(var(--player-accent-rgb), a) where no player colour is set */
-  --accent-blue-rgb:   61, 151, 240;
+  /* the accent as an r, g, b triplet, only for rgba(var(--player-accent-rgb), a) where no player colour is set */
+  --accent-blue-rgb:   220, 245, 90;
 }
 
 [data-theme="light"] {
   color-scheme: light;
 
-  --surface-page:      #eef3fa;
+  /* surfaces (Daylight) */
+  --surface-page:      #f4f1ea;
   --surface-card:      #ffffff;
-  --surface-raised:    #fafcfe;
-  --surface-sunken:    #f2f6fb;
+  --surface-raised:    #fbfaf6;
+  --surface-sunken:    #eae6dc;
+  --surface-inverse:   #141414;
+  --on-inverse:        #ffffff;
 
-  --border-subtle:     rgba(20, 60, 105, .1);
-  --border-default:    rgba(20, 60, 105, .154);
-  --border-strong:     rgba(20, 60, 105, .277);
+  --hairline:          rgba(20, 20, 20, .10);
+  --border-subtle:     rgba(20, 20, 20, .10);
+  --border-default:    rgba(20, 20, 20, .16);
+  --border-strong:     #8a877d;
+  --border-control:    #8a877d;
 
-  --ink-heading:       #14243a;
-  --ink-body:          #3c5570;
-  --ink-muted:         #415870;
-  --ink-faint:         #415870;
+  --ink-heading:       #141414;
+  --ink-body:          #3b3a36;
+  --ink-muted:         #66645c;
+  --ink-faint:         #66645c;
+  --ink-disabled:      #8f8c82;
 
-  --accent-blue:       #17559f;
-  --accent-blue-bright:#2f7fd4;
-  --accent-cyan:       #0a7aa8;
-  --accent-text:       var(--accent-blue);
-  --positive:          #17603c;
-  --negative:          #ad3550;
-  --warning:           #8a6a10;
+  --ball:              #d7f34a;
+  --on-ball:           #141414;
+  --ball-text:         #4a5a0a;
+  --ball-wash:         rgba(215, 243, 74, .28);
 
-  --accent-violet:     #5a2bc4;
-  --accent-violet-deep:#3d1a8f;
+  --live:              #c4162a;
+  --court:             #1d4f91;
+  --positive:          #1c7445;
+  --negative:          #c4162a;
+  --warning:           #7a5600;
+  --focus-ring:        #141414;
+  --scrim:             rgba(20, 20, 20, .48);
+
+  --accent-blue:       #4a5a0a;
+  --accent-blue-bright:#5c700d;
+  --accent-cyan:       #1d4f91;
+  --accent-text:       var(--ball-text);
+
+  --accent-violet:     #4a5a0a;
+  --accent-violet-deep:#3a4708;
   --chrome-high:       #ffffff;
-  --chrome-mid:        #8aa8cc;
-  --chrome-low:        #46617f;
-  --brand-navy:        #001020;
+  --chrome-mid:        #8a877d;
+  --chrome-low:        #66645c;
+  --brand-navy:        #141414;
+  --ramp-accent:       linear-gradient(90deg, #d7f34a, #d7f34a);
+  --ramp-gem:          linear-gradient(150deg, #d7f34a, #a9c41f);
 
-  --ramp-accent:       linear-gradient(90deg, #17559f, #5a2bc4);
-  --ramp-gem:          linear-gradient(150deg, #62b6ff, #3d1a8f);
+  --btn-primary-from:  #d7f34a;
+  --btn-primary-to:    #d7f34a;
+  --btn-primary-ink:   #141414;
+  --btn-primary-shadow: 0 2px 0 rgba(20, 20, 20, .18);
 
-  --btn-primary-from:  #2f7fd4;
-  --btn-primary-to:    #17559f;
-  --btn-primary-ink:   #ffffff;
-  --btn-primary-shadow: 0 8px 20px rgba(23, 85, 159, .28);
+  --btn-secondary-bg:  transparent;
+  --btn-secondary-border: #8a877d;
+  --btn-secondary-ink: #141414;
 
-  --btn-secondary-bg:  linear-gradient(180deg, #5badff0d, #5badff30);
-  --btn-secondary-border: rgba(91, 173, 255, .42);
-  --btn-secondary-ink: #17559f;
-
-  --shadow-ink:        #0f2846;
-  --accent-blue-rgb:   23, 85, 159;
+  --shadow-float:      0 12px 40px rgba(20, 20, 20, .12);
+  --shadow-press:      0 2px 0 rgba(20, 20, 20, .18);
+  --shadow-ink:        #141414;
+  --accent-blue-rgb:   74, 90, 10;
 }
 
-/* derived: how strongly shadows and glows show. A dark page can carry a heavy shadow; a light page only a soft one. */
-:root { --shadow-strength: 1; --glow-strength: 1; --text-glow-strength: 1; }
-[data-theme="light"] { --shadow-strength: .42; --glow-strength: .5; --text-glow-strength: 0; }
+/* derived: how strongly shadows show. The design is flat: no glows, soft shadows only on floating things. */
+:root { --shadow-strength: .5; --glow-strength: 0; --text-glow-strength: 0; }
+[data-theme="light"] { --shadow-strength: .3; --glow-strength: 0; --text-glow-strength: 0; }
+
+/* shape, space and size (same in both themes) */
+:root {
+  --radius-xs: 8px;
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 32px;
+  --radius-pill: 999px;
+  --space-7: 32px;
+  --space-8: 48px;
+  --space-9: 72px;
+  --tap-min: 48px;
+  --tap-court: 64px;
+  --content-max: 560px;
+}

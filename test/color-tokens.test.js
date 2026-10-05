@@ -18,25 +18,25 @@ function block(selector) {
 const dark = block(":root");
 const light = block('[data-theme="light"]');
 
+// Padelstar 1.0 design system (claude.ai "Padelstar" design-system artifact, tokens.json): Floodlight (:root, dark)
+// and Daylight ([data-theme=light]). Legacy names stay as aliases onto the new roles so the older layers follow.
 const DARK = {
-  "--surface-page": "#1b2438", "--surface-card": "#233049", "--surface-raised": "#212d45", "--surface-sunken": "#19283c",
-  "--border-subtle": "rgba(159, 207, 255, .108)", "--border-default": "rgba(159, 207, 255, .18)", "--border-strong": "rgba(159, 207, 255, .324)",
-  "--ink-heading": "#d5e2f0", "--ink-body": "#c2d4e5", "--ink-muted": "#9cb0c4", "--ink-faint": "#8a9db1",
-  "--accent-blue": "#3d97f0", "--accent-blue-bright": "#62b6ff", "--accent-cyan": "#17abe4", "--positive": "#7ed49e", "--negative": "#f2909f", "--warning": "#e6c05a",
-  "--btn-primary-from": "#a1d6ff", "--btn-primary-to": "#008df9", "--btn-primary-ink": "#04121f", "--btn-primary-shadow": "0 10px 26px rgba(35, 108, 168, .4)",
-  "--accent-violet": "#7848f0", "--accent-violet-deep": "#4800a8", "--chrome-high": "#f0f0f0", "--chrome-mid": "#b0d0f0", "--chrome-low": "#6080b0", "--brand-navy": "#001020",
-  "--ramp-accent": "linear-gradient(90deg, #3d97f0, #7848f0)", "--ramp-gem": "linear-gradient(150deg, #62b6ff, #4800a8)",
-  "--btn-secondary-bg": "linear-gradient(180deg, #5badff0d, #5badff30)", "--btn-secondary-border": "rgba(91, 173, 255, .42)", "--btn-secondary-ink": "#8ecbff",
+  "--surface-page": "#0b0b0b", "--surface-card": "#171717", "--surface-raised": "#222222", "--surface-sunken": "#2a2a2a",
+  "--surface-inverse": "#f5f4f0", "--on-inverse": "#0b0b0b",
+  "--ink-heading": "#f5f4f0", "--ink-body": "#cfccc4", "--ink-muted": "#9b988f", "--ink-faint": "#9b988f", "--ink-disabled": "#5b5953",
+  "--ball": "#dcf55a", "--on-ball": "#0b0b0b", "--ball-text": "#dcf55a",
+  "--live": "#ff6b78", "--court": "#8fb8f2", "--positive": "#6fe0a4", "--negative": "#ff6b78", "--warning": "#f2c14e",
+  "--focus-ring": "#dcf55a", "--border-control": "#6e6b64",
+  "--accent-blue": "#dcf55a", "--accent-cyan": "#8fb8f2", "--btn-primary-from": "#dcf55a", "--btn-primary-to": "#dcf55a", "--btn-primary-ink": "#0b0b0b",
 };
 const LIGHT = {
-  "--surface-page": "#eef3fa", "--surface-card": "#ffffff", "--surface-raised": "#fafcfe", "--surface-sunken": "#f2f6fb",
-  "--border-subtle": "rgba(20, 60, 105, .1)", "--border-default": "rgba(20, 60, 105, .154)", "--border-strong": "rgba(20, 60, 105, .277)",
-  "--ink-heading": "#14243a", "--ink-body": "#3c5570", "--ink-muted": "#415870", "--ink-faint": "#415870",
-  "--accent-blue": "#17559f", "--accent-blue-bright": "#2f7fd4", "--accent-cyan": "#0a7aa8", "--positive": "#17603c", "--negative": "#ad3550", "--warning": "#8a6a10",
-  "--btn-primary-from": "#2f7fd4", "--btn-primary-to": "#17559f", "--btn-primary-ink": "#ffffff", "--btn-primary-shadow": "0 8px 20px rgba(23, 85, 159, .28)",
-  "--accent-violet": "#5a2bc4", "--accent-violet-deep": "#3d1a8f", "--chrome-high": "#ffffff", "--chrome-mid": "#8aa8cc", "--chrome-low": "#46617f", "--brand-navy": "#001020",
-  "--ramp-accent": "linear-gradient(90deg, #17559f, #5a2bc4)", "--ramp-gem": "linear-gradient(150deg, #62b6ff, #3d1a8f)",
-  "--btn-secondary-bg": "linear-gradient(180deg, #5badff0d, #5badff30)", "--btn-secondary-border": "rgba(91, 173, 255, .42)", "--btn-secondary-ink": "#17559f",
+  "--surface-page": "#f4f1ea", "--surface-card": "#ffffff", "--surface-raised": "#fbfaf6", "--surface-sunken": "#eae6dc",
+  "--surface-inverse": "#141414", "--on-inverse": "#ffffff",
+  "--ink-heading": "#141414", "--ink-body": "#3b3a36", "--ink-muted": "#66645c", "--ink-faint": "#66645c", "--ink-disabled": "#8f8c82",
+  "--ball": "#d7f34a", "--on-ball": "#141414", "--ball-text": "#4a5a0a",
+  "--live": "#c4162a", "--court": "#1d4f91", "--positive": "#1c7445", "--negative": "#c4162a", "--warning": "#7a5600",
+  "--focus-ring": "#141414", "--border-control": "#8a877d",
+  "--accent-blue": "#4a5a0a", "--accent-cyan": "#1d4f91", "--btn-primary-from": "#d7f34a", "--btn-primary-to": "#d7f34a", "--btn-primary-ink": "#141414",
 };
 
 test("tokens.css holds exactly the specified values for the dark theme (:root) and the light theme ([data-theme=light])", () => {
@@ -49,48 +49,45 @@ test("tokens.css holds exactly the specified values for the dark theme (:root) a
 test("the two themes are tuned separately: light is not an inversion, and cards stay white", () => {
   assert.equal(LIGHT["--surface-card"], "#ffffff");
   assert.notEqual(LIGHT["--surface-page"], "#ffffff", "the page does the darkening, not the cards");
-  assert.equal(LIGHT["--accent-blue"], "#17559f");
-  assert.notEqual(DARK["--accent-blue"], LIGHT["--accent-blue"], "same role, different value");
-  assert.notEqual(LIGHT["--btn-primary-from"], DARK["--btn-primary-from"], "the light primary is a deep-blue gradient, not the pale dark one");
-  const l = (hex) => { const n = parseInt(hex.slice(1), 16); const c = [n >> 16 & 255, n >> 8 & 255, n & 255].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
-  assert.ok(l(LIGHT["--btn-primary-from"]) < l(LIGHT["--surface-page"]), "on a light page the primary action must be darker than the surface");
-  assert.ok(l(DARK["--surface-card"]) > l(DARK["--surface-page"]), "on dark, cards are lighter than the page");
+  assert.notEqual(DARK["--ball"], LIGHT["--ball"], "the ball is tuned per ground");
+  assert.notEqual(DARK["--ball-text"], LIGHT["--ball-text"], "on a light ground the accent as text is a deep olive, never the fill");
+  assert.ok(lum(DARK["--surface-card"]) > lum(DARK["--surface-page"]), "on dark, cards are lighter than the page");
 });
 
+function lum(hex) { const n = parseInt(hex.slice(1), 16); const c = [n >> 16 & 255, n >> 8 & 255, n & 255].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
 function contrast(a, b) {
-  const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const c = [n >> 16 & 255, n >> 8 & 255, n & 255].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
   const x = lum(a), y = lum(b);
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
 
 test("contrast floor: text tokens 4.5:1 on every surface, headline-scale accents 3:1, in both themes", () => {
   for (const [theme, set] of [["dark", DARK], ["light", LIGHT]]) {
-    const surfaces = ["--surface-page", "--surface-card", "--surface-raised", "--surface-sunken"];
-    const accentText = theme === "dark" ? "--accent-blue-bright" : "--accent-blue"; // --accent-text is defined as exactly this
-    for (const surface of surfaces) {
-      for (const ink of ["--ink-heading", "--ink-body", "--ink-muted", "--ink-faint", "--positive", "--negative", "--warning", accentText]) {
+    for (const surface of ["--surface-page", "--surface-card", "--surface-raised", "--surface-sunken"]) {
+      for (const ink of ["--ink-heading", "--ink-body", "--ink-muted", "--ink-faint", "--positive", "--negative", "--warning", "--live", "--ball-text", "--accent-blue"]) {
         assert.ok(contrast(set[ink], set[surface]) >= 4.5, `${theme}: ${ink} on ${surface} = ${contrast(set[ink], set[surface]).toFixed(2)}`);
       }
-      for (const accent of ["--accent-blue", "--accent-blue-bright", "--accent-cyan"]) {
-        assert.ok(contrast(set[accent], set[surface]) >= 3, `${theme}: ${accent} (headline scale) on ${surface}`);
-      }
+      assert.ok(contrast(set["--court"], set[surface]) >= 3, `${theme}: --court (tag scale) on ${surface}`);
     }
+    assert.ok(contrast(set["--on-ball"], set["--ball"]) >= 4.5, `${theme}: text on the ball`);
+    assert.ok(contrast(set["--on-inverse"], set["--surface-inverse"]) >= 4.5, `${theme}: text on the inverse card`);
+    assert.ok(contrast(set["--focus-ring"], set["--surface-page"]) >= 3, `${theme}: focus ring visible on the page`);
   }
-  assert.match(tokens, /:root \{[^}]*--accent-text:\s*var\(--accent-blue-bright\)/);
-  assert.match(tokens, /\[data-theme="light"\] \{[^}]*--accent-text:\s*var\(--accent-blue\)/);
+  assert.match(tokens, /:root \{[^}]*--accent-text:\s*var\(--ball-text\)/);
+  assert.match(tokens, /\[data-theme="light"\] \{[^}]*--accent-text:\s*var\(--ball-text\)/);
 });
 
-test("the primary button: ink 4.5:1 on both ends of the dark gradient, and 4:1 or better on the light one (bold text)", () => {
-  assert.ok(contrast(DARK["--btn-primary-ink"], DARK["--btn-primary-from"]) >= 4.5);
-  assert.ok(contrast(DARK["--btn-primary-ink"], DARK["--btn-primary-to"]) >= 4.5);
-  // white on #2f7fd4 is 4.11:1 (the lighter end of the specified light gradient), on #17559f 7.4:1
-  assert.ok(contrast(LIGHT["--btn-primary-ink"], LIGHT["--btn-primary-from"]) >= 4);
-  assert.ok(contrast(LIGHT["--btn-primary-ink"], LIGHT["--btn-primary-to"]) >= 4.5);
+test("the primary button is the ball: solid fill, ink 4.5:1 on it in both themes", () => {
+  for (const set of [DARK, LIGHT]) {
+    assert.equal(set["--btn-primary-from"], set["--ball"]);
+    assert.equal(set["--btn-primary-to"], set["--ball"]);
+    assert.equal(set["--btn-primary-ink"], set["--on-ball"]);
+    assert.ok(contrast(set["--btn-primary-ink"], set["--btn-primary-from"]) >= 4.5);
+  }
 });
 
 test("the primary shadow is themed (a tight deep one on light, the wide glow on dark) and every primary button uses it", () => {
   assert.notEqual(dark["--btn-primary-shadow"], light["--btn-primary-shadow"]);
-  const css = ["components-v2.css", "components.css", "styles.css", "ui-consistency.css"].map((f) => read("styles", f)).join("\n");
+  const css = ["components-v2.css", "components.css", "styles.css", "ui-consistency.css", "redesign.css"].map((f) => read("styles", f)).join("\n");
   assert.ok((css.match(/var\(--btn-primary-shadow\)/g) ?? []).length >= 5, "the primary buttons take their shadow from the token");
   assert.doesNotMatch(css, /\.ds-btn-primary \{[^}]*box-shadow: 0 10px 26px/, "no local glow on the primary button");
 });

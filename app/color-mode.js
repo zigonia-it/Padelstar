@@ -3,7 +3,7 @@
 // (read once when the page loads: the first visit), (3) dark. A choice is saved on this device and applied at once, without reloading.
 (function (global) {
   const STORAGE_KEY = "padelstar-theme";
-  const THEME_COLOR = { dark: "#1b2438", light: "#eef3fa" };
+  const THEME_COLOR = { dark: "#0b0b0b", light: "#f4f1ea" };
 
   // "light" | "dark" when the person chose one, otherwise null (follow the device).
   function readPreference(storage) {

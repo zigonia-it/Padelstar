@@ -1,0 +1,74 @@
+/* =========================================================
+   TV BOARD — Padelstar 1.0 (design system: TVBoard)
+   Readable from across the hall: flat cards on a calm ground, huge tabular scores, one ball-yellow accent
+   for the leader and for what is live. Loads after tv.css; every colour is a token (scripts/color-audit.js).
+   ========================================================= */
+
+body.tv-page { background: var(--surface-page); color: var(--ink-body); font-family: var(--font-ui); }
+body.tv-page::before, body.tv-page::after { content: none; display: none; }
+
+.tv-page .tv-header { gap: clamp(12px, 2vw, 32px); }
+.tv-page .tv-header-lines { display: none; }
+.tv-page .tv-brand { display: inline-flex; align-items: center; width: auto; height: clamp(26px, 2.6vw, 44px); filter: none; }
+.tv-page .tv-brand img { display: block; width: auto; height: 100%; }
+.tv-page .tv-brand .logo-on-dark { display: none; }
+[data-theme="dark"] .tv-page .tv-brand .logo-on-light { display: none; }
+[data-theme="dark"] .tv-page .tv-brand .logo-on-dark { display: block; }
+
+.tv-page .tv-title-wrap > span { color: var(--ink-muted); font: 700 clamp(.7rem, .9vw, 1rem)/1.3 var(--font-ui); letter-spacing: .14em; text-transform: uppercase; }
+.tv-page .tv-title-wrap h1 { color: var(--ink-heading); font-family: var(--font-display); font-weight: 600; letter-spacing: -0.035em; text-transform: none; text-shadow: none; }
+.tv-page .tv-clock { color: var(--ink-heading); font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; }
+.tv-page .tv-clock::before { display: none; }
+
+.tv-page .tv-theme-toggle { gap: 4px; padding: 4px; border: 0; border-radius: var(--radius-pill); background: var(--surface-sunken); box-shadow: none; }
+.tv-page .tv-theme-toggle button { min-height: 34px; padding: 0 14px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--ink-muted); font: 700 13px/1 var(--font-ui); box-shadow: none; }
+.tv-page .tv-theme-toggle button[aria-pressed="true"] { background: var(--surface-card); color: var(--ink-heading); box-shadow: var(--shadow-press); }
+
+.tv-page .tv-panel { border: 0; border-radius: var(--radius-lg); background: var(--surface-card); box-shadow: none; }
+.tv-page .tv-panel h2 { gap: 10px; color: var(--ink-heading); font: 700 clamp(.78rem, 1vw, 1.1rem)/1.2 var(--font-ui); letter-spacing: .14em; text-transform: uppercase; }
+.tv-page .tv-panel h2 em { color: var(--ink-muted); font-style: normal; }
+.tv-page .heading-icon { display: none; }
+.tv-page .live-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--live); box-shadow: none; }
+
+.tv-page .tv-match-card { border: 0; border-radius: var(--radius-md); background: var(--surface-raised); box-shadow: none; }
+.tv-page .tv-match-card.tv-live-match { background: var(--ball); color: var(--on-ball); }
+.tv-page .tv-match-card h3 { color: var(--ink-muted); font: 700 clamp(.62rem, .75vw, .9rem)/1.3 var(--font-ui); letter-spacing: .12em; text-transform: uppercase; }
+.tv-page .tv-match-card h3 > span { color: var(--court); }
+.tv-page .tv-live-match h3,
+.tv-page .tv-live-match h3 > span { color: color-mix(in srgb, var(--on-ball) 72%, transparent); }
+.tv-page .tv-team { color: var(--ink-heading); font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; text-transform: none; }
+.tv-page .tv-live-match .tv-team { color: var(--on-ball); }
+.tv-page .tv-team-score { color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.tv-page .tv-live-match .tv-team-score { color: var(--on-ball); }
+.tv-page .tv-versus { color: var(--ink-muted); font-family: var(--font-ui); font-weight: 700; letter-spacing: .1em; }
+.tv-page .tv-live-match .tv-versus,
+.tv-page .tv-live-match .tv-score-detail,
+.tv-page .tv-live-match .tv-match-meta { color: color-mix(in srgb, var(--on-ball) 72%, transparent); }
+.tv-page .tv-score-detail strong { color: inherit; font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+.tv-page .tv-live-match .tv-score-detail strong { color: var(--on-ball); }
+.tv-page .tv-match-meta { border-top: 0; color: var(--ink-muted); }
+.tv-page .tv-live-label { color: var(--on-ball); }
+.tv-page .tv-match-card:not(.tv-live-match) .tv-live-label { color: var(--live); }
+
+.tv-page .tv-table-head { border-bottom: 0; color: var(--ink-muted); font: 700 clamp(.58rem, .7vw, .82rem)/1.2 var(--font-ui); letter-spacing: .12em; }
+.tv-page .tv-standing-row { border-bottom: 1px solid var(--hairline); color: var(--ink-heading); }
+.tv-page .tv-standing-row::before,
+.tv-page .tv-standing-row:nth-child(n)::before { background: var(--surface-sunken); color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; }
+.tv-page .tv-standing-row:first-child::before { background: var(--ball); color: var(--on-ball); }
+.tv-page .tv-standing-name { color: var(--ink-heading); text-transform: none; }
+.tv-page .tv-standing-points { color: var(--ink-heading); font-family: var(--font-display); font-weight: 800; }
+
+.tv-page .tv-footer { border: 0; border-radius: var(--radius-pill); background: var(--surface-card); color: var(--ink-heading); box-shadow: none; }
+.tv-page .tv-footer > div,
+.tv-page .tv-footer strong { color: var(--ink-heading); border-color: var(--hairline); }
+.tv-page .tv-footer > div > span:not(.footer-icon) { color: var(--ink-muted); }
+.tv-page .tv-footer > p { color: var(--ink-muted); font-family: var(--font-display); font-weight: 700; }
+.tv-page .footer-icon { color: var(--ball-text); }
+.tv-page .tv-footer-status strong { color: var(--positive); }
+.tv-page .tv-footer-status .live-dot { background: var(--positive); }
+.tv-page .tv-footer-status.offline strong { color: var(--ink-muted); }
+.tv-page .tv-footer-status.offline .live-dot { background: var(--live); }
+.tv-page .tv-footer button { min-height: 40px; padding: 0 18px; border: 0; border-radius: var(--radius-pill); background: var(--surface-inverse); color: var(--on-inverse); }
+
+.tv-page .tv-bracket-card { border: 0; border-radius: var(--radius-sm); background: var(--surface-raised); box-shadow: none; }
+.tv-page .tv-cup-champion { border: 0; border-radius: var(--radius-md); background: var(--ball); color: var(--on-ball); box-shadow: none; }

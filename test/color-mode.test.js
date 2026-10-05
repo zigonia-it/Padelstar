@@ -46,10 +46,10 @@ test("first use follows the device; without a device preference it is dark", () 
   const light = fake({ device: "light" }); light.mode.bind();
   assert.equal(light.attrs["data-theme"], "light");
   assert.equal(light.root.style.colorScheme, "light");
-  assert.equal(light.meta.content, "#eef3fa");
+  assert.equal(light.meta.content, "#f4f1ea");
   const none = fake({ device: null }); none.mode.bind();
   assert.equal(none.attrs["data-theme"], "dark");
-  assert.equal(none.meta.content, "#1b2438");
+  assert.equal(none.meta.content, "#0b0b0b");
 });
 
 test("a manual choice overrides the device at once, is saved, and 'follow device' removes it", () => {

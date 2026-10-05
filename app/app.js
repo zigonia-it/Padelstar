@@ -1117,6 +1117,13 @@ async function handleTournamentMissing() {
 function initializeNavigation() {
   window.PadelstarNavigation?.initialize({ showModule, translate: t });
   window.PadelstarWorkspaceRail?.initialize({ showModule, activateAdminPanel });
+  window.PadelstarHomeJoin?.initialize({
+    form: document.querySelector("#homeJoinForm"),
+    translate: t,
+    prefillJoinForm,
+    showModule,
+    focusJoinName: () => window.requestAnimationFrame?.(() => elements.joinTournamentForm?.elements.playerName?.focus()),
+  });
 }
 
 function bindSupabaseReady() {

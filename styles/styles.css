@@ -321,20 +321,12 @@ body[data-theme="classic"] .workspace-header,
 body[data-theme="classic"] .panel,
 body[data-theme="classic"] .next-match,
 body[data-theme="classic"] .setup-card,
-body[data-theme="classic"] .match-card,
-body[data-theme="classic"] .intro {
+body[data-theme="classic"] .match-card {
   border-color: var(--border-default);
   background:
     linear-gradient(145deg, color-mix(in srgb, var(--accent-blue-bright) 10%, transparent), transparent 44%),
     color-mix(in srgb, var(--surface-card) 90%, transparent);
   box-shadow: 0 12px 32px color-mix(in srgb, var(--shadow-ink) calc(24% * var(--shadow-strength)), transparent), inset 0 1px 0 color-mix(in srgb, var(--ink-heading) calc(5% * var(--glow-strength)), transparent);
-}
-
-body[data-theme="classic"] .intro {
-  background:
-    linear-gradient(120deg, var(--surface-sunken), color-mix(in srgb, var(--surface-card) 82%, transparent) 62%, color-mix(in srgb, var(--accent-blue-bright) 34%, transparent)),
-    url("../assets/backgrounds/bg_img-1600.jpg") center / cover;
-  box-shadow: 0 24px 70px color-mix(in srgb, var(--shadow-ink) calc(38% * var(--shadow-strength)), transparent), inset 0 1px 0 color-mix(in srgb, var(--ink-heading) calc(6% * var(--glow-strength)), transparent);
 }
 
 body[data-theme="classic"] .app-menu,
@@ -561,14 +553,6 @@ body:not(.workspace-active):not(.setup-active) .topbar {
    SCORECARD DESIGN DIRECTION
    ========================================================= */
 
-@font-face {
-  font-family: "Anton";
-  src: url("../assets/fonts/Anton-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
   --card-navy: var(--surface-sunken);
   --card-navy-deep: var(--surface-sunken);
@@ -767,8 +751,9 @@ body.workspace-active {
   background: linear-gradient(145deg, color-mix(in srgb, var(--accent-blue-bright) 20%, transparent), color-mix(in srgb, var(--surface-sunken) 88%, transparent));
   color: var(--cream);
   font-size: clamp(3rem, 15cqw, 7rem);
-  font-family: "Anton", sans-serif;
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
   letter-spacing: 0;
   white-space: nowrap;
   line-height: 0.85;

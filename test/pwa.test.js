@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v372/);
+  assert.match(serviceWorkerSource, /padelstar-v373/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -339,11 +339,14 @@ test("initial URL and session view restoration has its own boundary", () => {
   assert.match(appSource, /initialView\.restore/);
 });
 
-test("all active app icon surfaces use the shared Padelstar icon", () => {
-  assert.match(indexSource, /apple-touch-icon" href="assets\/icons\/padelstar-icon\.png/);
-  assert.match(indexSource, /rel="icon" href="assets\/icons\/padelstar-icon\.png/);
-  assert.match(privacySource, /apple-touch-icon" href="assets\/icons\/padelstar-icon\.png/);
-  assert.match(privacySource, /rel="icon" href="assets\/icons\/padelstar-icon\.png/);
+test("all active app icon surfaces use the shared Padelstar icon (the ball from the 1.0 logo)", () => {
+  assert.match(indexSource, /apple-touch-icon" href="assets\/icons\/apple-touch-icon\.png/);
+  assert.match(indexSource, /rel="icon" href="assets\/icons\/favicon-64\.png/);
+  assert.match(privacySource, /apple-touch-icon" href="assets\/icons\/apple-touch-icon\.png/);
+  assert.match(privacySource, /rel="icon" href="assets\/icons\/favicon-64\.png/);
+  for (const icon of ["apple-touch-icon.png", "favicon-64.png", "padelstar-192.png", "padelstar-512.png", "padelstar-maskable-512.png", "padelstar-icon.png"]) {
+    assert.ok(fs.existsSync(path.join(root, "assets", "icons", icon)), icon);
+  }
   assert.match(manifestSource, /"src": "assets\/icons\/padelstar-192\.png"/);
   assert.match(manifestSource, /"src": "assets\/icons\/padelstar-maskable-512\.png"/);
   assert.match(serviceWorkerSource, /assets\/icons\/padelstar-192\.png/);
@@ -389,7 +392,7 @@ test("home and menu expose account and TV Mode entry points", () => {
 });
 
 test("TV Mode is a full-viewport read-only layout across aspect ratios", () => {
-  assert.match(indexSource, /class="tv-mode-logo"[^>]*src="assets\/icons\/padelstar-icon\.png"/);
+  assert.match(indexSource, /class="ps-logo ps-logo--lg tv-mode-logo"><img class="logo-on-light" src="assets\/brand\/padelstar-logo-dark\.webp"/);
   assert.doesNotMatch(indexSource, /id="tvModeButton"/);
   assert.match(indexSource, /id="tvModeMenuButton"[^>]*data-action="tv-mode"/);
   assert.match(modulesStylesSource, /\.tv-mode \.app-shell[\s\S]*height: 100dvh/);
@@ -401,16 +404,21 @@ test("TV Mode is a full-viewport read-only layout across aspect ratios", () => {
   assert.match(modulesStylesSource, /text-transform: uppercase/);
 });
 
-test("branding uses the shield icon in the menu and the wordmark in the hero", () => {
-  assert.match(indexSource, /class="brand-logo" src="assets\/icons\/padelstar-icon\.png"/);
-  assert.match(indexSource, /class="hero-logo-wordmark"[\s\S]*src="assets\/logos\/main_logo_without_icon\.png"/);
-  assert.match(componentsStylesSource, /\.hero-logo-wordmark[\s\S]*aspect-ratio: 1500 \/ 352/);
+test("branding uses the 1.0 logo (one image per ground) in the nav pill and a photo hero on home", () => {
+  for (const page of [indexSource, privacySource]) {
+    assert.match(page, /class="ps-logo brand-logo"><img class="logo-on-light" src="assets\/brand\/padelstar-logo-dark\.webp"[^>]*><img class="logo-on-dark" src="assets\/brand\/padelstar-logo-light\.webp"/);
+  }
+  assert.doesNotMatch(indexSource, /main_logo|hero-logo-wordmark/);
+  assert.match(indexSource, /class="ps-photo home-hero"[\s\S]*assets\/photos\/court-player-800\.webp/);
+  const redesign = fs.readFileSync(path.join(root, "styles", "redesign.css"), "utf8");
+  assert.match(redesign, /\[data-theme="dark"\] \.ps-logo \.logo-on-light \{ display: none; \}/);
+  assert.match(redesign, /\[data-theme="dark"\] \.ps-logo \.logo-on-dark \{ display: block; \}/);
 });
 
-test("TV header uses the icon and the standalone wordmark", () => {
-  assert.match(indexSource, /class="tv-mode-wordmark"[\s\S]*main_logo_without_icon\.png/);
-  assert.match(indexSource, /class="tv-mode-logo"[\s\S]*assets\/icons\/padelstar-icon\.png/);
-  assert.match(modulesStylesSource, /\.tv-mode \.tv-mode-wordmark[\s\S]*display: block/);
+test("TV header uses the logo, and only in TV mode", () => {
+  const redesign = fs.readFileSync(path.join(root, "styles", "redesign.css"), "utf8");
+  assert.match(redesign, /body\[data-theme\] \.tv-mode-logo,\s*body\[data-theme\] \.tv-mode-wordmark \{ display: none; \}/);
+  assert.match(redesign, /body\[data-theme\]\.tv-mode \.tv-mode-logo \{ display: inline-flex;/);
 });
 
 test("account entry opens a separate profile module and landing actions center odd buttons", () => {
@@ -977,8 +985,8 @@ test("active app files do not reference archived assets", () => {
 });
 
 test("browser entrypoint and service worker use the same cache-busting versions", () => {
-  assert.match(indexSource, /styles\/styles\.css\?v=padelstar-ui-105/);
-  assert.match(indexSource, /app\/app\.js\?v=padelstar-session-92/);
+  assert.match(indexSource, /styles\/styles\.css\?v=padelstar-ui-106/);
+  assert.match(indexSource, /app\/app\.js\?v=padelstar-session-93/);
   assert.match(indexSource, /app\/avatar-system\.js\?v=padelstar-avatar-system-1/);
   assert.match(indexSource, /app\/accent-system\.js\?v=padelstar-accent-system-2/);
   assert.match(indexSource, /app\/ui-feedback\.js\?v=padelstar-ui-feedback-2/);
@@ -988,8 +996,8 @@ test("browser entrypoint and service worker use the same cache-busting versions"
   assert.match(indexSource, /app\/state-bootstrap\.js\?v=padelstar-state-bootstrap-1/);
   assert.match(indexSource, /app\/module-routing\.js\?v=padelstar-module-routing-5/);
   assert.match(indexSource, /app\/session-policy\.js\?v=padelstar-session-policy-1/);
-  assert.match(serviceWorkerSource, /styles\/styles\.css\?v=padelstar-ui-105/);
-  assert.match(serviceWorkerSource, /app\/app\.js\?v=padelstar-session-92/);
+  assert.match(serviceWorkerSource, /styles\/styles\.css\?v=padelstar-ui-106/);
+  assert.match(serviceWorkerSource, /app\/app\.js\?v=padelstar-session-93/);
   assert.match(serviceWorkerSource, /app\/avatar-system\.js\?v=padelstar-avatar-system-1/);
   assert.match(serviceWorkerSource, /app\/accent-system\.js\?v=padelstar-accent-system-2/);
   assert.match(serviceWorkerSource, /app\/ui-feedback\.js\?v=padelstar-ui-feedback-2/);
@@ -1128,11 +1136,11 @@ test("backup export preserves admin/player identity so restore can resume as the
 });
 
 test("app shell uses optimized startup images", () => {
-  assert.match(indexSource, /assets\/logos\/main_logo_without_icon\.png/);
-  assert.match(indexSource, /assets\/backgrounds\/bg_img-1600\.jpg/);
-  assert.match(stylesSource, /assets\/backgrounds\/bg_img-1600\.jpg/);
-  assert.match(serviceWorkerSource, /assets\/logos\/main_logo\.png/);
-  assert.match(serviceWorkerSource, /assets\/backgrounds\/bg_img-1600\.jpg/);
+  assert.match(indexSource, /rel="preload" as="image"[^>]*assets\/photos\/court-player-800\.webp/);
+  assert.match(serviceWorkerSource, /assets\/brand\/padelstar-logo-dark\.webp/);
+  assert.match(serviceWorkerSource, /assets\/brand\/padelstar-logo-light\.webp/);
+  assert.match(serviceWorkerSource, /assets\/photos\/court-player-800\.webp/);
+  assert.doesNotMatch(serviceWorkerSource, /bg_img|main_logo|tv-brand/);
   assert.doesNotMatch(serviceWorkerSource, /assets\/padelstar_logo-1200\.png/);
   assert.doesNotMatch(serviceWorkerSource, /assets\/padelstar_button-900\.png/);
   assert.doesNotMatch(serviceWorkerSource, /assets\/zigonia-it_logo_gold\.png/);
@@ -1141,8 +1149,9 @@ test("app shell uses optimized startup images", () => {
 
 test("optimized startup image payload stays within the measured budget", () => {
   const startupImages = [
-    "assets/backgrounds/bg_img-1600.jpg",
-    "assets/logos/main_logo.png",
+    "assets/brand/padelstar-logo-dark.webp",
+    "assets/brand/padelstar-logo-light.webp",
+    "assets/photos/court-player-800.webp",
   ];
   const totalBytes = startupImages.reduce((sum, file) => sum + fs.statSync(path.join(root, file)).size, 0);
 
