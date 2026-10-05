@@ -444,11 +444,14 @@
       <section class="setup-panel app-module hidden" id="setupAdminView" data-module="setup-admin"
         aria-labelledby="setupAdminTitle">
         <div class="setup-intro-panel">
-          <p class="eyebrow" data-i18n="setup.createEyebrow">Opprett</p>
-          <h2 id="setupAdminTitle" data-i18n="setup.newTournament">Ny turnering</h2>
-          <p class="hint" data-i18n="setup.createDescription">Konfigurer din turnering raskt. Sett opp baner, opprett
-            spillerlister manuelt, eller la spillere bli med selv med en invitasjonskode.</p>
-          <figure class="ps-photo setup-photo"><picture><source type="image/webp" srcset="assets/photos/ready-stance-800.webp 800w, assets/photos/ready-stance-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/ready-stance-1200.jpg" alt="" width="800" height="1200" loading="lazy" decoding="async"></picture></figure>
+          <figure class="ps-photo setup-photo"><picture><source type="image/webp" srcset="assets/photos/ready-stance-800.webp 800w, assets/photos/ready-stance-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/ready-stance-1200.jpg" alt="" width="800" height="1200" loading="lazy" decoding="async"></picture>
+            <figcaption class="ps-photo__caption setup-photo-caption">
+              <p class="eyebrow" data-i18n="setup.createEyebrow">Opprett</p>
+              <h2 id="setupAdminTitle" data-i18n="setup.newTournament">Ny turnering</h2>
+              <p class="hint" data-i18n="setup.createDescription">Konfigurer din turnering raskt. Sett opp baner, opprett
+                spillerlister manuelt, eller la spillere bli med selv med en invitasjonskode.</p>
+            </figcaption>
+          </figure>
         </div>
         <form class="panel setup-card wizard-form" id="createTournamentForm">
           <div class="wizard-progress" id="createWizardProgress">
@@ -617,11 +620,14 @@
       <section class="setup-panel app-module hidden" id="setupPlayerView" data-module="setup-player"
         aria-labelledby="setupPlayerTitle">
         <div class="setup-intro-panel">
-          <p class="eyebrow" data-i18n="setup.joinEyebrow">Bli med</p>
-          <h2 id="setupPlayerTitle" data-i18n="setup.joinTitle">Bli med i turnering</h2>
-          <p class="hint" data-i18n="setup.joinDescription">Skriv inn invitasjonskoden du har fått fra arrangøren.
-            Profilen din blir automatisk lagt til i spiller treet.</p>
-          <figure class="ps-photo setup-photo"><picture><source type="image/webp" srcset="assets/photos/player-balls-800.webp 800w, assets/photos/player-balls-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/player-balls-1200.jpg" alt="" width="800" height="1200" loading="lazy" decoding="async"></picture></figure>
+          <figure class="ps-photo setup-photo"><picture><source type="image/webp" srcset="assets/photos/player-balls-800.webp 800w, assets/photos/player-balls-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/player-balls-1200.jpg" alt="" width="800" height="1200" loading="lazy" decoding="async"></picture>
+            <figcaption class="ps-photo__caption setup-photo-caption">
+              <p class="eyebrow" data-i18n="setup.joinEyebrow">Bli med</p>
+              <h2 id="setupPlayerTitle" data-i18n="setup.joinTitle">Bli med i turnering</h2>
+              <p class="hint" data-i18n="setup.joinDescription">Skriv inn invitasjonskoden du har fått fra arrangøren.
+                Profilen din blir automatisk lagt til i spiller treet.</p>
+            </figcaption>
+          </figure>
         </div>
         <form class="panel setup-card" id="joinTournamentForm">
           <div class="invite-code-field">

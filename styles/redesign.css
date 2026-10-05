@@ -956,9 +956,14 @@ body[data-theme] .landing-feature-card.has-photo > :not(.landing-feature-photo) 
 body[data-theme] .landing-feature-photo { aspect-ratio: 16 / 10; margin: 0 0 var(--space-2); border-radius: var(--radius-sm); }
 body[data-theme] .landing-feature-card.has-photo .feature-icon { margin-top: calc(-1 * var(--space-6)); position: relative; box-shadow: 0 0 0 4px var(--surface-card); }
 
-body[data-theme] .setup-photo { display: none; }
-@media (min-width: 900px) {
-  body[data-theme] .setup-photo { display: block; aspect-ratio: 4 / 5; max-width: 420px; margin-top: var(--space-6); }
+/* the create and join intros sit on their photo card as its caption; phones get a shorter crop of the same card */
+body[data-theme] .setup-photo { display: block; aspect-ratio: 4 / 5; max-width: 420px; }
+body[data-theme] .setup-photo-caption { display: grid; gap: var(--space-1); padding: var(--space-4) var(--space-5) var(--space-5); }
+body[data-theme] .setup-photo-caption .eyebrow { margin: 0; }
+body[data-theme] .setup-photo-caption h2 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.25rem); line-height: 1.1; }
+body[data-theme] .setup-photo-caption .hint { max-width: none; margin: var(--space-1) 0 0; color: var(--ink-body); line-height: 1.5; }
+@media (max-width: 899px) {
+  body[data-theme] .setup-photo { aspect-ratio: auto; min-height: 340px; max-width: none; }
 }
 
 /* =========================================================
