@@ -19,9 +19,19 @@ test("a 40-player Round Robin schedule stays small enough for browser storage", 
   const engine = load(["tournament-engine.js"]).PadelstarTournamentEngine;
   const schedule = engine.buildSchedule(players(40), "roundRobin");
   assert.equal(schedule.length, 39);
-  assert.ok(schedule.every((round) => !("matchups" in round) && round.allTeamsMeet === true));
+  assert.ok(schedule.every((round) => !("matchups" in round) && round.allTeamsMeet === false && round.teams.length === 20));
   assert.ok(JSON.stringify(schedule).length < 1_000_000, "the saved schedule no longer copies every pairing");
-  assert.equal(engine.roundPlanMatchups(schedule[0]).length, 190);
+  assert.equal(engine.roundPlanMatchups(schedule[0]).length, 0, "each team plays one match a round above the limit");
+});
+
+test("up to 32 players every team in a rotation still meets every other team", () => {
+  const engine = load(["tournament-engine.js"]).PadelstarTournamentEngine;
+  assert.equal(engine.allTeamsMeetMaxPlayers, 32);
+  const at32 = engine.buildSchedule(players(32), "roundRobin");
+  assert.ok(at32.every((round) => round.allTeamsMeet === true));
+  assert.equal(engine.roundPlanMatchups(at32[0]).length, 120);
+  const at33 = engine.buildSchedule(players(33), "roundRobin");
+  assert.ok(at33.every((round) => round.allTeamsMeet === false && round.sittingOut.length === 1));
 });
 
 test("older saved schedules with matchups are compacted and still produce the same matchups", () => {

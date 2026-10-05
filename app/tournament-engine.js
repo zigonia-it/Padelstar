@@ -1,4 +1,6 @@
 window.PadelstarTournamentEngine = (() => {
+  const allTeamsMeetMaxPlayers = 32;
+
   function buildSchedule(players, format = "roundRobin", options = {}) {
     const activePlayers = players.filter((player) => player.active && player.availability !== "away");
     if (format === "cup") return [];
@@ -44,6 +46,9 @@ window.PadelstarTournamentEngine = (() => {
   }
 
   function generatePartnerRounds(players) {
+    // Up to this many players every team in a rotation meets every other team. Above it each team plays one
+    // match per rotation (teams side by side are paired), so 40 players give 10 matches a round, not 190.
+    const everyTeamMeets = players.length <= allTeamsMeetMaxPlayers;
     let rotation = players.map((player) => player);
     if (rotation.length % 2 !== 0) rotation.push(null);
 
@@ -60,7 +65,7 @@ window.PadelstarTournamentEngine = (() => {
         else if (home || away) sittingOut.push(home ?? away);
       }
 
-      rounds.push({ teams, sittingOut, matchups: createTeamMatchups(teams) });
+      rounds.push({ teams, sittingOut, matchups: everyTeamMeets ? createTeamMatchups(teams) : [] });
       rotation = rotateRoundParticipants(rotation);
     }
 
@@ -122,6 +127,7 @@ window.PadelstarTournamentEngine = (() => {
   }
 
   return {
+    allTeamsMeetMaxPlayers,
     buildSchedule,
     compactRoundPlan,
     roundPlanMatchups,
