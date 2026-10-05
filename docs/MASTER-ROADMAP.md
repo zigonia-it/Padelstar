@@ -1,6 +1,6 @@
 # Padelstar – Master Roadmap (1.0.0 → 4.x)
 
-Status: proposal, written 2026-10-05 on the developer's request ("one plan for the whole development from the current version to everything planned"). It merges four sources into one order:
+Status: **governing plan** — written 2026-10-05 on the developer's request ("one plan for the whole development from the current version to everything planned") and confirmed the same day as the definitive plan that steers development ("behold master-roadmap som definitiv plan. la denne styre utviklingen."). It merges four sources into one order:
 
 - `docs/ROADMAP.md` (Priority 1 open items, Priority 2–4, post-1.0 backlog)
 - `docs/BUGS.md` and the open follow-ups after the 1.0.0 release
@@ -185,7 +185,7 @@ Master plan Part III, in its recommended order. Each phase may span one or more 
 
 ## 15. Decisions the developer needs to make
 
-1. Accept this file as the overview, with `ROADMAP.md` keeping the detail? Or should `ROADMAP.md` be rewritten in this order?
+1. ~~Accept this file as the overview?~~ Decided 2026-10-05: this file is the definitive plan and steers development; `ROADMAP.md` keeps the detailed checkboxes.
 2. Is 1.1–1.5 before League the right order, or should League 2.0 start right after 1.0.x? (The cost of starting early: the 1.5 match model and the 1.2 server-side generators would be built inside the League work.)
 3. Pending product decisions already in ROADMAP: retroactive guest-stat claiming, post-finish corrections scope, invitation push, Cup time overrides, public read-only view, public statistics sharing.
 4. League open questions (plan §7): guests in leagues, a court without a free referee, golden-point wins worth 3 points, who may create leagues.
