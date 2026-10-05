@@ -236,6 +236,9 @@ body[data-theme] .language-options {
   body[data-theme].app-menu-open .app-menu .theme-toggle { display: inline-flex; justify-self: start; margin-top: 4px; }
 }
 @media (min-width: 901px) {
+  /* opening the language picker printed the language name in the button, which widened it by ~100px and pushed the
+     whole menu left; the open list already names every language, so the button keeps its closed width */
+  body[data-theme] .topbar .language-menu[open] .language-current-name { display: none; }
   body[data-theme] .app-menu-toggle { display: none; }
   body[data-theme] .app-menu .theme-toggle { display: none; }
 }
