@@ -87,6 +87,7 @@
       // (hundreds of ms on a phone) follow once that frame is on screen, and taps in between share one save and render.
       deps.renderLargeScore();
       pendingFlashMatchIds.add(match.id);
+      if (matchWon) wonMatchIds.add(match.id);
       afterPointPending = true;
       if (matchWon || typeof deps.afterPaint !== "function") flushAfterPoint();
       else if (!afterPointScheduled) {
@@ -98,14 +99,16 @@
     let afterPointScheduled = false;
     let afterPointPending = false;
     const pendingFlashMatchIds = new Set();
+    const wonMatchIds = new Set();
     function flushAfterPoint() {
       afterPointScheduled = false;
       if (!afterPointPending) return;
       afterPointPending = false;
       deps.saveState();
       deps.render();
-      pendingFlashMatchIds.forEach((matchId) => deps.flashMatchCards(matchId));
+      pendingFlashMatchIds.forEach((matchId) => deps.flashMatchCards(matchId, { won: wonMatchIds.has(matchId) }));
       pendingFlashMatchIds.clear();
+      wonMatchIds.clear();
     }
 
     function isSetComplete(teamOne, teamTwo) {

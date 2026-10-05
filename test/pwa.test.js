@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v380/);
+  assert.match(serviceWorkerSource, /padelstar-v381/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -206,8 +206,8 @@ test("score actions have their own mutation boundary", () => {
   assert.match(scoreActionsSource, /awardTennisPoint/);
   assert.match(scoreActionsSource, /saveSetResult/);
   assert.match(scoreActionsSource, /global\.PadelstarScoreActions/);
-  assert.match(indexSource, /app\/score-actions\.js\?v=padelstar-score-actions-9/);
-  assert.match(serviceWorkerSource, /app\/score-actions\.js\?v=padelstar-score-actions-9/);
+  assert.match(indexSource, /app\/score-actions\.js\?v=padelstar-score-actions-10/);
+  assert.match(serviceWorkerSource, /app\/score-actions\.js\?v=padelstar-score-actions-10/);
   assert.match(appSource, /scoreActions\.awardTennisPoint/);
 });
 
@@ -633,10 +633,10 @@ test("standings rendering has its own leaderboard boundary", () => {
 
 test("podium is a real post-finish screen, not just a redirect to standings", () => {
   assert.match(indexSource, /data-module="podium"/);
-  assert.match(indexSource, /app\/podium\.js\?v=padelstar-podium-3/);
-  assert.match(serviceWorkerSource, /app\/podium\.js\?v=padelstar-podium-3/);
-  assert.match(indexSource, /styles\/podium\.css\?v=padelstar-podium-5/);
-  assert.match(serviceWorkerSource, /styles\/podium\.css\?v=padelstar-podium-5/);
+  assert.match(indexSource, /app\/podium\.js\?v=padelstar-podium-4/);
+  assert.match(serviceWorkerSource, /app\/podium\.js\?v=padelstar-podium-4/);
+  assert.match(indexSource, /styles\/podium\.css\?v=padelstar-podium-6/);
+  assert.match(serviceWorkerSource, /styles\/podium\.css\?v=padelstar-podium-6/);
   assert.match(podiumSource, /window\.PadelstarPodium/);
   assert.match(podiumSource, /renderPodium/);
   assert.match(moduleRoutingSource, /requestedModule === "podium"/);
@@ -720,8 +720,8 @@ test("design-chat suggestions: gem-color court strips, offline indicator, waitin
 test("large score rendering has its own dialog boundary", () => {
   assert.match(largeScoreSource, /renderLargeScore/);
   assert.match(largeScoreSource, /window\.PadelstarLargeScore/);
-  assert.match(indexSource, /app\/large-score\.js\?v=padelstar-large-score-5/);
-  assert.match(serviceWorkerSource, /app\/large-score\.js\?v=padelstar-large-score-5/);
+  assert.match(indexSource, /app\/large-score\.js\?v=padelstar-large-score-6/);
+  assert.match(serviceWorkerSource, /app\/large-score\.js\?v=padelstar-large-score-6/);
   assert.match(appSource, /largeScore\.renderLargeScore\(largeScoreMatchId\)/);
 });
 
@@ -985,7 +985,7 @@ test("active app files do not reference archived assets", () => {
 
 test("browser entrypoint and service worker use the same cache-busting versions", () => {
   assert.match(indexSource, /styles\/styles\.css\?v=padelstar-ui-106/);
-  assert.match(indexSource, /app\/app\.js\?v=padelstar-session-94/);
+  assert.match(indexSource, /app\/app\.js\?v=padelstar-session-95/);
   assert.match(indexSource, /app\/avatar-system\.js\?v=padelstar-avatar-system-1/);
   assert.match(indexSource, /app\/accent-system\.js\?v=padelstar-accent-system-2/);
   assert.match(indexSource, /app\/ui-feedback\.js\?v=padelstar-ui-feedback-2/);
@@ -996,7 +996,7 @@ test("browser entrypoint and service worker use the same cache-busting versions"
   assert.match(indexSource, /app\/module-routing\.js\?v=padelstar-module-routing-5/);
   assert.match(indexSource, /app\/session-policy\.js\?v=padelstar-session-policy-1/);
   assert.match(serviceWorkerSource, /styles\/styles\.css\?v=padelstar-ui-106/);
-  assert.match(serviceWorkerSource, /app\/app\.js\?v=padelstar-session-94/);
+  assert.match(serviceWorkerSource, /app\/app\.js\?v=padelstar-session-95/);
   assert.match(serviceWorkerSource, /app\/avatar-system\.js\?v=padelstar-avatar-system-1/);
   assert.match(serviceWorkerSource, /app\/accent-system\.js\?v=padelstar-accent-system-2/);
   assert.match(serviceWorkerSource, /app\/ui-feedback\.js\?v=padelstar-ui-feedback-2/);

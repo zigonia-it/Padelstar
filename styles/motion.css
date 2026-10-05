@@ -82,6 +82,20 @@ body[data-theme] .large-score-actions .is-ticking {
 /* the facts row's numbers are left-aligned blocks: grow from their left edge, not the middle of the box */
 body[data-theme] .large-score-actions .is-ticking { transform-origin: left center; }
 
+/* the winning point: the winner's pad gets the sweep and says "Winner", the other pad steps back
+   (app/large-score.js celebrateWin, the board closes by itself afterwards) */
+body[data-theme] .large-score-team.is-winner { position: relative; overflow: hidden; }
+body[data-theme] .large-score-team.is-winner::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  /* the pads are ink and ball yellow already, so the sweep is a lighter or darker shade of the pad itself */
+  background: color-mix(in srgb, currentColor 24%, transparent); transform-origin: left center;
+  animation: ps-win-sweep var(--motion-celebrate) var(--ease-out) both;
+}
+body[data-theme] .large-score-team.is-winner strong { animation: ps-score-tick var(--motion-base) var(--ease-pop) var(--motion-quick); }
+body[data-theme] .large-score-team.is-runner-up { opacity: .45; transition: opacity var(--motion-slow) var(--ease-standard); }
+body[data-theme] .large-score-team[aria-disabled="true"] { pointer-events: none; }
+body[data-theme] .large-score-team.is-winner .large-score-hint { animation: ps-settle-in var(--motion-base) var(--ease-out) both; }
+
 /* a match card whose score changed gets a short ball wash (app/ui-effects.js flashMatchCards) */
 @keyframes ps-wash-out {
   from { opacity: 1; }
@@ -93,7 +107,37 @@ body[data-theme] .match-card.score-flash::after {
   animation: ps-wash-out var(--motion-celebrate) var(--ease-out) both;
 }
 
+/* ---------- 4. The win moment: the point that wins a match (app/ui-effects.js flashMatchCards with won) ---------- */
+/* a ball-yellow wash sweeps across the card, the final score ticks once, then the result note and status settle in */
+@keyframes ps-win-sweep {
+  0% { opacity: 1; transform: scaleX(0); }
+  45% { opacity: 1; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+@keyframes ps-settle-in {
+  from { opacity: 0; transform: translateY(var(--motion-distance-sm)); }
+}
+body[data-theme] .match-card.match-won { position: relative; }
+body[data-theme] .match-card.match-won::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: color-mix(in srgb, var(--ball) 32%, transparent); transform-origin: left center;
+  animation: ps-win-sweep var(--motion-celebrate) var(--ease-out) both;
+}
+body[data-theme] .match-card.match-won .match-summary-score {
+  display: inline-block; transform-origin: right center;
+  animation: ps-score-tick var(--motion-base) var(--ease-pop) var(--motion-quick);
+}
+body[data-theme] .match-card.match-won .match-status,
+body[data-theme] .match-card.match-won .winner-note {
+  animation: ps-settle-in var(--motion-base) var(--ease-out) var(--motion-slow) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  /* no sweep: the wash simply fades, so the win still reads as a change */
+  body[data-theme] .match-card.match-won::after { transform: none; animation-name: ps-wash-out; }
+  body[data-theme] .match-card.match-won .match-summary-score { animation: none; }
+  body[data-theme] .large-score-team.is-winner::after { transform: none; animation-name: ps-wash-out; }
+  body[data-theme] .large-score-team.is-winner strong { animation: none; }
   body[data-theme] .nav-indicator.is-sliding { transition: opacity var(--motion-quick) var(--ease-standard); }
   .motion-enter,
   body[data-theme] .large-score-team .is-ticking,
