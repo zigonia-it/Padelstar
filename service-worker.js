@@ -1,4 +1,4 @@
-const cacheName = "padelstar-v376";
+const cacheName = "padelstar-v377";
 
 const appShell = [
   "./",
@@ -6,12 +6,12 @@ const appShell = [
   "./tv.html",
   "./privacy.html",
   "./guide.html",
-  "./styles/tokens.css?v=padelstar-tokens-3",
+  "./styles/tokens.css?v=padelstar-tokens-4",
   "./styles/base.css?v=padelstar-base-10",
   "./styles/layout.css?v=padelstar-layout-10",
   "./styles/components.css?v=padelstar-components-25",
   "./styles/tv.css?v=padelstar-tv-19",
-  "./styles/tv-redesign.css?v=padelstar-tv-redesign-3",
+  "./styles/tv-redesign.css?v=padelstar-tv-redesign-4",
   "./assets/brand/padelstar-logo-dark.webp",
   "./assets/brand/padelstar-logo-light.webp",
   "./styles/modules.css?v=padelstar-modules-16",
@@ -35,7 +35,7 @@ const appShell = [
   "./styles/invite-code-input.css?v=padelstar-invite-code-input-2",
   "./styles/accent-picker.css?v=padelstar-accent-picker-2",
   "./styles/privacy.css?v=padelstar-privacy-8",
-  "./styles/redesign.css?v=padelstar-redesign-3",
+  "./styles/redesign.css?v=padelstar-redesign-4",
   "./app/translations.js?v=padelstar-i18n-70",
   "./app/i18n-ui.js?v=padelstar-i18n-ui-6",
   "./app/storage.js?v=padelstar-storage-1",

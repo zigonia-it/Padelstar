@@ -29,9 +29,12 @@ const legacyAccentMap = accentSystem.legacyAccentMap;
 const accents = accentSystem.accents;
 const accentPicker = window.PadelstarAccentPicker.create({ palette: playerAccentPalette });
 const avatarSystem = window.PadelstarAvatarSystem;
+// Padelstar 1.0: players have no colour of their own any more (developer's decision 2026-10-05). The stored accent stays
+// in the data, but every accent variable resolves to the neutral ink of the theme.
+const NEUTRAL_PLAYER_STYLE = "--player-accent: var(--ink-muted); --player-accent-light: var(--ink-body); --player-accent-dark: var(--ink-heading); --player-accent-rgb: var(--ink-muted-rgb); --gem-fill: var(--ink-muted); --gem-ink: var(--ink-heading); --gem-tint: transparent;";
 const playerVisuals = window.PadelstarPlayerVisuals.create({
   avatarUrl: (player) => avatarSystem.url(player),
-  accentStyle: (accent) => accentSystem.accentStyle(accent),
+  accentStyle: () => NEUTRAL_PLAYER_STYLE,
   escapeHtml: (value) => escapeHtml(value),
 });
 const defaultAvatarId = avatarSystem.defaultAvatarId;
@@ -2190,8 +2193,8 @@ function teamDisplay(team, variant = "default") {
   return playerVisuals.teamDisplay(team, variant);
 }
 
-function accentStyle(accent) {
-  return accentSystem.accentStyle(accent);
+function accentStyle() {
+  return NEUTRAL_PLAYER_STYLE;
 }
 
 function teamAccentStyle(team) {

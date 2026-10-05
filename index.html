@@ -20,7 +20,7 @@
   <link rel="preload" as="image" href="assets/photos/court-player-800.webp" type="image/webp"
     imagesrcset="assets/photos/court-player-800.webp 800w, assets/photos/court-player-1600.webp 1600w"
     imagesizes="(min-width: 900px) 1100px, 100vw" fetchpriority="high">
-  <link rel="stylesheet" href="styles/tokens.css?v=padelstar-tokens-3">
+  <link rel="stylesheet" href="styles/tokens.css?v=padelstar-tokens-4">
   <link rel="stylesheet" href="styles/base.css?v=padelstar-base-10">
   <link rel="stylesheet" href="styles/layout.css?v=padelstar-layout-10">
   <link rel="stylesheet" href="styles/components.css?v=padelstar-components-25">
@@ -44,7 +44,7 @@
   <link rel="stylesheet" href="styles/notification-center.css?v=padelstar-notification-center-9">
   <link rel="stylesheet" href="styles/scorer-panel.css?v=padelstar-scorer-panel-8">
   <link rel="stylesheet" href="styles/settings-rows.css?v=padelstar-settings-rows-2">
-  <link rel="stylesheet" href="styles/redesign.css?v=padelstar-redesign-3">
+  <link rel="stylesheet" href="styles/redesign.css?v=padelstar-redesign-4">
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
@@ -337,7 +337,8 @@
                 data-i18n-placeholder="profile.namePlaceholder" placeholder="Navnet ditt">
               <small class="field-hint" data-i18n="profile.nameHint">Dette navnet (eller kallenavnet ditt) fylles inn når du blir med i en turnering. Har du et vanlig navn, legg til første bokstav i etternavnet, for eksempel «Anna K.».</small>
             </label>
-            <div>
+            <!-- players have no colour of their own in 1.0; the picker stays (hidden) so a saved choice is kept -->
+            <div class="hidden">
               <span data-i18n="setup.chooseColor">Velg farge</span>
               <div class="accent-swatch-grid" id="profileAccentPicker" role="radiogroup"
                 data-i18n-aria-label="setup.chooseColor"></div>
@@ -652,12 +653,12 @@
               required data-i18n-placeholder="setup.playerNamePlaceholder">
             <small class="field-hint" data-i18n="setup.nameHint">Har du et vanlig navn? Legg til første bokstav i etternavnet, for eksempel «Anna K.». Da kan ikke navnet ditt forveksles med en annen.</small>
           </label>
-          <div>
+          <div class="hidden">
             <span data-i18n="setup.chooseColor">Velg farge</span>
             <div class="accent-swatch-grid" id="joinAccentPicker" role="radiogroup"
               data-i18n-aria-label="setup.chooseColor"></div>
           </div>
-          <div class="join-preview" aria-live="polite">
+          <div class="join-preview hidden" aria-live="polite">
             <span class="avatar ds-avatar-gem ds-avatar-gem-lg" id="joinAvatarPreviewFrame" aria-hidden="true">
               <span class="ds-avatar-gem-outer"></span>
               <span class="ds-avatar-gem-inner" id="joinAvatarPreview"></span>

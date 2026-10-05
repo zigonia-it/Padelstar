@@ -157,12 +157,12 @@ body[data-theme] .brand-home-button {
 body[data-theme] .brand-home-button:not(:disabled):hover { transform: none; }
 /* the old square-icon rules fixed .brand-logo at 52–60px wide, which clipped the box and drew the version under the wordmark */
 body[data-theme] .brand-home-button .ps-logo { --logo-h: 26px; width: auto; height: var(--logo-h); max-width: none; max-height: none; flex: none; filter: none; }
-/* the version sits in a small pill beside the logo (brand-lockup restated to outweigh ui-consistency's classic rule) */
+/* the version sits in a small ball-green pill (the join button's colour) beside the logo (brand-lockup restated to outweigh ui-consistency's classic rule) */
 body[data-theme] .version,
 body[data-theme] .brand-lockup .version {
   display: inline-flex; align-items: center; order: 0; margin: 0; padding: 5px 10px; border: 1px solid var(--hairline); border-radius: var(--radius-pill);
-  background: var(--surface-sunken); color: var(--ink-muted); white-space: nowrap;
-  font: 700 11px/1 var(--font-ui); letter-spacing: .4px; text-transform: none;
+  background: var(--ball); color: var(--on-ball); border-color: transparent; white-space: nowrap;
+  font: 800 11px/1 var(--font-ui); letter-spacing: .4px; text-transform: none;
 }
 body[data-theme] .brand-lockup .version:empty { display: none; }
 body[data-theme] .topbar-actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); flex: 1 1 auto; min-width: 0; }
@@ -593,7 +593,7 @@ body[data-theme] .match-summary-chevron { color: var(--ink-muted); }
 body[data-theme] .scorecard-team h3 { font: 700 12px/16px var(--font-ui); letter-spacing: 1.4px; text-transform: uppercase; color: var(--ink-muted); }
 
 body[data-theme] .scoreboard-table thead th { color: var(--ink-muted); font: 700 11px/16px var(--font-ui); letter-spacing: 1.2px; }
-body[data-theme] .scoreboard-row { background: var(--surface-raised); box-shadow: inset 4px 0 0 rgba(var(--player-accent-rgb), 0.9); }
+body[data-theme] .scoreboard-row { background: var(--surface-raised); box-shadow: none; }
 body[data-theme] .scoreboard-row > td:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
 body[data-theme] .scoreboard-row > td:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 body[data-theme] .scoreboard-team-name { color: var(--ink-heading); font-family: var(--font-ui); }
@@ -857,7 +857,7 @@ body[data-theme] .scorecard-team-one,
 body[data-theme] .scorecard-team-two {
   position: static; grid-row: auto; grid-column: auto; display: grid; gap: var(--space-2); align-content: start;
   min-height: 0; padding: var(--space-3); border: 0; border-radius: var(--radius-sm);
-  background: var(--surface-card); box-shadow: inset 0 3px 0 rgba(var(--player-accent-rgb), 0.9);
+  background: var(--surface-card); box-shadow: none;
 }
 body[data-theme] .match-card:not(.match-playing) .scorecard-team { background: var(--surface-card); }
 body[data-theme] .scorecard-team h3 {
@@ -1086,3 +1086,32 @@ body[data-theme] .standings > li.is-me span { color: var(--ink-body); }
 body[data-theme] .standings .placement-badge { min-width: 28px; height: 28px; box-shadow: none; background: transparent; }
 body[data-theme] .standings > li:first-child .placement-badge { background: var(--ball); color: var(--on-ball); }
 body[data-theme] .standing-stats strong { font-size: 18px; }
+
+/* ---------- 21. Players without colours or avatars (developer's decision 2026-10-05) ----------
+   The gem avatars and the coloured name chips do not fit the 1.0 design: names are plain ink, no gem, no accent bar. */
+body[data-theme] .ds-avatar-gem,
+body[data-theme] .avatar.ds-avatar-gem { display: none !important; }
+body[data-theme] .team-player,
+body[data-theme] .scorecard-players .team-player { gap: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
+body[data-theme] .team-player-badge,
+body[data-theme] .scorecard-players .team-player-badge,
+body[data-theme] .large-score-label .team-player-badge {
+  min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none;
+  color: inherit; font: inherit; font-weight: 700; text-shadow: none;
+}
+body[data-theme] .team-player + .team-player::before { content: "&"; margin: 0 .35em; color: var(--ink-muted); font-weight: 600; }
+
+/* ---------- 22. Theme switch: the sun and the moon say it; the words stay for screen readers only ---------- */
+body[data-theme] .theme-toggle .theme-toggle-option:has(svg) { gap: 0; min-width: 40px; padding-inline: 10px; justify-content: center; }
+body[data-theme] .theme-toggle .theme-toggle-option:has(svg) > span {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+/* no accent bar on list rows either, and the scorecard keeps a team's names on one line */
+body[data-theme] .compact-list li::before { content: none; display: none; }
+body[data-theme] .player-name-badge { padding: 0; border: 0; background: transparent; box-shadow: none; color: var(--ink-heading); font-weight: 700; }
+body[data-theme] .scorecard-players { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0; }
+body[data-theme] .scorecard-players .team-player { display: inline-flex; }
+body[data-theme] .large-score-label { display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 4px; }
+body[data-theme] .large-score-label .large-score-hint { flex: 0 0 100%; }
+body[data-theme] .large-score-label .team-player { display: inline-flex; font: 700 clamp(20px, 3.2vw, 30px)/1.15 var(--font-display); letter-spacing: -0.02em; }
+body[data-theme] .large-score-label .team-player + .team-player::before { color: inherit; opacity: .55; }

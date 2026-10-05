@@ -93,6 +93,8 @@
   --shadow-ink:        #000000;
   /* the accent as an r, g, b triplet, only for rgba(var(--player-accent-rgb), a) where no player colour is set */
   --accent-blue-rgb:   220, 245, 90;
+  /* muted ink as r, g, b: what player accents resolve to now that players have no colour of their own */
+  --ink-muted-rgb:     155, 152, 143;
 }
 
 [data-theme="light"] {
@@ -158,6 +160,7 @@
   --shadow-press:      0 2px 0 rgba(20, 20, 20, .18);
   --shadow-ink:        #141414;
   --accent-blue-rgb:   74, 90, 10;
+  --ink-muted-rgb:     102, 100, 92;
 }
 
 /* derived: how strongly shadows show. The design is flat: no glows, soft shadows only on floating things. */

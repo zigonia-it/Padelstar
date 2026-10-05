@@ -124,3 +124,14 @@ body.tv-page::before, body.tv-page::after { content: none; display: none; }
 
 /* round tag on the ball, like the prototype header */
 .tv-page .tv-title-wrap > span { display: inline-flex; align-items: center; height: 30px; padding: 0 14px; border-radius: var(--radius-pill); background: var(--ball); color: var(--on-ball); letter-spacing: .1em; }
+
+/* section headings and status tags read from across the room: heavier weight, and "Pågår nå" in heading ink */
+.tv-page .tv-panel h2 { font-weight: 800; font-size: clamp(.9rem, 1.2vw, 1.35rem); }
+.tv-page .tv-panel h2 em { color: var(--ink-heading); font-weight: 800; }
+.tv-page .tv-court-tag,
+.tv-page .tv-live-label,
+.tv-page .tv-next-label { font-weight: 800; }
+
+/* players have no colours or gem avatars in 1.0 (developer's decision 2026-10-05) */
+.tv-page .ds-avatar-gem { display: none !important; }
+.tv-page .tv-standing-player { gap: 0; }
