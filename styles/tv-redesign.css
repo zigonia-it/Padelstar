@@ -9,8 +9,8 @@ body.tv-page::before, body.tv-page::after { content: none; display: none; }
 
 .tv-page .tv-header { gap: clamp(12px, 2vw, 32px); }
 .tv-page .tv-header-lines { display: none; }
-.tv-page .tv-brand { display: inline-flex; align-items: center; width: auto; height: clamp(26px, 2.6vw, 44px); filter: none; }
-.tv-page .tv-brand img { display: block; width: auto; height: 100%; }
+.tv-page .tv-brand { --logo-h: clamp(26px, 2.6vw, 44px); display: inline-flex; align-items: center; width: auto; height: var(--logo-h); filter: none; }
+.tv-page .tv-brand img { display: block; width: auto; max-width: none; height: var(--logo-h); }
 .tv-page .tv-brand .logo-on-dark { display: none; }
 [data-theme="dark"] .tv-page .tv-brand .logo-on-light { display: none; }
 [data-theme="dark"] .tv-page .tv-brand .logo-on-dark { display: block; }

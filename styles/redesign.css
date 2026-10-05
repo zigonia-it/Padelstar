@@ -13,13 +13,14 @@
    ========================================================= */
 
 /* ---------- Logo: the supplied wordmark + ball, one image per ground ---------- */
-/* the lockup is 928×180; the ratio gives the box its real width, so whatever sits beside the logo (the version) is never drawn under it */
-.ps-logo { display: inline-flex; align-items: center; height: 26px; aspect-ratio: 928 / 180; flex: none; }
-.ps-logo img { display: block; width: 100%; height: 100%; }
+/* the image gets its height in pixels and its width from its own ratio, so the box is always as wide as the wordmark
+   (no percentage or aspect-ratio sizing, which older Safari resolves to zero) */
+.ps-logo { --logo-h: 26px; display: inline-flex; align-items: center; width: auto; height: var(--logo-h); max-width: none; max-height: none; flex: none; filter: none; }
+.ps-logo img { display: block; width: auto; max-width: none; height: var(--logo-h); }
 .ps-logo .logo-on-dark { display: none; }
 [data-theme="dark"] .ps-logo .logo-on-light { display: none; }
 [data-theme="dark"] .ps-logo .logo-on-dark { display: block; }
-.ps-logo--lg { height: 34px; }
+.ps-logo--lg { --logo-h: 34px; }
 
 /* ---------- Design-system primitives (bundle.css, Padelstar namespace) ---------- */
 .ps-num { font-family: var(--font-display); font-variant-numeric: tabular-nums; }
@@ -155,12 +156,15 @@ body[data-theme] .brand-home-button {
 }
 body[data-theme] .brand-home-button:not(:disabled):hover { transform: none; }
 /* the old square-icon rules fixed .brand-logo at 52–60px wide, which clipped the box and drew the version under the wordmark */
-body[data-theme] .brand-home-button .ps-logo { width: auto; height: 26px; flex: none; }
-body[data-theme] .version {
-  order: 0; margin: 0; padding: 4px 10px; border: 0; border-radius: var(--radius-pill);
-  background: var(--surface-sunken); color: var(--ink-muted);
+body[data-theme] .brand-home-button .ps-logo { --logo-h: 26px; width: auto; height: var(--logo-h); max-width: none; max-height: none; flex: none; filter: none; }
+/* the version sits in a small pill beside the logo (brand-lockup restated to outweigh ui-consistency's classic rule) */
+body[data-theme] .version,
+body[data-theme] .brand-lockup .version {
+  display: inline-flex; align-items: center; order: 0; margin: 0; padding: 5px 10px; border: 1px solid var(--hairline); border-radius: var(--radius-pill);
+  background: var(--surface-sunken); color: var(--ink-muted); white-space: nowrap;
   font: 700 11px/1 var(--font-ui); letter-spacing: .4px; text-transform: none;
 }
+body[data-theme] .brand-lockup .version:empty { display: none; }
 body[data-theme] .topbar-actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); flex: 1 1 auto; min-width: 0; }
 body[data-theme] .app-menu { gap: 2px; padding: 0; border: 0; background: transparent; box-shadow: none; }
 body[data-theme] .app-menu .module-link {
@@ -215,8 +219,8 @@ body[data-theme] .language-options {
 /* phones and small tablets: the links fold into a sheet that drops under the pill */
 @media (max-width: 900px) {
   body[data-theme] .topbar { padding: 6px 6px 6px 18px; min-height: 56px; }
-  body[data-theme] .brand-home-button .ps-logo { height: 22px; }
-  body[data-theme] .version { display: none; }
+  body[data-theme] .brand-home-button .ps-logo { --logo-h: 22px; }
+  body[data-theme] .version, body[data-theme] .brand-lockup .version { display: none; }
   body[data-theme] .topbar-actions > .theme-toggle { display: none; }
   body[data-theme] .menu-drawer { display: none; }
   body[data-theme].app-menu-open .menu-drawer {
@@ -529,7 +533,7 @@ body[data-theme] .workspace-header h2 { margin: 2px 0 0; font: 600 28px/32px var
 body[data-theme] .tv-mode-logo,
 body[data-theme] .tv-mode-wordmark { display: none; }
 .tv-mode body[data-theme] .tv-mode-logo,
-body[data-theme].tv-mode .tv-mode-logo { display: inline-flex; width: auto; height: clamp(28px, 3vw, 48px); aspect-ratio: auto; opacity: 1; filter: none; }
+body[data-theme].tv-mode .tv-mode-logo { display: inline-flex; width: auto; --logo-h: clamp(28px, 3vw, 48px); height: var(--logo-h); opacity: 1; filter: none; }
 
 body[data-theme] .workspace-rail-icon { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 body[data-theme] .workspace-rail-item { gap: 10px; border: 0; color: var(--ink-muted); font: 700 14px/1 var(--font-ui); }
@@ -992,7 +996,7 @@ body[data-theme] .privacy-header > a.secondary {
   background: var(--surface-inverse); color: var(--on-inverse); text-decoration: none; font: 700 14px/1 var(--font-ui); white-space: nowrap;
 }
 @media (max-width: 900px) {
-  body[data-theme] .privacy-header .brand-lockup .ps-logo { height: 22px; }
+  body[data-theme] .privacy-header .brand-lockup .ps-logo { --logo-h: 22px; height: var(--logo-h); }
 }
 
 /* =========================================================
