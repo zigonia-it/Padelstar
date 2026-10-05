@@ -1397,11 +1397,16 @@ function loadPendingPlayerScores() {
 }
 
 function persistSyncMetadata() {
-  stateManager.persistSyncMetadata(localStorage, syncStorageKey, pendingAdminSync, pendingPlayerScores, {
-    lastAttemptAt: syncLastAttemptAt,
-    lastError: syncLastError,
-  });
-  persistence.mirrorKeys([syncStorageKey]);
+  try {
+    stateManager.persistSyncMetadata(localStorage, syncStorageKey, pendingAdminSync, pendingPlayerScores, {
+      lastAttemptAt: syncLastAttemptAt,
+      lastError: syncLastError,
+    });
+    persistence.mirrorKeys([syncStorageKey]);
+  } catch (error) {
+    // Same as persistLocalState: a full browser storage must not stop the server save that follows.
+    console.warn("Padelstar could not save the sync status on this device", error);
+  }
 }
 
 function hasPendingRemoteWrites() {
@@ -1439,9 +1444,10 @@ function persistLocalState() {
     return;
   }
   try {
-    tournamentLibrary.upsert(state);
+    const storedState = { ...state, schedule: window.PadelstarTournamentEngine?.compactSchedule(state.schedule) ?? state.schedule };
+    tournamentLibrary.upsert(storedState);
     persistence.writeTournamentState({
-      state,
+      state: storedState,
       stateKey: storageKey,
       recoveryKey: recoveryStorageKey,
       isValidState: isValidTournamentState,

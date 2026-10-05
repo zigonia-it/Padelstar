@@ -21,10 +21,11 @@ window.PadelstarTournamentRuntime = (() => {
       return getState();
     }
 
-    function createScheduledRound(roundPlan, roundNumber) {
+    function createScheduledRound(savedRoundPlan, roundNumber) {
       const currentState = state();
+      const roundPlan = window.PadelstarTournamentEngine?.hydrateRoundPlan(savedRoundPlan, currentState.players) ?? savedRoundPlan;
       const plannedMatchups = roundPlan.allTeamsMeet || roundPlan.matchups?.length
-        ? (window.PadelstarTournamentScheduler?.orderMatchups(roundPlan.teams, currentState.schedulerHistory) ?? window.PadelstarTournamentEngine.roundPlanMatchups(roundPlan))
+        ? (window.PadelstarTournamentScheduler?.orderMatchups(roundPlan.teams, currentState.schedulerHistory) ?? window.PadelstarTournamentEngine?.roundPlanMatchups(roundPlan) ?? roundPlan.matchups)
         : [];
       const queuedMatchups = plannedMatchups.length && window.PadelstarTournamentScheduler
         ? window.PadelstarTournamentScheduler.createQueue(plannedMatchups, Math.max(1, currentState.courts.length)).flat()

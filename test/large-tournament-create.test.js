@@ -24,6 +24,19 @@ test("a 40-player Round Robin schedule stays small enough for browser storage", 
   assert.equal(engine.roundPlanMatchups(schedule[0]).length, 0, "each team plays one match a round above the limit");
 });
 
+test("the 40-player plan fits the server's 256 KB create limit and is filled in from the roster", () => {
+  const engine = load(["tournament-engine.js"]).PadelstarTournamentEngine;
+  const roster = players(40);
+  const schedule = engine.compactSchedule(engine.buildSchedule(roster, "roundRobin"));
+  const createPayload = JSON.stringify({ players: roster, schedule });
+  assert.ok(createPayload.length < 262144, `create payload ${createPayload.length} bytes`);
+  assert.ok(schedule[0].teams.every((team) => team.players.every((player) => Object.keys(player).join() === "id")));
+  const round = engine.hydrateRoundPlan(schedule[0], roster);
+  assert.equal(round.teams[0].players[0].name, roster.find((player) => player.id === round.teams[0].players[0].id).name);
+  assert.match(round.teams[0].displayName, / & /);
+  assert.equal(round.teams[0].accent, "silver");
+});
+
 test("up to 32 players every team in a rotation still meets every other team", () => {
   const engine = load(["tournament-engine.js"]).PadelstarTournamentEngine;
   assert.equal(engine.allTeamsMeetMaxPlayers, 32);
@@ -41,7 +54,7 @@ test("older saved schedules with matchups are compacted and still produce the sa
   const compact = engine.compactRoundPlan(legacy[0]);
   assert.equal(compact.allTeamsMeet, true);
   assert.equal(engine.roundPlanMatchups(compact).length, 6);
-  assert.equal(engine.compactRoundPlan(compact), compact);
+  assert.equal(JSON.stringify(engine.compactRoundPlan(compact)), JSON.stringify(compact));
 });
 
 test("a full browser storage drops older tournaments instead of failing the save", () => {

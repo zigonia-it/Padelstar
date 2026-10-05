@@ -14,9 +14,6 @@ window.PadelstarState = (() => {
     nextState.players ??= [];
     nextState.courts ??= structuredClone(defaults.courts);
     nextState.schedule ??= helpers.buildSchedule(nextState.players, nextState.settings.format);
-    if (Array.isArray(nextState.schedule) && window.PadelstarTournamentEngine?.compactRoundPlan) {
-      nextState.schedule = nextState.schedule.map(window.PadelstarTournamentEngine.compactRoundPlan);
-    }
     nextState.schedulerHistory = {
       partners: {},
       opponents: {},
@@ -195,6 +192,7 @@ window.PadelstarState = (() => {
     delete sharedState.claimedAt;
     delete sharedState.serverConfirmed;
     if (sharedState.settings) delete sharedState.settings.language;
+    if (window.PadelstarTournamentEngine?.compactSchedule) sharedState.schedule = window.PadelstarTournamentEngine.compactSchedule(sharedState.schedule);
     for (const round of sharedState.rounds ?? []) for (const match of round.matches ?? []) compactMatchHistory(match);
     return sharedState;
   }
