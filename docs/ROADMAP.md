@@ -2,6 +2,8 @@
 
 # Padelstar – Active Release Roadmap
 
+> **Long-range order (1.0.x → 4.x):** see `docs/MASTER-ROADMAP.md` for the release-by-release overview that merges this file with the v2 League and the v3–v4 master plans. This file keeps the detailed checkboxes.
+
 > **Primary objective:** 
 > Restore a reliably usable Padelstar as fast as possible.
 >
