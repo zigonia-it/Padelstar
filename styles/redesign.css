@@ -215,6 +215,14 @@ body[data-theme] .theme-toggle-option:not(:disabled):hover { transform: none; co
 body[data-theme] .language-current {
   min-height: 40px; padding: 0 12px; border: 0; border-radius: var(--radius-pill); background: var(--surface-raised); color: var(--ink-heading); box-shadow: none;
 }
+/* the open caret was a different glyph (⌃ for ⌄); in Safari and Firefox it comes from a fallback font of another width,
+   so the button still changed size and nudged the menu. One glyph, a fixed box, turned over when open. */
+body[data-theme] .language-current::after,
+body[data-theme] .language-menu[open] .language-current::after {
+  content: "⌄"; display: inline-block; flex: 0 0 1em; width: 1em; text-align: center;
+  transition: transform var(--motion-quick) var(--ease-standard);
+}
+body[data-theme] .language-menu[open] .language-current::after { transform: rotate(180deg); }
 body[data-theme] .language-options {
   border: 0; border-radius: var(--radius-md); background: var(--surface-card); box-shadow: var(--shadow-float);
 }
