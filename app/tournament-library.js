@@ -19,8 +19,26 @@
       };
     }
 
-    function write(library) {
-      storage.writeJson(localStorage, storageKey, library);
+    // The library is a convenience copy of every tournament on this device. When the browser's storage is full,
+    // the oldest other tournaments make room first; if the current one still does not fit it is left out, so a
+    // full library never stops the tournament itself from being created or saved.
+    function write(library, keepId = null) {
+      const tournaments = [...library.tournaments];
+      for (;;) {
+        try {
+          storage.writeJson(localStorage, storageKey, { ...library, tournaments });
+          return true;
+        } catch (error) {
+          if (!isQuotaError(error)) throw error;
+          const evictable = tournaments
+            .map((item, index) => ({ item, index }))
+            .filter(({ item }) => item.id !== keepId)
+            .sort((a, b) => String(a.item.updatedAt ?? "").localeCompare(String(b.item.updatedAt ?? "")));
+          if (evictable.length) tournaments.splice(evictable[0].index, 1);
+          else if (tournaments.length) tournaments.length = 0;
+          else return false;
+        }
+      }
     }
 
     function list() {
@@ -34,7 +52,7 @@
       const index = library.tournaments.findIndex((item) => item.id === state.id);
       if (index >= 0) library.tournaments[index] = entry;
       else library.tournaments.push(entry);
-      write(library);
+      write(library, state.id);
     }
 
     function get(id) {
@@ -48,6 +66,10 @@
     }
 
     return { get, list, remove, upsert };
+  }
+
+  function isQuotaError(error) {
+    return error?.name === "QuotaExceededError" || error?.name === "NS_ERROR_DOM_QUOTA_REACHED" || error?.code === 22;
   }
 
   global.PadelstarTournamentLibrary = { create };

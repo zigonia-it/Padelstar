@@ -1,13 +1,64 @@
 window.PadelstarTournamentEngine = (() => {
+  const allTeamsMeetMaxPlayers = 32;
+
   function buildSchedule(players, format = "roundRobin", options = {}) {
     const activePlayers = players.filter((player) => player.active && player.availability !== "away");
     if (format === "cup") return [];
     if (window.PadelstarTournamentModes && format !== "roundRobin") {
-      return window.PadelstarTournamentModes.build(players, format, { roundRobin: (roster) => roster.length < 4 ? generateSinglesRounds(roster) : generatePartnerRounds(roster), standings: options.standings ?? [], history: options.history ?? {} });
+      return window.PadelstarTournamentModes.build(players, format, { roundRobin: (roster) => roster.length < 4 ? generateSinglesRounds(roster) : generatePartnerRounds(roster), standings: options.standings ?? [], history: options.history ?? {} }).map(withoutMatchups);
     }
-    return activePlayers.length < 4
+    return (activePlayers.length < 4
       ? generateSinglesRounds(activePlayers)
-      : generatePartnerRounds(activePlayers);
+      : generatePartnerRounds(activePlayers)).map(withoutMatchups);
+  }
+
+  // A saved plan refers to players by id and keeps only a flag for "every team meets every other team"; the
+  // matchups and the full players are filled in from the roster when the round starts (hydrateRoundPlan).
+  // Storing them copied every player into every pairing, which for 40 players was close to 10 MB: the browser
+  // refused it and the server's 256 KB limit refused it too, so creating the tournament failed.
+  function withoutMatchups(roundPlan) {
+    if (!roundPlan || !Array.isArray(roundPlan.matchups)) return roundPlan;
+    const { matchups, ...plan } = roundPlan;
+    return { ...plan, allTeamsMeet: matchups.length > 0 };
+  }
+
+  // What is stored on the device and sent to the server.
+  function compactRoundPlan(roundPlan) {
+    if (!roundPlan || typeof roundPlan !== "object") return roundPlan;
+    const plan = withoutMatchups(roundPlan);
+    if (Array.isArray(plan.teams)) {
+      plan.teams = plan.teams.map((team) => ({ id: team.id, players: (team.players ?? []).map(playerRef) }));
+    }
+    if (Array.isArray(plan.sittingOut)) plan.sittingOut = plan.sittingOut.map(playerRef);
+    return plan;
+  }
+
+  function compactSchedule(schedule) {
+    return Array.isArray(schedule) ? schedule.map(compactRoundPlan) : schedule;
+  }
+
+  function playerRef(player) {
+    return player?.id ? { id: player.id } : player;
+  }
+
+  function hydrateRoundPlan(roundPlan, players = []) {
+    const byId = new Map(players.map((player) => [player.id, player]));
+    const full = (player) => byId.get(player?.id) ?? player;
+    const teams = (roundPlan.teams ?? []).map((team) => {
+      const teamPlayers = (team.players ?? []).map(full);
+      return {
+        ...team,
+        players: teamPlayers,
+        accent: team.accent ?? teamPlayers[0]?.accent ?? "silver",
+        displayName: team.displayName ?? teamPlayers.map((player) => player.name).join(" & "),
+      };
+    });
+    return { ...roundPlan, teams, sittingOut: (roundPlan.sittingOut ?? []).map(full) };
+  }
+
+  function roundPlanMatchups(roundPlan) {
+    if (Array.isArray(roundPlan?.matchups)) return roundPlan.matchups;
+    return roundPlan?.allTeamsMeet ? createTeamMatchups(roundPlan.teams ?? []) : [];
   }
 
   function generateSinglesRounds(players) {
@@ -30,6 +81,9 @@ window.PadelstarTournamentEngine = (() => {
   }
 
   function generatePartnerRounds(players) {
+    // Up to this many players every team in a rotation meets every other team. Above it each team plays one
+    // match per rotation (teams side by side are paired), so 40 players give 10 matches a round, not 190.
+    const everyTeamMeets = players.length <= allTeamsMeetMaxPlayers;
     let rotation = players.map((player) => player);
     if (rotation.length % 2 !== 0) rotation.push(null);
 
@@ -46,7 +100,7 @@ window.PadelstarTournamentEngine = (() => {
         else if (home || away) sittingOut.push(home ?? away);
       }
 
-      rounds.push({ teams, sittingOut, matchups: createTeamMatchups(teams) });
+      rounds.push({ teams, sittingOut, matchups: everyTeamMeets ? createTeamMatchups(teams) : [] });
       rotation = rotateRoundParticipants(rotation);
     }
 
@@ -108,7 +162,12 @@ window.PadelstarTournamentEngine = (() => {
   }
 
   return {
+    allTeamsMeetMaxPlayers,
     buildSchedule,
+    compactRoundPlan,
+    compactSchedule,
+    hydrateRoundPlan,
+    roundPlanMatchups,
     generateSinglesRounds,
     generatePartnerRounds,
     generateRoundMatches,

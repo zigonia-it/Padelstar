@@ -192,6 +192,7 @@ window.PadelstarState = (() => {
     delete sharedState.claimedAt;
     delete sharedState.serverConfirmed;
     if (sharedState.settings) delete sharedState.settings.language;
+    if (window.PadelstarTournamentEngine?.compactSchedule) sharedState.schedule = window.PadelstarTournamentEngine.compactSchedule(sharedState.schedule);
     for (const round of sharedState.rounds ?? []) for (const match of round.matches ?? []) compactMatchHistory(match);
     return sharedState;
   }
