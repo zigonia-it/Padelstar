@@ -132,12 +132,27 @@ body[data-theme] .match-card.match-won .winner-note {
   animation: ps-settle-in var(--motion-base) var(--ease-out) var(--motion-slow) both;
 }
 
+/* ---------- 5. Standings: a row that climbed gets a short ball wash, points that changed tick (app/list-reorder.js) ---------- */
+/* the slide itself runs from JS (Web Animations, --motion-slow / --ease-standard) */
+/* the climbing row passes over the rows it overtakes, so it is lifted and given the card colour */
+body[data-theme] [data-reorder-key].is-climbing,
+body[data-theme] .panel .standings > [data-reorder-key].is-climbing { position: relative; z-index: 1; background: var(--surface-card); }
+body[data-theme] [data-reorder-key].is-climbing::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--ball-wash); pointer-events: none;
+  animation: ps-wash-out var(--motion-slow) var(--ease-out) var(--motion-quick) both;
+}
+body[data-theme] [data-reorder-key] .is-ticking {
+  display: inline-block; transform-origin: right center;
+  animation: ps-score-tick var(--motion-base) var(--ease-pop);
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* no sweep: the wash simply fades, so the win still reads as a change */
   body[data-theme] .match-card.match-won::after { transform: none; animation-name: ps-wash-out; }
   body[data-theme] .match-card.match-won .match-summary-score { animation: none; }
   body[data-theme] .large-score-team.is-winner::after { transform: none; animation-name: ps-wash-out; }
   body[data-theme] .large-score-team.is-winner strong { animation: none; }
+  body[data-theme] [data-reorder-key] .is-ticking { animation: none; }
   body[data-theme] .nav-indicator.is-sliding { transition: opacity var(--motion-quick) var(--ease-standard); }
   .motion-enter,
   body[data-theme] .large-score-team .is-ticking,

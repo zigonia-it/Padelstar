@@ -5,7 +5,14 @@ window.PadelstarStandings = (() => {
       if (elements.ownerStandingsList) renderStandingsList(elements.ownerStandingsList, matches);
     }
 
+    // rows slide to their new places when the order changes (app/list-reorder.js)
     function renderStandingsList(container, matches) {
+      const reorder = window.PadelstarListReorder;
+      if (reorder) reorder.rebuild(container, () => fillStandingsList(container, matches), { pointsSelector: ".standing-stats strong" });
+      else fillStandingsList(container, matches);
+    }
+
+    function fillStandingsList(container, matches) {
       container.innerHTML = "";
       const entries = leaderboardEntries(matches);
       if (entries.length === 0) {
@@ -15,6 +22,7 @@ window.PadelstarStandings = (() => {
       entries.forEach((entry, index) => {
         const item = document.createElement("li");
         item.setAttribute("style", accentStyle(entry.player.accent));
+        item.dataset.reorderKey = entry.player.id ?? entry.player.name;
         // Your own row carries the ball wash (design system: Standings table).
         if (entry.player.id && entry.player.id === getSelectedPlayerId?.()) item.classList.add("is-me");
         item.innerHTML = `

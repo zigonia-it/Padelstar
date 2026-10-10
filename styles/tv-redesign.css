@@ -135,3 +135,19 @@ body.tv-page::before, body.tv-page::after { content: none; display: none; }
 /* players have no colours or gem avatars in 1.0 (developer's decision 2026-10-05) */
 .tv-page .ds-avatar-gem { display: none !important; }
 .tv-page .tv-standing-player { gap: 0; }
+
+/* Standings reorder on the board (app/list-reorder.js): the slide runs from JS; a row that climbed gets a ball wash
+   and points that changed tick once. This page does not load styles.css or motion.css, so it carries its own
+   keyframes and reduced-motion block. */
+@keyframes tv-wash-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes tv-score-tick { 40% { transform: scale(var(--motion-scale-pop)); } }
+.tv-page .tv-standing-row.is-climbing { position: relative; z-index: 1; background: var(--surface-card); }
+.tv-page .tv-standing-row.is-climbing::after {
+  /* stronger than the app's wash: the board is read from across the hall */
+  content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--ball) 35%, transparent); pointer-events: none;
+  animation: tv-wash-out var(--motion-slow) var(--ease-out) var(--motion-quick) both;
+}
+.tv-page .tv-standing-points.is-ticking { display: inline-block; animation: tv-score-tick var(--motion-base) var(--ease-pop); }
+@media (prefers-reduced-motion: reduce) {
+  .tv-page .tv-standing-points.is-ticking { animation: none; }
+}
