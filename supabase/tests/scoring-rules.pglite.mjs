@@ -54,7 +54,8 @@ for (const scenario of scenarios) {
     currentGame: initial.currentGame ? pair(initial.currentGame) : { teamOne: 0, teamTwo: 0 },
     currentSet: initial.currentSet ? pair(initial.currentSet) : { teamOne: 0, teamTwo: 0 },
     completedSets: (initial.completedSets ?? []).map(pair), undoStack: [], courtId: 'c1', courtName: 'Bane 1' };
-  if (scenario.initial) match.startedAt = new Date().toISOString();
+  // the clock was started on the match card before the first point
+  if (scenario.initial || scenario.settings.timedMinutes) match.startedAt = new Date().toISOString();
   const state = { status: 'Runde pågår', settings: scenario.settings, revision: 1, rounds: [{ id: 'r1', status: 'active', matches: [match] }] };
   await pg.query(`insert into public.tournaments(id,invite_code,admin_token,state,revision) values ($1,'ABCD2345','admintoken-1234567890',$2::jsonb,1)`, [T, JSON.stringify(state)]);
   await pg.query(`insert into public.player_sessions values ($1,$2,encode(extensions.digest($3,'sha256'),'hex'))`, [T, A, TOK]);
