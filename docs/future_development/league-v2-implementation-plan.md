@@ -67,6 +67,8 @@ Serve order for teams (1,2) vs (3,4): 1R, 1L, 3R, 3L, 2R, 2L, 4R, 4L, repeat —
 
 Big Score swaps the "Server: team" cell for `[padelstar-ball.png] Anna · right` and adds the countdown. This change is behind the `league` format so tournament Big Score is untouched.
 
+Built 2026-10-10 (step B): `app/serve-rotation.js` plus the Big Score cell. It shows in every mode, not only `league`: Tennis gets one turn per game (tiebreak rule inside a tiebreak), Points two points per turn. The first server of each team is assumed to be its first listed player until the league session lets the referee pick. The 5-minute default belongs to the league wizard (step D), since there is no `league` format yet.
+
 ## 5. Build order (maps to scope §31)
 
 | Step | Scope phase | Deliverable | Depends on |

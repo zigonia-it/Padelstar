@@ -80,6 +80,7 @@ const colorModePath = path.join(appRoot, "color-mode.js");
 const playerStatePath = path.join(appRoot, "player-state.js");
 const tournamentStatusPath = path.join(appRoot, "tournament-status.js");
 const scoringEnginePath = path.join(appRoot, "scoring-engine.js");
+const serveRotationPath = path.join(appRoot, "serve-rotation.js");
 const stateManagerPath = path.join(appRoot, "state-manager.js");
 const realtimeSyncPath = path.join(appRoot, "realtime-sync.js");
 const offlineStoragePath = path.join(appRoot, "offline-storage.js");
@@ -240,6 +241,7 @@ function loadPadelstar(options = {}) {
   vm.runInContext(fs.readFileSync(playerStatePath, "utf8"), context, { filename: playerStatePath });
   vm.runInContext(fs.readFileSync(tournamentStatusPath, "utf8"), context, { filename: tournamentStatusPath });
   vm.runInContext(fs.readFileSync(scoringEnginePath, "utf8"), context, { filename: scoringEnginePath });
+  vm.runInContext(fs.readFileSync(serveRotationPath, "utf8"), context, { filename: serveRotationPath });
   vm.runInContext(fs.readFileSync(stateManagerPath, "utf8"), context, { filename: stateManagerPath });
   vm.runInContext(fs.readFileSync(realtimeSyncPath, "utf8"), context, { filename: realtimeSyncPath });
   vm.runInContext(fs.readFileSync(offlineStoragePath, "utf8"), context, { filename: offlineStoragePath });

@@ -699,6 +699,22 @@ body[data-theme] .large-score-actions { grid-template-columns: repeat(3, minmax(
   body[data-theme] .large-score-actions span { font-size: 10px; letter-spacing: 1px; }
   body[data-theme] .large-score-actions strong { font-size: 1.05rem; }
 }
+/* Serve indicator (League v2.0, app/serve-rotation.js): the Padelstar ball, the serving player and the side.
+   The ball also sits on that player's name on their half of the pad. */
+body[data-theme] .serve-indicator { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; min-width: 0; }
+body[data-theme] .serve-ball { flex: none; width: 1.15em; height: 1.15em; object-fit: contain; }
+body[data-theme] .serve-name { min-width: 0; overflow-wrap: anywhere; }
+body[data-theme] .large-score-actions .serve-side { color: var(--ink-muted); font: 700 12px/16px var(--font-ui); letter-spacing: 0; text-transform: none; }
+body[data-theme] .large-score-team .team-player .serve-ball { width: 22px; height: 22px; margin-left: 6px; vertical-align: middle; }
+/* a timed match adds its clock as a fourth fact: one row on wide screens, two rows on phones */
+body[data-theme] .large-score-actions.has-timer { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+body[data-theme] .large-score-actions .match-timer { justify-self: start; font-size: 1.05rem; letter-spacing: 0; text-transform: none; color: var(--ink-heading); }
+body[data-theme] .large-score-actions .match-timer-warning { color: var(--warning); }
+body[data-theme] .large-score-actions .match-timer-expired { color: var(--negative); }
+@media (max-width: 560px) {
+  body[data-theme] .large-score-actions.has-timer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body[data-theme] .large-score-actions .serve-side { font-size: 10px; }
+}
 
 /* =========================================================
    11. CREATE WIZARD (WizardStep) — four ball segments, choice rows

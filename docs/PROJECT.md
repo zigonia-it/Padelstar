@@ -11,6 +11,7 @@ Last updated: 2026-10-05.
 - **Version 1.0.0** is live on https://padelstar.app (Vercel, deployed from `main`; Supabase project `sxzlljxodorkfrjnwfgr` in the EU). Released 2026-10-05 with the Padelstar 1.0 redesign.
 - Merged after 1.0.0, not yet versioned: the motion system and win moment (PR #42, #45) and the missing 512 px icon (PR #43). See `docs/CHANGELOG.md` "Unreleased".
 - Open pull requests: **#44** large Round Robin can be created (the 2 MB server limit it needs is already live); **#46** League v2.0 plan and `docs/MASTER-ROADMAP.md`.
+- League v2.0 work has started (developer's choice 2026-10-10): step B, serve rotation and the ball in Big Score, is in a draft PR on branch `league-serve-bigscore`.
 - Live modes: Round Robin and Cup. Scoring: Tennis (padel) and Points modes on the generic scoring engine.
 - Current stage of the plan: **1.0.x, stabilise** (master roadmap §1): live verification on real devices, the open bugs in `docs/BUGS.md`, the privacy sign-off, motion step 3.
 - What the developer must do or decide: `docs/USER_ACTIONS.md`.

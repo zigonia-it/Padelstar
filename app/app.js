@@ -581,6 +581,7 @@ const largeScore = window.PadelstarLargeScore.create({
   teamAccentStyle: (team) => teamAccentStyle(team),
   teamDisplay: (team) => teamDisplay(team),
   tennisPointLabel: (points) => tennisPointLabel(points),
+  timerMarkup: (match) => matchCard.timerMarkup(match),
   t: (key, values) => t(key, values),
 });
 const setScoreDialog = window.PadelstarSetScoreDialog.create({
