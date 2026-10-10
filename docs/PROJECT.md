@@ -4,13 +4,13 @@
 
 Padelstar is a multi-device padel tournament application/PWA for creating, running, scoring and displaying tournaments.
 
-Last updated: 2026-10-05.
+Last updated: 2026-10-10.
 
 ## Current state
 
 - **Version 1.0.0** is live on https://padelstar.app (Vercel, deployed from `main`; Supabase project `sxzlljxodorkfrjnwfgr` in the EU). Released 2026-10-05 with the Padelstar 1.0 redesign.
 - Merged after 1.0.0, not yet versioned: the motion system and win moment (PR #42, #45) and the missing 512 px icon (PR #43). See `docs/CHANGELOG.md` "Unreleased".
-- Open pull requests: **#44** large Round Robin can be created (the 2 MB server limit it needs is already live); **#46** League v2.0 plan and `docs/MASTER-ROADMAP.md`.
+- Open pull requests: **#44** large Round Robin can be created (the 2 MB server limit it needs is already live); the timed-match **start clock button** (branch `match-clock-start`; needs its database migration applied when it is merged). #46 (League v2.0 plan and `docs/MASTER-ROADMAP.md`) is merged.
 - Live modes: Round Robin and Cup. Scoring: Tennis (padel) and Points modes on the generic scoring engine.
 - Current stage of the plan: **1.0.x, stabilise** (master roadmap §1): live verification on real devices, the open bugs in `docs/BUGS.md`, the privacy sign-off, motion step 3.
 - What the developer must do or decide: `docs/USER_ACTIONS.md`.
@@ -71,7 +71,7 @@ One active scorer per match, point by point, approved by the teams (details belo
 
 ## Approved product behaviour (built so far)
 
-- **Scoring**: golden point, set tiebreak and timed matches (a game won after time is up ends the match; level after time = deciding golden-point game) are rule settings; ties in the table are broken head-to-head. One active scorer per match; a player-scored result is approved by one player of each team (auto-approved after 30 minutes, or at once when only one team uses the app); the admin can always approve and can correct a finished result with a reason (the old result is kept and can be restored). After the finish only the admin can still correct a result (see "Corrections after the finish" below).
+- **Scoring**: golden point, set tiebreak and timed matches (the clock starts when someone presses Start klokken / Start kamp on the match card, not on the first point (developer's decision 2026-10-10); a game won after time is up ends the match; level after time = deciding golden-point game) are rule settings; ties in the table are broken head-to-head. One active scorer per match; a player-scored result is approved by one player of each team (auto-approved after 30 minutes, or at once when only one team uses the app); the admin can always approve and can correct a finished result with a reason (the old result is kept and can be restored). After the finish only the admin can still correct a result (see "Corrections after the finish" below).
 - **Players who leave**: the admin can replace a player (a running match restarts at 0–0 after a warning) or withdraw them without a replacement: their unplayed matches wait for the remaining teammate, who plays alone (1 against 2) or gives a walkover (the admin can decide for them).
 - **Guests and accounts**: guests use a temporary session per device; a name alone never takes over a claimed slot. A signed-in account can claim an unclaimed pre-added slot; statistics follow the account. The admin can invite people by email; an invitation reserves nothing until the person joins and lapses when the first round starts.
 - **History**: only account players get permanent statistics, written once at the finish; deleting a tournament never deletes anyone's statistics.

@@ -4,16 +4,17 @@ const path = require("node:path");
 const test = require("node:test");
 const vm = require("node:vm");
 
-function cardApi(settings = {}) {
+function cardApi(settings = {}, { role = "admin", selectedPlayerId = null, status = "Runde pågår" } = {}) {
   const context = { console, structuredClone };
   context.window = context;
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "app", "match-card.js"), "utf8"), context);
   return context.PadelstarMatchCard.create({
-    currentLocalRole: () => "admin",
+    currentLocalRole: () => role,
     escapeAttribute: (v) => String(v),
     escapeHtml: (v) => String(v),
-    getState: () => ({ settings }),
+    getState: () => ({ settings, selectedPlayerId, status }),
+    matchIncludesPlayer: (match, playerId) => [...match.teamOne.players, ...match.teamTwo.players].some((p) => p.id === playerId),
     translate: (key) => key,
   });
 }
@@ -83,4 +84,39 @@ test("a deciding-game label is left alone by the ticker", () => {
   el.textContent = "label";
   updateTimers(fakeRoot([el]), Date.parse("2026-09-19T11:00:00.000Z"));
   assert.equal(el.textContent, "label");
+});
+
+const onCourt = (extra = {}) => timedMatch({ startedAt: undefined, teamOne: { players: [{ id: "ann" }] }, teamTwo: { players: [{ id: "bob" }] }, ...extra });
+
+test("a timed match on court without a started clock offers the start button to the admin", () => {
+  const { clockStartMarkup } = cardApi();
+  assert.match(clockStartMarkup(onCourt(), true), /start-clock-button/);
+  assert.match(clockStartMarkup(onCourt(), true), /actions\.startClock/);
+  assert.equal(clockStartMarkup(onCourt(), false), "", "not when the admin cannot edit the match");
+  assert.equal(clockStartMarkup(onCourt({ startedAt: "2026-09-19T10:00:00.000Z" }), true), "", "not once the clock runs");
+  assert.equal(clockStartMarkup(onCourt({ state: "waiting" }), true), "", "a waiting match uses Start match");
+  assert.equal(clockStartMarkup(onCourt({ rules: { timedMinutes: 0 } }), true), "", "untimed matches have no clock");
+});
+
+test("players on the match can start the clock; others and a non-scorer cannot", () => {
+  assert.match(cardApi({}, { role: "player", selectedPlayerId: "ann" }).clockStartMarkup(onCourt(), true, true), /start-clock-button/);
+  assert.equal(cardApi({}, { role: "player", selectedPlayerId: "cat" }).clockStartMarkup(onCourt(), true, true), "");
+  assert.equal(cardApi({}, { role: "player", selectedPlayerId: "ann" }).clockStartMarkup(onCourt({ scorer: { playerId: "bob" } }), true, true), "");
+});
+
+test("a finished tournament never offers the button", () => {
+  assert.equal(cardApi({}, { status: "Avsluttet" }).clockStartMarkup(onCourt(), true), "");
+});
+
+test("a point does not start the clock", () => {
+  const context = { console, structuredClone };
+  context.window = context;
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "app", "scoring-engine.js"), "utf8"), context);
+  const match = { state: "playing", currentGame: { teamOne: 0, teamTwo: 0 }, currentSet: { teamOne: 0, teamTwo: 0 }, completedSets: [], teamOne: { players: [] }, teamTwo: { players: [] } };
+  context.PadelstarScoring.awardPoint(match, 0, { timedMinutes: 10 }, Date.parse("2026-09-19T10:00:00.000Z"));
+  assert.equal(match.startedAt, undefined);
+  for (let i = 0; i < 3; i += 1) context.PadelstarScoring.awardPoint(match, 0, { timedMinutes: 10 }, Date.parse("2026-09-19T11:00:00.000Z"));
+  assert.equal(match.endReason, undefined, "without a started clock the match does not time out");
+  assert.equal(match.completedSets.length, 0);
 });
