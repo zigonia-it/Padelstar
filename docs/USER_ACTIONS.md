@@ -9,7 +9,7 @@ Status: `[ ]` open, `[x]` done.
 
 - [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), score a point (the clock stays at 5:00), press Start klokken on the match card or on the player's own match, and check that the countdown runs on the card and on the TV board.
 - [ ] **Review and merge PR #44** (large Round Robin can be created; above 8 players each team plays one match per rotation). Until it is merged, a Round Robin with many players fails on padelstar.app (`docs/BUGS.md`). The 2 MB server limit it relies on is already live.
-- [ ] **Review PR #46** (League v2.0 plan and `docs/MASTER-ROADMAP.md`). The master roadmap is the governing plan (developer's decision 2026-10-05); merging #46 puts it in the repo.
+- [ ] **Review PR #51** (League step B: Big Score shows the ball, the serving player and the side). Decide: show it in every mode (as built; each team's first listed player is assumed to serve first) or only in League. Try it on your phone via the Vercel preview of the PR.
 - [ ] **Master roadmap decisions** (`docs/MASTER-ROADMAP.md` §15):
   1. Should League 2.0 start right after 1.0.x, or after 1.1–1.5 as planned?
   2. Pending product decisions: retroactive guest-stat claiming, post-finish corrections scope, invitation push, Cup time overrides, public read-only view, public statistics sharing.
