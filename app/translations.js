@@ -1560,21 +1560,25 @@ Object.assign(padelstarTranslations.nb, {
   "admin.timedMinutes": "Tidsbegrenset kamp (minutter, 0 = ingen)",
   "common.minutesValue": "{minutes} min",
   "rules.timedTitle": "Tidsbegrenset kamp",
-  "rules.timedText": "Kampen varer {minutes} minutter fra første poeng. Når tiden er ute fullføres pågående game, og den som leder på sett (deretter games) vinner. Er det likt, avgjør ett golden point-game.",
+  "rules.timedText": "Kampen varer {minutes} minutter fra klokken startes på kampkortet. Når tiden er ute fullføres pågående game, og den som leder på sett (deretter games) vinner. Er det likt, avgjør ett golden point-game.",
   "match.timeExpired": "Tid utløpt",
   "match.timeExpiredNote": "Tiden er ute – pågående game fullføres.",
   "match.decidingGame": "Avgjørende game (golden point)",
   "match.timeLeft": "Tid igjen",
+  "actions.startClock": "Start klokken",
+  "match.clockNotStarted": "Klokken går ikke før den startes. Poeng kan føres før det.",
 });
 Object.assign(padelstarTranslations.en, {
   "admin.timedMinutes": "Timed match (minutes, 0 = none)",
   "common.minutesValue": "{minutes} min",
   "rules.timedTitle": "Timed match",
-  "rules.timedText": "The match lasts {minutes} minutes from the first point. When time is up the game in progress is finished and the leader on sets (then games) wins. If level, one golden-point game decides.",
+  "rules.timedText": "The match lasts {minutes} minutes from when the clock is started on the match card. When time is up the game in progress is finished and the leader on sets (then games) wins. If level, one golden-point game decides.",
   "match.timeExpired": "Time expired",
   "match.timeExpiredNote": "Time is up – the game in progress is finished.",
   "match.decidingGame": "Deciding game (golden point)",
   "match.timeLeft": "Time left",
+  "actions.startClock": "Start clock",
+  "match.clockNotStarted": "The clock doesn't run until it is started. Points can be scored before that.",
 });
 // TV Mode (must exist in every production language; test/tv-i18n.test.js enforces it).
 Object.assign(padelstarTranslations.nb, {

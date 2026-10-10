@@ -34,8 +34,9 @@ function playScenario(scenario) {
     match.completedSets = (scenario.initial.completedSets ?? []).map(pair);
     if (scenario.initial.currentSet) match.currentSet = pair(scenario.initial.currentSet);
     if (scenario.initial.currentGame) match.currentGame = pair(scenario.initial.currentGame);
-    match.startedAt = new Date(T0).toISOString();
   }
+  // the clock was started on the match card before the first point
+  if (scenario.initial || scenario.settings.timedMinutes) match.startedAt = new Date(T0).toISOString();
   let clock = T0;
   for (const step of scenario.steps) {
     if (step === "x") { clock = T0 + ((scenario.settings.timedMinutes ?? 0) * 60 + 30) * 1000; continue; }

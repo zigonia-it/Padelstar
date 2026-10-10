@@ -176,6 +176,18 @@
   font-weight: 700;
 }
 
+.match-clock-start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 12px 0;
+}
+
+.match-clock-start .hint {
+  margin: 0;
+}
+
 @keyframes match-timer-pulse {
   50% { opacity: 0.55; }
 }

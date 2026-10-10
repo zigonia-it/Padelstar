@@ -2,11 +2,12 @@
 
 Things only the developer can do or decide. Every work session updates this file before it ends: new items are added, finished ones are ticked and moved to "Done" (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). Order = recommended order.
 
-Last updated: 2026-10-05 (version 1.0.0 on padelstar.app).
+Last updated: 2026-10-10 (version 1.0.0 on padelstar.app).
 Status: `[ ]` open, `[x]` done.
 
 ## 1. Decide or review now
 
+- [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), score a point (the clock stays at 5:00), press Start klokken on the match card or on the player's own match, and check that the countdown runs on the card and on the TV board.
 - [ ] **Review and merge PR #44** (large Round Robin can be created; above 8 players each team plays one match per rotation). Until it is merged, a Round Robin with many players fails on padelstar.app (`docs/BUGS.md`). The 2 MB server limit it relies on is already live.
 - [ ] **Review PR #46** (League v2.0 plan and `docs/MASTER-ROADMAP.md`). The master roadmap is the governing plan (developer's decision 2026-10-05); merging #46 puts it in the repo.
 - [ ] **Master roadmap decisions** (`docs/MASTER-ROADMAP.md` §15):
@@ -38,6 +39,8 @@ One structured field test with two accounts and two phones covers most of these 
 ## Done
 
 Kept short for reference; details are in `docs/CHANGELOG.md` and git history.
+
+- [x] Timed-match start clock (PR #49) merged and its migration `20261010150000_match_clock_start_button.sql` applied to Supabase (2026-10-10, on the developer's "just fix it").
 
 - [x] Feedback form address fixed; stray Vercel variable and unused Resend keys removed (2026-09-20).
 - [x] Turnstile secret saved in Supabase; sign-ups without the check are refused (2026-09-20).
