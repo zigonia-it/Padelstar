@@ -2055,6 +2055,16 @@ Object.assign(padelstarTranslations.de, {"player.yourMatch": "Dein Match", "acti
 Object.assign(padelstarTranslations.fr, {"player.yourMatch": "Ton match", "actions.keepScore": "Compter les points", "common.live": "En direct", "score.tapForPoint": "Touchez pour un point", "nav.today": "Aujourd'hui", "player.tabsAria": "Tournoi"});
 Object.assign(padelstarTranslations.sv, {"player.yourMatch": "Din match", "actions.keepScore": "För poäng", "common.live": "Live", "score.tapForPoint": "Tryck för poäng", "nav.today": "I dag", "player.tabsAria": "Turnering"});
 Object.assign(padelstarTranslations.da, {"player.yourMatch": "Din kamp", "actions.keepScore": "Før point", "common.live": "Live", "score.tapForPoint": "Tryk for point", "nav.today": "I dag", "player.tabsAria": "Turnering"});
+
+// Serve side in Big Score (League v2.0: serve rotation, app/serve-rotation.js)
+Object.assign(padelstarTranslations.nb, {"score.serveRight": "høyre", "score.serveLeft": "venstre"});
+Object.assign(padelstarTranslations.nn, {"score.serveRight": "høgre", "score.serveLeft": "venstre"});
+Object.assign(padelstarTranslations.en, {"score.serveRight": "right", "score.serveLeft": "left"});
+Object.assign(padelstarTranslations.es, {"score.serveRight": "derecha", "score.serveLeft": "izquierda"});
+Object.assign(padelstarTranslations.de, {"score.serveRight": "rechts", "score.serveLeft": "links"});
+Object.assign(padelstarTranslations.fr, {"score.serveRight": "droite", "score.serveLeft": "gauche"});
+Object.assign(padelstarTranslations.sv, {"score.serveRight": "höger", "score.serveLeft": "vänster"});
+Object.assign(padelstarTranslations.da, {"score.serveRight": "højre", "score.serveLeft": "venstre"});
 window.PadelstarTranslations = padelstarTranslations;
 window.PadelstarI18n = {
   fallbackLanguage,

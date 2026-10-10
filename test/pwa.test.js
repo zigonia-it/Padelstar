@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v382/);
+  assert.match(serviceWorkerSource, /padelstar-v383/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -720,9 +720,12 @@ test("design-chat suggestions: gem-color court strips, offline indicator, waitin
 test("large score rendering has its own dialog boundary", () => {
   assert.match(largeScoreSource, /renderLargeScore/);
   assert.match(largeScoreSource, /window\.PadelstarLargeScore/);
-  assert.match(indexSource, /app\/large-score\.js\?v=padelstar-large-score-6/);
-  assert.match(serviceWorkerSource, /app\/large-score\.js\?v=padelstar-large-score-6/);
+  assert.match(indexSource, /app\/large-score\.js\?v=padelstar-large-score-7/);
+  assert.match(serviceWorkerSource, /app\/large-score\.js\?v=padelstar-large-score-7/);
   assert.match(appSource, /largeScore\.renderLargeScore\(largeScoreMatchId\)/);
+  assert.match(indexSource, /app\/serve-rotation\.js\?v=padelstar-serve-1/);
+  assert.match(serviceWorkerSource, /app\/serve-rotation\.js\?v=padelstar-serve-1/);
+  assert.match(serviceWorkerSource, /assets\/brand\/padelstar-ball-128\.png/);
 });
 
 test("set score dialog owns quick-result rendering and selection", () => {

@@ -1,5 +1,35 @@
 window.PadelstarLargeScore = (() => {
-  function create({ awardTennisPoint, undoLastPoint, closeLargeScore, elements, escapeHtml, getMatchById, getState, gameScoreText, matchContextText, setScoreText, startingTeamText, teamAccentStyle, teamDisplay, tennisPointLabel, t }) {
+  // The serving player is marked with the Padelstar ball (League v2.0 scope §12: the project asset, not an emoji).
+  const SERVE_BALL_SRC = "assets/brand/padelstar-ball-128.png";
+
+  function create({ awardTennisPoint, undoLastPoint, closeLargeScore, elements, escapeHtml, getMatchById, getState, gameScoreText, matchContextText, setScoreText, startingTeamText, teamAccentStyle, teamDisplay, tennisPointLabel, timerMarkup, t }) {
+    function serveBall() {
+      return `<img class="serve-ball" src="${SERVE_BALL_SRC}" alt="" width="20" height="20" decoding="async">`;
+    }
+
+    // "[ball] Anna · right"; falls back to the serving team when the player is unknown (older or odd-sized teams)
+    function serverCellMarkup(match, server) {
+      if (!server?.player) return escapeHtml(startingTeamText(match));
+      const side = t(server.side === "left" ? "score.serveLeft" : "score.serveRight");
+      return `<span class="serve-indicator">${serveBall()}<span class="serve-name">${escapeHtml(server.player.name)}</span><span class="serve-side">${escapeHtml(side)}</span></span>`;
+    }
+
+    // The ball also sits on the serving player's name on their team's pad.
+    function markServingPlayer(server) {
+      if (!server?.player) return;
+      const pad = elements.largeScoreBoard.querySelector(`[data-large-score-team="${server.teamIndex}"]`);
+      if (!pad) return;
+      pad.classList.add("is-serving");
+      const playerIndex = getMatchTeam(server.teamIndex)?.players?.indexOf(server.player) ?? -1;
+      const badge = pad.querySelectorAll(".team-player")[playerIndex];
+      if (badge) badge.insertAdjacentHTML("beforeend", serveBall());
+    }
+
+    let currentTeams = [];
+    function getMatchTeam(teamIndex) {
+      return currentTeams[teamIndex];
+    }
+
     function renderLargeScore(matchId) {
       if (!matchId || !elements.largeScoreDialog.open) return;
       const match = getMatchById(matchId);
@@ -11,6 +41,9 @@ window.PadelstarLargeScore = (() => {
         return;
       }
       const state = getState();
+      currentTeams = [match.teamOne, match.teamTwo];
+      const server = window.PadelstarServe?.currentServer(match, state.settings) ?? null;
+      const timer = timerMarkup?.(match) ?? "";
       elements.largeScoreSurface.setAttribute("style", teamAccentStyle(match.teamOne));
       elements.largeScoreContext.textContent = `${matchContextText(match)} · ${match.courtName ?? t("tournament.noCourtAssigned")}`;
       elements.largeScoreTitle.textContent = t("score.matchup", { teamOne: match.teamOne.displayName, teamTwo: match.teamTwo.displayName });
@@ -28,7 +61,10 @@ window.PadelstarLargeScore = (() => {
       elements.largeScoreActions.innerHTML = `
         <div><span>${t("common.games")}</span><strong>${pointsMode ? gamesWon : setScoreText(match)}</strong></div>
         <div><span>${t("common.points")}</span><strong>${pointsMode ? setScoreText(match) : gameScoreText(match)}</strong></div>
-        <div><span>${t("common.server")}</span><strong>${escapeHtml(startingTeamText(match))}</strong></div>`;
+        <div><span>${t("common.server")}</span><strong>${serverCellMarkup(match, server)}</strong></div>
+        ${timer ? `<div class="large-score-timer"><span>${t("match.timeLeft")}</span>${timer}</div>` : ""}`;
+      elements.largeScoreActions.classList.toggle("has-timer", Boolean(timer));
+      markServingPlayer(server);
       const undo = elements.largeScoreUndoButton;
       if (undo) {
         undo.disabled = !match.undoStack?.length;

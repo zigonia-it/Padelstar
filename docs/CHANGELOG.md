@@ -14,6 +14,7 @@ Merged to `main` and deployed to padelstar.app after 1.0.0 (version still shown 
 - **Motion system** (PR #42): motion tokens in `styles/tokens.css` (durations, easings, distances, scales) with a reduced-motion layer that removes movement, and the spec `docs/technical/motion.md`.
 - **Menu highlight slides** to the active item in the top menu, the rail and the tab bars (`app/nav-indicator.js`).
 - **Panels fly between pages** when you move through the menu or rail (View Transitions where the browser has them, a fly-in otherwise; `app/view-motion.js`, `styles/motion.css`).
+- **Serve rotation in Big Score** (League step B, branch `league-serve-bigscore`, not merged yet): the server cell shows the ball, the serving player and the side (right/left), and the ball sits next to that player's name on the pad. The server is worked out from the score (`app/serve-rotation.js`): one serve turn per game in Tennis, two points per turn in Points, the tiebreak rule inside a tiebreak. Undo, realtime and server-side scoring need nothing stored. Timed matches also show the countdown next to the score.
 - **Win moment** (PR #45): the winning point keeps the big score up for one beat (the winner's pad shows the final games and "Winner", the other pad steps back), the match card gets a ball-yellow sweep and its score ticks once. The podium lands 3rd, 2nd, then 1st.
 
 ### Changed
