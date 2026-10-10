@@ -226,7 +226,11 @@
     if (cup) {
       renderCupPanel();
     } else {
-      document.querySelector("#tvStandings").innerHTML = playerStats().map((entry) => `<li class="tv-standing-row">${standingPlayer(entry.player)}<span>${entry.matches}</span><span>${entry.wins}</span><span class="tv-standing-points">${entry.points}</span><span>${entry.diff > 0 ? "+" : ""}${entry.diff}</span></li>`).join("");
+      // rows slide to their new places when a result changes the order (app/list-reorder.js)
+      const standings = document.querySelector("#tvStandings");
+      const fill = () => { standings.innerHTML = playerStats().map((entry) => `<li class="tv-standing-row" data-reorder-key="${escapeHtml(entry.player.id ?? entry.player.name)}">${standingPlayer(entry.player)}<span>${entry.matches}</span><span>${entry.wins}</span><span class="tv-standing-points">${entry.points}</span><span>${entry.diff > 0 ? "+" : ""}${entry.diff}</span></li>`).join(""); };
+      if (window.PadelstarListReorder) window.PadelstarListReorder.rebuild(standings, fill, { pointsSelector: ".tv-standing-points" });
+      else fill();
     }
     const finished = matches.filter((match) => match.state === "finished").length;
     document.querySelector("#tvProgress").textContent = t("tv.roundOf", { round: state.currentRound || 1, total: Math.max((state.rounds ?? []).length, 1) });

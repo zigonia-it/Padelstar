@@ -94,7 +94,7 @@ const tournamentQueriesSource = fs.readFileSync(path.join(root, "app", "tourname
 const tournamentSharingSource = fs.readFileSync(path.join(root, "app", "tournament-sharing.js"), "utf8");
 
 test("service worker claims updates and keeps a navigation fallback", () => {
-  assert.match(serviceWorkerSource, /padelstar-v381/);
+  assert.match(serviceWorkerSource, /padelstar-v382/);
   assert.match(indexSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(serviceWorkerSource, /styles\/ui-consistency\.css\?v=padelstar-ui-consistency-55/);
   assert.match(indexSource, /app\/tournament-rounds\.js\?v=padelstar-rounds-2/);
@@ -626,8 +626,8 @@ test("match list rendering has its own grouping boundary", () => {
 test("standings rendering has its own leaderboard boundary", () => {
   assert.match(standingsSource, /renderStandings/);
   assert.match(standingsSource, /window\.PadelstarStandings/);
-  assert.match(indexSource, /app\/standings\.js\?v=padelstar-standings-4/);
-  assert.match(serviceWorkerSource, /app\/standings\.js\?v=padelstar-standings-4/);
+  assert.match(indexSource, /app\/standings\.js\?v=padelstar-standings-5/);
+  assert.match(serviceWorkerSource, /app\/standings\.js\?v=padelstar-standings-5/);
   assert.doesNotMatch(appSource, /function renderStandingsList/);
 });
 

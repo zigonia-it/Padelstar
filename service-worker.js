@@ -1,4 +1,4 @@
-const cacheName = "padelstar-v381";
+const cacheName = "padelstar-v382";
 
 const appShell = [
   "./",
@@ -11,7 +11,7 @@ const appShell = [
   "./styles/layout.css?v=padelstar-layout-10",
   "./styles/components.css?v=padelstar-components-25",
   "./styles/tv.css?v=padelstar-tv-19",
-  "./styles/tv-redesign.css?v=padelstar-tv-redesign-4",
+  "./styles/tv-redesign.css?v=padelstar-tv-redesign-5",
   "./assets/brand/padelstar-logo-dark.webp",
   "./assets/brand/padelstar-logo-light.webp",
   "./styles/modules.css?v=padelstar-modules-16",
@@ -36,7 +36,7 @@ const appShell = [
   "./styles/accent-picker.css?v=padelstar-accent-picker-2",
   "./styles/privacy.css?v=padelstar-privacy-8",
   "./styles/redesign.css?v=padelstar-redesign-5",
-  "./styles/motion.css?v=padelstar-motion-2",
+  "./styles/motion.css?v=padelstar-motion-3",
   "./app/translations.js?v=padelstar-i18n-70",
   "./app/i18n-ui.js?v=padelstar-i18n-ui-6",
   "./app/storage.js?v=padelstar-storage-1",
@@ -66,7 +66,8 @@ const appShell = [
   "./app/tournament-events.js?v=padelstar-tournament-events-1",
   "./app/retention-policy.js?v=padelstar-retention-2",
   "./app/match-list.js?v=padelstar-match-list-4",
-  "./app/standings.js?v=padelstar-standings-4",
+  "./app/list-reorder.js?v=padelstar-list-reorder-1",
+  "./app/standings.js?v=padelstar-standings-5",
   "./app/podium.js?v=padelstar-podium-4",
   "./app/lobby.js?v=padelstar-lobby-5",
   "./app/player-list.js?v=padelstar-player-list-3",
@@ -146,7 +147,7 @@ const appShell = [
   "./app/state-bootstrap.js?v=padelstar-state-bootstrap-1",
   "./app/module-routing.js?v=padelstar-module-routing-5",
   "./app/session-policy.js?v=padelstar-session-policy-1",
-  "./app/tv-mode.js?v=padelstar-tv-mode-13",
+  "./app/tv-mode.js?v=padelstar-tv-mode-14",
   "./app/remote-state-write.js?v=padelstar-remote-state-write-1",
   "./app/remote-admin-actions.js?v=padelstar-remote-admin-actions-6",
   "./app/remote-player-score.js?v=padelstar-remote-player-score-4",

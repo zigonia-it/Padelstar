@@ -137,11 +137,16 @@ The app's catch-all in `styles/styles.css` (the `*` rule that sets every duratio
   card gets a ball-yellow sweep, its score ticks once and the status and winner note settle in (when the card is on
   screen). Reduced motion: no sweep or tick, the wash fades and the hold is shorter.
 - **Podium**: places land 3rd, 2nd, then 1st, three `--motion-stagger` steps apart, with `--ease-pop`.
+- **Standings reorder** (`app/list-reorder.js`, `styles/motion.css` section 5, `styles/tv-redesign.css`): when a result
+  changes the order, rows slide from their old place to the new one over `--motion-slow` (FLIP, keyed by player id), in
+  the app and on the TV board. A row that climbed is lifted above the rows it passes and gets a short ball wash (stronger
+  on the TV); a points value that changed ticks once. Nothing moves on a list's first paint or while it is hidden.
+  Reduced motion: rows jump, the wash still fades.
 - Navigation is the one place where the old view leaves before the new one is shown; it never waits more than
   `--motion-quick` and the menu highlight moves at once.
 
 ## Plan
 1. Tokens and this spec (done).
 2. Scoring and results motion: scorepad press and tick, `.score-flash`, the win moment, podium stagger (done).
-3. Standings and navigation motion: FLIP reorder (app and TV), view transitions, tab indicator, dialogs and sheets.
+3. Standings and navigation motion: FLIP reorder (app and TV, done), view transitions and tab indicator (done), dialogs and sheets.
 4. Polish: move existing transitions onto tokens, fix the TV timer pulse, performance pass on phones and the TV board.
