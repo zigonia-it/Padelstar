@@ -20,7 +20,7 @@ Describes the implemented rules. The client (`app/*.js`) and the database functi
 
 - Points inside a game: 0/15/30/40, deuce and advantage, or **golden point** (a rule setting).
 - A set is won at the configured number of games with a two-game margin; at the tiebreak point a **set tiebreak** is played (rule setting).
-- **Timed matches**: a countdown per match; a game that ends after time is up ends the match; if the match is level a **deciding golden-point game** is played.
+- **Timed matches**: a countdown per match that starts when someone presses Start klokken (a match on court) or Start kamp (a waiting match); points scored before it do not start it, and undo keeps it running; a game that ends after time is up ends the match; if the match is level a **deciding golden-point game** is played.
 - Every match keeps a snapshot of the rules it started with.
 - Undo/redo: server-side for players (the scorer), a single-step stack for the admin; not allowed for a submitted result.
 
