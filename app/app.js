@@ -1087,7 +1087,10 @@ async function handleEndTournament() {
 
 async function handleResetTournament() {
   if (!await requestConfirmationWithTitle(t("messages.resetTournamentConfirm"), t("messages.resetTournamentTitle"))) return;
-  if (!await tournamentFinalization.finalize("cancelled")) return;
+  // Already finished, or this device holds no admin key: there is nothing to cancel on the server, so the reset only
+  // forgets the local copy. Asking the server would fail every time and the button would seem dead.
+  const serverCancelNeeded = state.status !== "Avsluttet" && !state.finalizationConfirmed && Boolean(state.adminToken);
+  if (serverCancelNeeded && !await tournamentFinalization.finalize("cancelled")) return;
   clearLocalTournament();
   showStart();
   render();
@@ -1097,6 +1100,7 @@ async function handleResetTournament() {
 function clearLocalTournament() {
   removeRealtimeChannel();
   tournamentLibrary.remove(state.id);
+  if (state.id) localStorage.removeItem(`${storageKey}:finalize:${state.id}`);
   const language = state.settings?.language;
   state = structuredClone(defaultTournament);
   if (language) state.settings.language = language;

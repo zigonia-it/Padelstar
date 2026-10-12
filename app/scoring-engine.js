@@ -360,6 +360,14 @@ window.PadelstarScoring = (() => {
     return nowMs >= Date.parse(match.startedAt) + rules.timedMinutes * 60000;
   }
 
+  // A timed match takes no points until its clock is started (developer's decision 2026-10-12): a waiting match is
+  // started with "Start match" (which starts the clock), a match already on court with "Start clock".
+  function clockBlocksScoring(match, settings = {}) {
+    if (!match || match.startedAt || match.endReason) return false;
+    if (!["waiting", "playing"].includes(match.state)) return false;
+    return matchRules(match, settings).timedMinutes > 0;
+  }
+
   function remainingSeconds(match, nowMs = Date.now()) {
     const minutes = match?.rules?.timedMinutes;
     if (!minutes || !match.startedAt) return null;
@@ -496,6 +504,7 @@ window.PadelstarScoring = (() => {
     snapshotRules,
     awardPoint,
     remainingSeconds,
+    clockBlocksScoring,
     pointLabel,
   };
 })();
