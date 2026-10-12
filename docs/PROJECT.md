@@ -10,7 +10,7 @@ Last updated: 2026-10-12.
 
 - **Version 1.0.0** is live on https://padelstar.app (Vercel, deployed from `main`; Supabase project `sxzlljxodorkfrjnwfgr` in the EU). Released 2026-10-05 with the Padelstar 1.0 redesign.
 - Merged after 1.0.0, not yet versioned: the motion system and win moment (PR #42, #45), the missing 512 px icon (PR #43) and the tournament menu Lobby/Spillere/Kamper/Tabell-Cup with TV Mode off phones (PR #56, 2026-10-12), and the reset fix, no points before the match clock and the feedback sender (PR #55, 2026-10-12, with migration `20261012090000_block_points_before_clock.sql` applied). See `docs/CHANGELOG.md` "Unreleased".
-- Open pull requests: **#44** large Round Robin can be created (the 2 MB server limit it needs is already live); #49 (timed-match start clock button, with its migration) and #46 (League v2.0 plan and `docs/MASTER-ROADMAP.md`) are merged.
+- Open pull requests: **#53** blocked-account API guard (its migration `20261012100000_blocked_account_request_guard.sql` is live since 2026-10-12; the client part waits for the merge); **#44** large Round Robin can be created (the 2 MB server limit it needs is already live); #49 (timed-match start clock button, with its migration) and #46 (League v2.0 plan and `docs/MASTER-ROADMAP.md`) are merged.
 - Live modes: Round Robin and Cup. Scoring: Tennis (padel) and Points modes on the generic scoring engine.
 - Current stage of the plan: **1.0.x, stabilise** (master roadmap §1): live verification on real devices, the open bugs in `docs/BUGS.md`, the privacy sign-off, motion step 3.
 - What the developer must do or decide: `docs/USER_ACTIONS.md`.
@@ -36,6 +36,14 @@ The flow that 0.6.0 was built around stays the regression check for every change
 - Current implemented UI is the design authority.
 - Product rules must not be silently changed to match old documentation.
 - Round Robin and Cup are the 1.x tournament modes. League (ligaspill) is release 2.0 together with Social (master roadmap §7). Hidden formats (Americano, Mexicano, ...) are not deleted; they are server-wired in 1.2.
+
+## User administration (system owner)
+
+Approved 2026-10-12 (developer's request §6.1). Only the system owner, with the second factor passed, can list, search (e-mail or display name), block, unblock and delete accounts; every check is in the database (`is_system_owner`), not in the menu. The owner can never be blocked or deleted.
+
+- **Block** sets `banned_until`, ends every session and, through `check_account_access` before each API request, refuses any access token the account still holds. The account can still use Padelstar as a guest, like anyone without an account, and keeps any tournament admin links stored on its own device.
+- **Delete** is a real deletion, not a deactivation: the account, its profile, statistics and tournament links are removed (personal data with no purpose once the person is gone). Shared match history is not affected: results live in each tournament's state under the player slot, so other players' tables, statistics and tournaments stay as they were; tournaments the account owned stay without an owner and follow the guest lifecycle. To keep someone out, block instead of deleting (a deleted address can register again).
+- Block, unblock and delete are logged in `system_log` with the acting owner's id (ids only, kept 90 days).
 
 ## Ownership/account
 

@@ -11,7 +11,7 @@
       tournaments: "Turneringer", running: "Pågår", finished: "Avsluttet", expired: "Utløpt", accountOwned: "Med konto", profiles: "Profiler",
       colName: "Navn", colStatus: "Status", colPlayers: "Spillere", colOwner: "Konto", colCreated: "Opprettet", yes: "Ja", no: "Nei", none: "Ingen turneringer.",
       tabsLabel: "Administrasjon", tabOverview: "Oversikt", tabTournaments: "Turneringer", tabUsers: "Brukere", tabMaintenance: "Vedlikehold",
-      searchTournaments: "Søk på turneringsnavn", searchUsers: "Søk på e-post", search: "Søk", filterAll: "Alle", filterRunning: "Pågår", filterFinished: "Avsluttet", filterExpired: "Utløpt",
+      searchTournaments: "Søk på turneringsnavn", searchUsers: "Søk på e-post eller navn", search: "Søk", filterAll: "Alle", filterRunning: "Pågår", filterFinished: "Avsluttet", filterExpired: "Utløpt",
       colRounds: "Runder", colFormat: "Format", colUpdated: "Sist endret", colEmail: "E-post", colConfirmed: "Bekreftet", colLastSignIn: "Sist innlogget", colOwned: "Eier", colPlayed: "Deltatt", colFinished: "Fullført",
       owner: "Systemeier", never: "Aldri", loading: "Laster …", noUsers: "Ingen brukere funnet.", noResults: "Ingen treff.", showing: "Viser {from}–{to} av {total}", previous: "Forrige", next: "Neste", refresh: "Oppdater",
       jobs: "Planlagte oppgaver", jobName: "Oppgave", jobSchedule: "Tidsplan", jobActive: "Aktiv", jobLastRun: "Siste kjøring", jobNever: "Ikke kjørt ennå", jobsNone: "Ingen planlagte oppgaver funnet.",
@@ -34,7 +34,7 @@
       tournaments: "Tournaments", running: "Running", finished: "Finished", expired: "Expired", accountOwned: "With account", profiles: "Profiles",
       colName: "Name", colStatus: "Status", colPlayers: "Players", colOwner: "Account", colCreated: "Created", yes: "Yes", no: "No", none: "No tournaments.",
       tabsLabel: "Administration", tabOverview: "Overview", tabTournaments: "Tournaments", tabUsers: "Users", tabMaintenance: "Maintenance",
-      searchTournaments: "Search tournament name", searchUsers: "Search e-mail", search: "Search", filterAll: "All", filterRunning: "Running", filterFinished: "Finished", filterExpired: "Expired",
+      searchTournaments: "Search tournament name", searchUsers: "Search e-mail or name", search: "Search", filterAll: "All", filterRunning: "Running", filterFinished: "Finished", filterExpired: "Expired",
       colRounds: "Rounds", colFormat: "Format", colUpdated: "Last changed", colEmail: "E-mail", colConfirmed: "Confirmed", colLastSignIn: "Last sign-in", colOwned: "Owned", colPlayed: "Played", colFinished: "Finished",
       owner: "System owner", never: "Never", loading: "Loading …", noUsers: "No users found.", noResults: "No results.", showing: "Showing {from}–{to} of {total}", previous: "Previous", next: "Next", refresh: "Refresh",
       jobs: "Scheduled jobs", jobName: "Job", jobSchedule: "Schedule", jobActive: "Active", jobLastRun: "Last run", jobNever: "Not run yet", jobsNone: "No scheduled jobs found.",
@@ -114,7 +114,8 @@
   function userActions(row, t) {
     if (row.is_system_owner) return "";
     const id = escapeHtml(row.id);
-    const email = escapeHtml(row.email || "");
+    // The confirmation names the person as well as the address, so the owner can see who is affected.
+    const email = escapeHtml(row.display_name ? `${row.email || ""} (${row.display_name})` : row.email || "");
     const block = row.blocked
       ? `<button class="secondary" type="button" data-user-action="unblock" data-user-id="${id}" data-user-email="${email}">${escapeHtml(t.unblock)}</button>`
       : `<button class="secondary" type="button" data-user-action="block" data-user-id="${id}" data-user-email="${email}">${escapeHtml(t.block)}</button>`;
@@ -123,7 +124,7 @@
 
   function renderUserList(data, t, locale = "nb-NO") {
     const rows = (data?.rows ?? []).map((row) => [
-      `${escapeHtml(row.email || "—")}${row.is_system_owner ? ` <span class="system-admin-badge">${escapeHtml(t.owner)}</span>` : ""}${row.blocked ? ` <span class="system-admin-badge system-admin-badge-blocked">${escapeHtml(t.blocked)}</span>` : ""}`,
+      `${escapeHtml(row.email || "—")}${row.display_name ? `<br><span class="hint">${escapeHtml(row.display_name)}</span>` : ""}${row.is_system_owner ? ` <span class="system-admin-badge">${escapeHtml(t.owner)}</span>` : ""}${row.blocked ? ` <span class="system-admin-badge system-admin-badge-blocked">${escapeHtml(t.blocked)}</span>` : ""}`,
       escapeHtml(row.email_confirmed ? t.yes : t.unconfirmed),
       escapeHtml(formatDate(row.created_at, locale)),
       escapeHtml(row.last_sign_in_at ? formatDate(row.last_sign_in_at, locale) : t.never),

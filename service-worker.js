@@ -1,4 +1,4 @@
-const cacheName = "padelstar-v384";
+const cacheName = "padelstar-v385";
 
 const appShell = [
   "./",
@@ -37,7 +37,7 @@ const appShell = [
   "./styles/privacy.css?v=padelstar-privacy-8",
   "./styles/redesign.css?v=padelstar-redesign-6",
   "./styles/motion.css?v=padelstar-motion-2",
-  "./app/translations.js?v=padelstar-i18n-73",
+  "./app/translations.js?v=padelstar-i18n-74",
   "./app/i18n-ui.js?v=padelstar-i18n-ui-6",
   "./app/storage.js?v=padelstar-storage-1",
   "./app/tournament-library.js?v=padelstar-tournament-library-3",
@@ -114,14 +114,14 @@ const appShell = [
   "./app/push-preferences.js?v=padelstar-push-preferences-1",
   "./app/expiry-notice.js?v=padelstar-expiry-notice-1",
   "./app/notification-center-ui.js?v=padelstar-notification-center-9",
-  "./app/system-admin.js?v=padelstar-system-admin-4",
+  "./app/system-admin.js?v=padelstar-system-admin-5",
   "./app/system-two-factor.js?v=padelstar-system-two-factor-1",
   "./app/invitations.js?v=padelstar-invitations-2",
   "./styles/system-admin.css?v=padelstar-system-admin-5",
   "./admin.html",
   "./app/profile-session.js?v=padelstar-profile-session-4",
   "./app/captcha.js?v=padelstar-captcha-1",
-  "./app/account-auth.js?v=padelstar-account-auth-7",
+  "./app/account-auth.js?v=padelstar-account-auth-8",
   "./app/config/storage-keys.js?v=padelstar-storage-keys-1",
   "./app/config/supabase-config.js?v=padelstar-supabase-config-1",
   "./app/core/utilities.js?v=padelstar-utilities-1",

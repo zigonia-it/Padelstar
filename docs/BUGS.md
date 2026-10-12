@@ -20,6 +20,8 @@ A bug is complete only when it was reproduced or clearly verified, the smallest 
 
 ## Known limitations (decided or accepted, not bugs to fix now)
 
+- **A blocked account can still use Padelstar as a guest** (2026-10-12): blocking stops the account, not the person. They can join tournaments without an account and keep admin links for tournaments stored on their own device. To stop a specific tournament, delete it (tournament deletion in System is being built separately).
+
 - Two players with exactly the same name cannot be told apart by the claim flow; only the first match in the roster is reachable. Names are the only key the claim flow has.
 - When players on **both** teams of one Round Robin match have withdrawn, the match is cancelled (no rule was given for it). In a Cup a cancelled match makes the best-placed losing team take the place (0.13.0).
 - Corrections after the tournament is finished (built 0.10.0): only for finished, not cancelled tournaments, only by the admin, and a Cup result that later matches depend on stays blocked. Guests: the correction window ends when the 24-hour retention deletes the tournament.
