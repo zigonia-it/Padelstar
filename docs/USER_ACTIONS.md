@@ -7,7 +7,6 @@ Status: `[ ]` open, `[x]` done.
 
 ## 1. Decide or review now
 
-- [ ] **Review and merge PR #55** (critical fixes): reset, no points before the clock, feedback sender. When it is merged, migration `20261012090000_block_points_before_clock.sql` is applied to Supabase so the database refuses points before the clock too.
 - [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), check that the + buttons and Før poeng are disabled, press Start klokken on the match card or on the player's own match, then score; check that the countdown runs on the card and on the TV board.
 - [ ] **Try "Nullstill turnering" on your phone** once the fix is live, on an account tournament: it must go back to Hjem and the tournament must not reappear under "Dine turneringer" after a reload. A copy that came back before the fix can be removed with Nullstill turnering too.
 - [ ] **Review and merge PR #44** (large Round Robin can be created; above 8 players each team plays one match per rotation). Until it is merged, a Round Robin with many players fails on padelstar.app (`docs/BUGS.md`). The 2 MB server limit it relies on is already live.
@@ -31,6 +30,7 @@ One structured field test with two accounts and two phones covers most of these 
 - [ ] **Network loss during a running match.** Airplane mode for ~30 s while scoring, then back online: the queued points arrive, nothing lost or doubled.
 - [ ] **Points mode (0.17).** Create a tournament with "Poeng (først til N)" (e.g. first to 21, win by 2), start and score a match: the table shows GAMES and POENG, 20-20 continues until a 2-point lead, "Set resultat" takes two numbers. Also best of 3 games and a timed match, and the point-by-point approval with a second player.
 - [ ] **Motion on your phone (after 1.0.0).** The menu highlight slides, pages fly in, the winning point shows the win moment, the podium lands 3rd, 2nd, 1st. With "Reduce motion" on in the phone's settings nothing should move. Tell Claude anything that feels slow or wrong.
+- [ ] **The new tournament menu on phone, tablet and computer (PR #56, merged 2026-10-12).** As admin: Lobby shows Del turnering, Spillere, Regler, Banekø in that order; Spillere puts the players on court first; Kamper starts with the current match; the fourth item says Cup and shows the bracket in a Cup. TV Mode must be missing on the phone and present on the tablet/computer. As a player on another phone: no admin menu, only I dag / Kamper / Tabell. Open the bell with one and with several notices and check the spacing.
 - [ ] **Large Round Robin after PR #44 is merged.** Create a Round Robin with 20–40 players on padelstar.app, start it and play a few matches.
 
 ## 3. Later, when the time comes
@@ -42,6 +42,7 @@ One structured field test with two accounts and two phones covers most of these 
 
 Kept short for reference; details are in `docs/CHANGELOG.md` and git history.
 
+- [x] Critical fixes PR #55 merged on the developer's "go" and migration `20261012090000_block_points_before_clock.sql` applied to Supabase (2026-10-12).
 - [x] Timed-match start clock (PR #49) merged and its migration `20261010150000_match_clock_start_button.sql` applied to Supabase (2026-10-10, on the developer's "just fix it").
 
 - [x] Feedback form address fixed; stray Vercel variable and unused Resend keys removed (2026-09-20).
