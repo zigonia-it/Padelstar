@@ -11,6 +11,9 @@ Last updated: 2026-10-12.
 ### Changed
 - **Smaller Vercel deployments**: a `.vercelignore` keeps unused design archives, large source images, docs, tests and database files out of every deployment (about 330 MB down to about 11 MB). Vercel's 10 GB deployment storage had filled up. `test/vercelignore.test.js` checks no page loads an excluded asset.
 
+### Fixed
+- **Feedback email sends again** (live configuration, 2026-10-12): the Resend key in Vercel had been saved under the wrong variable name; `RESEND_API_KEY` and `FEEDBACK_TO_EMAIL` are now set for Production. Confirmed by the developer on padelstar.app.
+
 ## 1.0.1
 
 Released 2026-10-12 on the developer's instruction ("merge all finished threads to main as bug-fix update v1.0.1"). Collects everything merged after 1.0.0: PR #42, #43, #45, #49, #55, #56 and, on release day, #53, #54, #44 and #50. Verified: the automated test suite (621 tests) and `npm run check:syntax` on the merged `main`, the asset-version check, and the production database checked on 2026-10-12 for every migration this release needs (`check_account_access` set as `pgrst.db_pre_request`, `admin_delete_tournament`, the clock guard in `save_player_point`, the 2 MB state limit). Browser flows were checked in each PR; not yet checked by a person on a real phone (see `docs/USER_ACTIONS.md`).

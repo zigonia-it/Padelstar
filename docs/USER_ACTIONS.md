@@ -18,7 +18,6 @@ Status: `[ ]` open, `[x]` done.
   3. League open questions (league plan §7): guests in leagues, a court without a free referee, golden-point wins worth 3 points, who may create leagues.
   4. Start the Vipps merchant agreement and test environment early (needed for 3.0; it takes calendar time, not code time).
 - [ ] **Privacy page "beta text" line.** `privacy.html` still says (nb): "Dette er fortsatt en beta-tekst og bør kvalitetssikres av behandlingsansvarlig før bred bruk." You are the data controller: read the privacy text, then tell Claude to remove the sentence (or what to change). The nn/es/de/fr/sv/da versions are older than nb/en and stay hidden until they are updated.
-- [ ] **Email sending (invitations and feedback): send one test.** On 2026-10-12 the developer found the Resend key had been added in Vercel with the key as the variable *name*; it was replaced by `RESEND_API_KEY` (new key `padelstar_vercel`) and `FEEDBACK_TO_EMAIL` for Production, and redeployed. Left: send a message with "Gi tilbakemelding" on padelstar.app and confirm it arrives. If it fails, the dialog names the case (`docs/technical/feedback-setup.md`, "Troubleshooting").
 - [ ] **Vercel deployment storage was full (10 GB / 10 GB, 2026-10-12).** The developer set a team deployment retention policy the same day. Merging PR #58 (`.vercelignore`) shrinks each new deployment from about 330 MB to about 11 MB.
 
 ## 2. Verify as a person (Claude cannot sign in or use real devices)
@@ -42,6 +41,7 @@ One structured field test with two accounts and two phones covers most of these 
 
 ## Done
 
+- [x] **Feedback email works (2026-10-12).** The Resend key had been saved in Vercel as the variable *name*; the developer replaced it with `RESEND_API_KEY` (new key `padelstar_vercel`) and `FEEDBACK_TO_EMAIL` for Production, redeployed, and confirmed "Gi tilbakemelding" now sends.
 - [x] Released 1.0.1 (2026-10-12): PR #53, #54, #44 and #50 merged with the earlier post-1.0.0 work.
 - [x] Walkover / admin tournament delete merged (PR #54, 2026-10-12, in 1.0.1; migration applied 2026-10-12).
 - [x] Blocked-account guard merged (PR #53, 2026-10-12, in 1.0.1; migration live since 2026-10-12).
