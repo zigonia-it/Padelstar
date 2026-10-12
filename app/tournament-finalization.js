@@ -60,6 +60,11 @@
         await commit({ id, outcome, deleted: !state.ownerUserId, statisticsSaved: false, localOnly: true, state });
         return true;
       } catch (error) {
+        // The server refused because the tournament moved on after the intent was saved, so nothing was finalized.
+        // Keeping the intent would replay the stale revision on every later attempt and the button would never work.
+        if (/tournament state changed/i.test(String(error?.message ?? ""))) {
+          try { await clearIntent(id); } catch { /* the next attempt replays it */ }
+        }
         reportError(error);
         return false;
       }

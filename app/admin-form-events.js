@@ -76,7 +76,6 @@
         deps.render();
       };
       elements.courtNamesForm?.addEventListener("submit", submitCourtNames);
-      elements.lobbyCourtNamesForm?.addEventListener("submit", submitCourtNames);
 
       elements.tournamentSettingsForm?.addEventListener("submit", (event) => {
         event.preventDefault();

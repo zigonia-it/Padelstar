@@ -2,12 +2,15 @@
 
 Things only the developer can do or decide. Every work session updates this file before it ends: new items are added, finished ones are ticked and moved to "Done" (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). Order = recommended order.
 
-Last updated: 2026-10-10 (version 1.0.0 on padelstar.app).
+Last updated: 2026-10-12 (version 1.0.0 on padelstar.app).
 Status: `[ ]` open, `[x]` done.
 
 ## 1. Decide or review now
 
-- [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), score a point (the clock stays at 5:00), press Start klokken on the match card or on the player's own match, and check that the countdown runs on the card and on the TV board.
+- [ ] **Review and merge the walkover / admin tournament delete PR** (branch `walkover-text-and-admin-delete`). Its migration is already applied to Supabase (2026-10-12). After merging, open System → Turneringer and check the new Kode and Konto columns.
+- [ ] **Review and merge PR #53** (blocked-account guard; its migration is live since 2026-10-12). Then, with a second test account: block it in System → Brukere while it is signed in on another device; on that device any action that needs the account fails at once and, after a reload, it shows "Du er logget ut fordi økten ble avsluttet"; signing in shows "Kontoen er sperret". Unblock and sign in again.
+- [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), check that the + buttons and Før poeng are disabled, press Start klokken on the match card or on the player's own match, then score; check that the countdown runs on the card and on the TV board.
+- [ ] **Try "Nullstill turnering" on your phone** once the fix is live, on an account tournament: it must go back to Hjem and the tournament must not reappear under "Dine turneringer" after a reload. A copy that came back before the fix can be removed with Nullstill turnering too.
 - [ ] **Review and merge PR #44** (large Round Robin can be created; above 8 players each team plays one match per rotation). Until it is merged, a Round Robin with many players fails on padelstar.app (`docs/BUGS.md`). The 2 MB server limit it relies on is already live.
 - [ ] **Review PR #46** (League v2.0 plan and `docs/MASTER-ROADMAP.md`). The master roadmap is the governing plan (developer's decision 2026-10-05); merging #46 puts it in the repo.
 - [ ] **Master roadmap decisions** (`docs/MASTER-ROADMAP.md` §15):
@@ -16,7 +19,7 @@ Status: `[ ]` open, `[x]` done.
   3. League open questions (league plan §7): guests in leagues, a court without a free referee, golden-point wins worth 3 points, who may create leagues.
   4. Start the Vipps merchant agreement and test environment early (needed for 3.0; it takes calendar time, not code time).
 - [ ] **Privacy page "beta text" line.** `privacy.html` still says (nb): "Dette er fortsatt en beta-tekst og bør kvalitetssikres av behandlingsansvarlig før bred bruk." You are the data controller: read the privacy text, then tell Claude to remove the sentence (or what to change). The nn/es/de/fr/sv/da versions are older than nb/en and stay hidden until they are updated.
-- [ ] **Email sending (invitations and feedback).** At 0.17.3 `RESEND_API_KEY` was missing in Vercel Production, so `/api/invitation-email` answered `notConfigured` and the feedback button could not send. If you have not done it yet: Vercel → the Padelstar project → Settings → Environment Variables → add `RESEND_API_KEY` (Production) → redeploy. Then send yourself a feedback message from padelstar.app.
+- [ ] **Email sending (invitations and feedback) — "Gi tilbakemelding" still fails (2026-10-12).** The form itself works (checked in a browser: validation, sending, the thanks message and the email fallback); what fails is the server sending the email, which needs Vercel settings Claude cannot read. Most likely `RESEND_API_KEY` is still missing in Vercel Production (the 2026-09-20 cleanup removed "unused Resend keys"). Vercel → the Padelstar project → Settings → Environment Variables: check `RESEND_API_KEY` and `FEEDBACK_TO_EMAIL` exist for **Production** (delete `FEEDBACK_FROM` unless it is an address at padelstar.app) → redeploy → send yourself a feedback message. If it still fails, the message in the dialog tells which case it is (`docs/technical/feedback-setup.md`, "Troubleshooting").
 
 ## 2. Verify as a person (Claude cannot sign in or use real devices)
 
@@ -29,6 +32,7 @@ One structured field test with two accounts and two phones covers most of these 
 - [ ] **Network loss during a running match.** Airplane mode for ~30 s while scoring, then back online: the queued points arrive, nothing lost or doubled.
 - [ ] **Points mode (0.17).** Create a tournament with "Poeng (først til N)" (e.g. first to 21, win by 2), start and score a match: the table shows GAMES and POENG, 20-20 continues until a 2-point lead, "Set resultat" takes two numbers. Also best of 3 games and a timed match, and the point-by-point approval with a second player.
 - [ ] **Motion on your phone (after 1.0.0).** The menu highlight slides, pages fly in, the winning point shows the win moment, the podium lands 3rd, 2nd, 1st. With "Reduce motion" on in the phone's settings nothing should move. Tell Claude anything that feels slow or wrong.
+- [ ] **The new tournament menu on phone, tablet and computer (PR #56, merged 2026-10-12).** As admin: Lobby shows Del turnering, Spillere, Regler, Banekø in that order; Spillere puts the players on court first; Kamper starts with the current match; the fourth item says Cup and shows the bracket in a Cup. TV Mode must be missing on the phone and present on the tablet/computer. As a player on another phone: no admin menu, only I dag / Kamper / Tabell. Open the bell with one and with several notices and check the spacing.
 - [ ] **Large Round Robin after PR #44 is merged.** Create a Round Robin with 20–40 players on padelstar.app, start it and play a few matches.
 
 ## 3. Later, when the time comes
@@ -40,6 +44,7 @@ One structured field test with two accounts and two phones covers most of these 
 
 Kept short for reference; details are in `docs/CHANGELOG.md` and git history.
 
+- [x] Critical fixes PR #55 merged on the developer's "go" and migration `20261012090000_block_points_before_clock.sql` applied to Supabase (2026-10-12).
 - [x] Timed-match start clock (PR #49) merged and its migration `20261010150000_match_clock_start_button.sql` applied to Supabase (2026-10-10, on the developer's "just fix it").
 
 - [x] Feedback form address fixed; stray Vercel variable and unused Resend keys removed (2026-09-20).

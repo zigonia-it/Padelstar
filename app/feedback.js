@@ -152,7 +152,7 @@
       sendButton.disabled = false;
       // The text stays in the form; offer a mail draft so nothing is lost.
       showStatus(`<p class="feedback-error">${t(`feedback.error.${result.reason}`)}</p>
-        <p><a class="button secondary" href="${escapeHtml(mailtoHref(payload))}">${t("feedback.emailInstead")}</a></p>`, "error");
+        <p><a class="ps-btn ps-btn--ghost ps-btn--block feedback-mail-button" href="${escapeHtml(mailtoHref(payload))}">${t("feedback.emailInstead")}</a></p>`, "error");
     }
 
     // Any element with data-feedback-open (footer link, menu entry) opens the dialog.
