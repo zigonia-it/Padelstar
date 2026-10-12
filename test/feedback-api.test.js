@@ -65,9 +65,9 @@ test("a valid message is emailed through Resend with the secret only in the serv
   assert.doesNotMatch(JSON.stringify(res.body), /re_secret/);
 });
 
-test("the sender can be configured; the default is Resend's onboarding sender", async () => {
+test("the sender can be configured; the default is the verified padelstar.app domain", async () => {
   await post(valid());
-  assert.match(JSON.parse(calls[0].options.body).from, /onboarding@resend\.dev/);
+  assert.equal(JSON.parse(calls[0].options.body).from, "Padelstar Feedback <feedback@padelstar.app>");
   await post(valid(), { env: { RESEND_API_KEY: "k", FEEDBACK_TO_EMAIL: "d@example.com", FEEDBACK_FROM: "Padelstar <feedback@example.com>" } });
   assert.equal(JSON.parse(calls[0].options.body).from, "Padelstar <feedback@example.com>");
 });

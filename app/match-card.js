@@ -339,6 +339,11 @@
       return "";
     }
 
+    // A timed match takes no points until its clock is started.
+    function clockBlocksScoring(match) {
+      return Boolean(global.PadelstarScoring?.clockBlocksScoring?.(match, getState().settings));
+    }
+
     function scoreboardRow(match, teamIndex, teamName, pointControlsEnabled, pointsMode) {
       const team = teamIndex === 0 ? match.teamOne : match.teamTwo;
       const key = teamIndex === 0 ? "teamOne" : "teamTwo";
@@ -346,7 +351,7 @@
       // While a result waits for approval only an unsubmitted draft (scorer) or the admin can still undo.
       const undoOpen = !awaiting || currentLocalRole() !== "player" || match.approval?.status === "draft";
       const canUndo = pointControlsEnabled && match.state !== "finished" && undoOpen && Boolean(match.undoStack?.length) && playerIsScorerOrNotPlayer(match);
-      const canAward = pointControlsEnabled && match.state !== "finished" && !awaiting;
+      const canAward = pointControlsEnabled && match.state !== "finished" && !awaiting && !clockBlocksScoring(match);
       return `
     <tr class="scoreboard-row" style="${teamAccentStyle(team)}">
       <td class="scoreboard-team-name">${teamName}</td>
@@ -484,9 +489,9 @@
         <button class="secondary save-court-button" type="button">${translate("actions.saveCourt")}</button>
       </div>
       <div class="button-row">
-        <button class="secondary set-score-button" type="button" ${["finished", "cancelled", "awaitingApproval", "awaitingWithdrawalDecision"].includes(match.state) ? "disabled" : ""}>${translate("actions.setResult")}</button>
+        <button class="secondary set-score-button" type="button" ${["finished", "cancelled", "awaitingApproval", "awaitingWithdrawalDecision"].includes(match.state) || clockBlocksScoring(match) ? "disabled" : ""}>${translate("actions.setResult")}</button>
         <button class="secondary start-match-button" type="button" ${match.state !== "waiting" ? "disabled" : ""}>${translate("actions.startMatch")}</button>
-        <button class="secondary large-score-button" type="button" ${match.state !== "playing" ? "disabled" : ""}>${translate("actions.largeScore")}</button>
+        <button class="secondary large-score-button" type="button" ${match.state !== "playing" || clockBlocksScoring(match) ? "disabled" : ""}>${translate("actions.largeScore")}</button>
         <button class="secondary reopen-match-button" type="button" ${["cancelled"].includes(match.state) || !match.undoStack?.length ? "disabled" : ""}>${["finished", "awaitingApproval"].includes(match.state) ? translate("actions.undoResult") : translate("actions.undoLast")}</button>
         <button class="ghost cancel-match-button" type="button" ${["finished", "cancelled"].includes(match.state) ? "disabled" : ""}>${translate("actions.cancelMatch")}</button>
         <div class="walkover-row">

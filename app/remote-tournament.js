@@ -36,7 +36,7 @@
       if (!isReady() || !inviteCode) return false;
       const { data, error } = await getTournamentByInvite(inviteCode);
       if (error || !data) return false;
-      applyRemoteState(data, { source: "refresh" });
+      applyRemoteState(data, { source: "invite" });
       return true;
     }
 

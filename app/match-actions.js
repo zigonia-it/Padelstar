@@ -157,7 +157,9 @@
     async function setWalkover(match, teamIndex) {
       if (![0, 1].includes(teamIndex) || ["finished", "cancelled"].includes(match.state)) return;
       const winningTeam = teamIndex === 0 ? match.teamOne : match.teamTwo;
-      if (!await requestConfirmation(t("messages.walkoverConfirm", { team: winningTeam.displayName }))) return;
+      // Say plainly which team is set as the winner: the button names the team that gets the walkover, not the absent one.
+      const team = winningTeam.displayName;
+      if (!await requestConfirmation(t("messages.walkoverConfirm", { team }), t("messages.walkoverTitle", { team }), t("messages.walkoverAccept", { team }))) return;
       if (isSupabaseReady()) {
         queueRemoteMatchAction(match, "walkover", teamIndex);
         return;

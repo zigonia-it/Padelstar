@@ -17,7 +17,7 @@ window.PadelstarLargeScore = (() => {
       elements.largeScoreBoard.innerHTML = [match.teamOne, match.teamTwo].map((team, index) => {
         const teamKey = index === 0 ? "teamOne" : "teamTwo";
         return `
-          <button class="large-score-team" type="button" data-large-score-team="${index}" style="${teamAccentStyle(team)}">
+          <button class="large-score-team" type="button" data-large-score-team="${index}" style="${teamAccentStyle(team)}" ${window.PadelstarScoring.clockBlocksScoring?.(match, state.settings) ? "disabled" : ""}>
             <span class="large-score-label"><span class="large-score-hint">${t("score.tapForPoint")}</span>${teamDisplay(team)}</span>
             <strong>${match.currentSet[teamKey]}</strong>
             ${window.PadelstarScoring.isPointsMatch(match, state.settings) ? "" : `<small>${window.PadelstarScoring.pointLabel(match, match.currentGame[teamKey])}</small>`}

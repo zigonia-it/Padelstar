@@ -459,8 +459,6 @@ const podium = window.PadelstarPodium.create({
 });
 const lobby = window.PadelstarLobby.create({
   activateAdminPanel: (panel) => activateAdminPanel(panel),
-  createJoinLink: () => createJoinLink(),
-  createQrCodeUrl: (text) => createQrCodeUrl(text),
   elements,
   escapeHtml: (value) => escapeHtml(value),
   generateFullTournamentSchedule: () => generateFullTournamentSchedule(),
@@ -906,7 +904,7 @@ const matchActions = window.PadelstarMatchActions.create({
   queueRemoteMatchAction: (match, action, teamIndex) => queueRemoteMatchAction(match, action, teamIndex),
   render: () => render(),
   renderLargeScore: () => renderLargeScore(),
-  requestConfirmation: (message) => requestConfirmation(message),
+  requestConfirmation: (message, title, acceptLabel) => requestConfirmationWithTitle(message, title, acceptLabel),
   saveState: () => saveState(),
   showToast: (message, statusClass) => showToast(message, statusClass),
   t: (key, values) => t(key, values),
@@ -1087,7 +1085,10 @@ async function handleEndTournament() {
 
 async function handleResetTournament() {
   if (!await requestConfirmationWithTitle(t("messages.resetTournamentConfirm"), t("messages.resetTournamentTitle"))) return;
-  if (!await tournamentFinalization.finalize("cancelled")) return;
+  // Already finished, or this device holds no admin key: there is nothing to cancel on the server, so the reset only
+  // forgets the local copy. Asking the server would fail every time and the button would seem dead.
+  const serverCancelNeeded = state.status !== "Avsluttet" && !state.finalizationConfirmed && Boolean(state.adminToken);
+  if (serverCancelNeeded && !await tournamentFinalization.finalize("cancelled")) return;
   clearLocalTournament();
   showStart();
   render();
@@ -1097,6 +1098,7 @@ async function handleResetTournament() {
 function clearLocalTournament() {
   removeRealtimeChannel();
   tournamentLibrary.remove(state.id);
+  if (state.id) localStorage.removeItem(`${storageKey}:finalize:${state.id}`);
   const language = state.settings?.language;
   state = structuredClone(defaultTournament);
   if (language) state.settings.language = language;
@@ -1175,7 +1177,7 @@ function bindBootstrapEvents() {
       openAccountAuth,
       toggleTvMode,
       toggleTvModeFromMenu: () => {
-        if (!hasActiveTournament()) return;
+        if (!hasActiveTournament() || isPhoneScreen()) return;
         toggleTvMode();
         window.PadelstarNavigation?.closeMenu();
       },
@@ -1268,7 +1270,6 @@ function bindGlobalEvents() {
       syncJoinPreview,
       togglePodiumFullStandings,
       startFromLobby,
-      skipLobby,
     },
   });
 }
@@ -1400,11 +1401,16 @@ function loadPendingPlayerScores() {
 }
 
 function persistSyncMetadata() {
-  stateManager.persistSyncMetadata(localStorage, syncStorageKey, pendingAdminSync, pendingPlayerScores, {
-    lastAttemptAt: syncLastAttemptAt,
-    lastError: syncLastError,
-  });
-  persistence.mirrorKeys([syncStorageKey]);
+  try {
+    stateManager.persistSyncMetadata(localStorage, syncStorageKey, pendingAdminSync, pendingPlayerScores, {
+      lastAttemptAt: syncLastAttemptAt,
+      lastError: syncLastError,
+    });
+    persistence.mirrorKeys([syncStorageKey]);
+  } catch (error) {
+    // Same as persistLocalState: a full browser storage must not stop the server save that follows.
+    console.warn("Padelstar could not save the sync status on this device", error);
+  }
 }
 
 function hasPendingRemoteWrites() {
@@ -1441,13 +1447,19 @@ function persistLocalState() {
     persistence.removeKeys([storageKey, recoveryStorageKey]);
     return;
   }
-  tournamentLibrary.upsert(state);
-  persistence.writeTournamentState({
-    state,
-    stateKey: storageKey,
-    recoveryKey: recoveryStorageKey,
-    isValidState: isValidTournamentState,
-  });
+  try {
+    const storedState = { ...state, schedule: window.PadelstarTournamentEngine?.compactSchedule(state.schedule) ?? state.schedule };
+    tournamentLibrary.upsert(storedState);
+    persistence.writeTournamentState({
+      state: storedState,
+      stateKey: storageKey,
+      recoveryKey: recoveryStorageKey,
+      isValidState: isValidTournamentState,
+    });
+  } catch (error) {
+    // A full browser storage must not stop create, start or scoring: the server copy still saves.
+    console.warn("Padelstar could not save the tournament on this device", error);
+  }
 }
 
 function openSavedTournament(tournamentId) {
@@ -1551,7 +1563,7 @@ function setRemoteNotice(message) {
 }
 
 function requestConfirmation(message) { return uiFeedback.requestConfirmation(message); }
-function requestConfirmationWithTitle(message, title) { return uiFeedback.requestConfirmation(message, title); }
+function requestConfirmationWithTitle(message, title, acceptLabel) { return uiFeedback.requestConfirmation(message, title, acceptLabel); }
 function showToast(message, statusClass = "status-message-success") { return uiFeedback.showToast(message, statusClass); }
 
 function showRecoveryNotice() {
@@ -1759,6 +1771,12 @@ function renderRoleVisibility() {
 }
 
 // TV Mode always opens in its own tab/window (the app stays where it is); it is read-only and needs no login.
+// TV Mode is for tablets and computers (1.3): a phone screen is too small for the board. Same query as styles/workspace-nav.css.
+const phoneScreenQuery = "(max-width: 599.98px), (pointer: coarse) and (max-height: 499.98px)";
+function isPhoneScreen() {
+  return Boolean(window.matchMedia?.(phoneScreenQuery).matches);
+}
+
 function openTvMode() {
   const inviteCode = state?.inviteCode ? `?spectate=${encodeURIComponent(state.inviteCode)}` : "";
   // No "noopener" feature here: with it window.open always returns null, which looked like a blocked pop-up and sent the
@@ -1867,6 +1885,7 @@ function renderMatches(matches) {
     filteredAdminMatches,
     t("tournament.noMatches"),
     (match) => createMatchCard(match, isEditableAdminMatch(match)),
+    { byStatus: true },
   );
   matchList.renderGroupedMatches(
     elements.playerMatches,
@@ -2145,10 +2164,6 @@ function goToNewTournamentFromPodium() {
 
 function startFromLobby() {
   return lobby.startFromLobby();
-}
-
-function skipLobby() {
-  return lobby.skipToWorkspace();
 }
 
 function updateCourtsFromInput(value) {

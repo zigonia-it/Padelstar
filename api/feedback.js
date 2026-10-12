@@ -5,8 +5,9 @@
 // Environment variables (Vercel -> Project -> Settings -> Environment Variables):
 //   RESEND_API_KEY      required   API key from Resend
 //   FEEDBACK_TO_EMAIL   required   where the feedback is delivered (your own address)
-//   FEEDBACK_FROM       optional   sender, default "Padelstar Feedback <onboarding@resend.dev>"
-//                                  (with the free onboarding sender Resend only delivers to the address you signed up with)
+//   FEEDBACK_FROM       optional   sender, default "Padelstar Feedback <feedback@padelstar.app>" (padelstar.app is
+//                                  verified in Resend, like the invitation sender, so it delivers to any address; the free
+//                                  onboarding@resend.dev sender only delivered to the address the Resend account was made with)
 //
 // No secret ever reaches the browser. The email is plain text (nothing from the user is rendered as HTML), single-line
 // fields are stripped of line breaks (no header injection), a hidden honeypot field silently drops most bots, and each
@@ -121,7 +122,7 @@ module.exports = async function handler(request, response) {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: from || "Padelstar Feedback <onboarding@resend.dev>",
+        from: from || "Padelstar Feedback <feedback@padelstar.app>",
         to: [to],
         subject,
         text: lines.join("\n"),
