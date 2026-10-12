@@ -8,11 +8,11 @@ Last updated: 2026-10-12.
 
 ## Current state
 
-- **Version 1.0.0** is live on https://padelstar.app (Vercel, deployed from `main`; Supabase project `sxzlljxodorkfrjnwfgr` in the EU). Released 2026-10-05 with the Padelstar 1.0 redesign.
-- Merged after 1.0.0, not yet versioned: the motion system and win moment (PR #42, #45), the missing 512 px icon (PR #43) and the tournament menu Lobby/Spillere/Kamper/Tabell-Cup with TV Mode off phones (PR #56, 2026-10-12), and the reset fix, no points before the match clock and the feedback sender (PR #55, 2026-10-12, with migration `20261012090000_block_points_before_clock.sql` applied). See `docs/CHANGELOG.md` "Unreleased".
-- Open pull requests: the walkover question and admin tournament delete (PR #54); **#53** blocked-account API guard (its migration `20261012100000_blocked_account_request_guard.sql` is live since 2026-10-12; the client part waits for the merge); **#44** large Round Robin can be created (the 2 MB server limit it needs is already live); #49 (timed-match start clock button, with its migration) and #46 (League v2.0 plan and `docs/MASTER-ROADMAP.md`) are merged.
+- **Version 1.0.1** is live on https://padelstar.app (Vercel, deployed from `main`; Supabase project `sxzlljxodorkfrjnwfgr` in the EU). Released 2026-10-12: the bug-fix batch after 1.0.0 (released 2026-10-05 with the Padelstar 1.0 redesign). What it contains: `docs/CHANGELOG.md` "1.0.1".
+- Merged after 1.0.1, not yet versioned: nothing.
+- Open pull requests: #52 (plan for a Vite build in the master roadmap, waits for the developer's decision) and #51 (League step B, draft, release 2.0).
 - Live modes: Round Robin and Cup. Scoring: Tennis (padel) and Points modes on the generic scoring engine.
-- Current stage of the plan: **1.0.x, stabilise** (master roadmap §1): live verification on real devices, the open bugs in `docs/BUGS.md`, the privacy sign-off, motion step 3.
+- Current stage of the plan: **1.0.x, stabilise** (master roadmap §1): live verification on real devices, the open bugs in `docs/BUGS.md`, the privacy sign-off, the rest of motion step 3 (dialogs/sheets, TV live pulse).
 - What the developer must do or decide: `docs/USER_ACTIONS.md`.
 
 ## The plan

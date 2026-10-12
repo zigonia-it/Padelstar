@@ -4,7 +4,7 @@ Live app: https://padelstar.app
 
 Sist oppdatert: 2026-10-05
 
-Status: 1.0.0, responsiv PWA som kan hostes statisk med Supabase live sync
+Status: 1.0.1, responsiv PWA som kan hostes statisk med Supabase live sync
 
 Dokumentasjon (holdes oppdatert i hver arbeidsøkt, se `CLAUDE.md` / `AGENTS.md`):
 
