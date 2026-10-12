@@ -69,16 +69,17 @@ test("the lobby lists a remove button per player, using the same rule and functi
   assert.match(read("styles", "lobby.css"), /\.lobby-players-card \.danger-button/);
 });
 
-test("the lobby is the first panel of the admin workspace: rail, phone tabs and subtabs all open it (0.12)", () => {
+test("the admin menu is Lobby, Spillere, Kamper, Tabell/Cup on the rail, the phone tabs and the subtabs (4.1)", () => {
   const html = read("index.html");
   for (const nav of [html.match(/<nav class="workspace-rail[\s\S]*?<\/nav>/)[0], html.match(/<nav class="workspace-bottom-tabs[\s\S]*?<\/nav>/)[0]]) {
-    assert.match(nav, /data-rail-target="lobby"/);
-    assert.ok(nav.indexOf('data-rail-target="lobby"') < nav.indexOf('data-rail-target="control"'), "Lobby comes first");
+    const targets = [...nav.matchAll(/data-rail-target="([a-z]+)"/g)].map((match) => match[1]);
+    assert.deepEqual(targets, ["lobby", "players", "matches", "standings", "player"], "Lobby first; the admin's own player view last");
+    assert.doesNotMatch(nav, /data-rail-target="lobby"[^>]*class="[^"]*hidden|class="workspace-rail-item hidden" data-rail-target="lobby"/);
+    assert.ok(nav.indexOf('data-action="tv-mode"') > nav.indexOf('data-rail-target="player"'), "TV Mode sits at the bottom");
   }
   const rail = read("app", "workspace-rail.js");
   assert.doesNotMatch(rail, /showModule\("lobby"\)/, "no separate lobby screen");
   assert.match(rail, /activateAdminPanel\(target\)/, "the lobby item opens its panel like the other panels");
-  assert.match(rail, /data-rail-target="lobby"[\s\S]*classList\.toggle\("hidden", !showRail\)/, "shown whenever the workspace rail is (also after the start)");
   assert.match(read("app", "module-routing.js"), /requestedModule === "lobby"\) return isCurrentUserAdmin\(\) \? "admin"/);
   assert.match(read("app", "workspace-navigation.js"), /openLobbyPanel[\s\S]*activateAdminPanel\("lobby"\)/);
 });
