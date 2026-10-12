@@ -7,7 +7,7 @@ Status: `[ ]` open, `[x]` done.
 
 ## 1. Decide or review now
 
-- [ ] **Review and merge the critical-fixes PR** (`fix/critical-reset-clock-feedback`): reset, no points before the clock, feedback sender. When it is merged, migration `20261012090000_block_points_before_clock.sql` is applied to Supabase so the database refuses points before the clock too.
+- [ ] **Review and merge PR #55** (critical fixes): reset, no points before the clock, feedback sender. When it is merged, migration `20261012090000_block_points_before_clock.sql` is applied to Supabase so the database refuses points before the clock too.
 - [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), check that the + buttons and Før poeng are disabled, press Start klokken on the match card or on the player's own match, then score; check that the countdown runs on the card and on the TV board.
 - [ ] **Try "Nullstill turnering" on your phone** once the fix is live, on an account tournament: it must go back to Hjem and the tournament must not reappear under "Dine turneringer" after a reload. A copy that came back before the fix can be removed with Nullstill turnering too.
 - [ ] **Review and merge PR #44** (large Round Robin can be created; above 8 players each team plays one match per rotation). Until it is merged, a Round Robin with many players fails on padelstar.app (`docs/BUGS.md`). The 2 MB server limit it relies on is already live.
