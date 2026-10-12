@@ -41,7 +41,7 @@ Goal: 1.0.0 is solid on real devices before new features land. Patch releases on
 - **Release follow-ups:** privacy page "beta text" line needs owner sign-off; nn/es/de/fr privacy and guide text are older than nb/en.
 - **Motion step 3** (from the animations work): standings reorder animation (app + TV), dialogs/sheets, TV live pulse.
 - **Timed-match start clock button** (developer's request 2026-10-10): the clock starts from the match card, not on the first point. Done in PR #49 (merged 2026-10-10).
-- **User administration hardening** (developer's request 2026-10-12, §6.1/§6.3): a blocked or deleted account loses API access at once, search by name, the role checks as database tests. In PR #53.
+- **User administration hardening** (developer's request 2026-10-12, §6.1/§6.3): a blocked or deleted account loses API access at once, search by name, the role checks as database tests. In PR #53; its migration is live since 2026-10-12.
 - **Phase 30 Definition of Done** boxes checked for real, then `ROADMAP.md` Priority 1 can be archived.
 
 Pending developer decisions already listed in ROADMAP that block items here: post-finish corrections scope, retroactive guest-stat claiming, invitation push, Cup time overrides, public read-only view.
