@@ -1,5 +1,7 @@
 # Padelstar – Master Roadmap (1.0.0 → 4.x)
 
+Last updated: 2026-10-12.
+
 Status: **governing plan** — written 2026-10-05 on the developer's request ("one plan for the whole development from the current version to everything planned") and confirmed the same day as the definitive plan that steers development ("behold master-roadmap som definitiv plan. la denne styre utviklingen."). It merges four sources into one order:
 
 - `docs/ROADMAP.md` (Priority 1 open items, Priority 2–4, post-1.0 backlog)
@@ -41,6 +43,7 @@ Goal: 1.0.0 is solid on real devices before new features land. Patch releases on
 - **Release follow-ups:** privacy page "beta text" line needs owner sign-off; nn/es/de/fr privacy and guide text are older than nb/en.
 - **Motion step 3** (from the animations work): standings reorder animation (app + TV), dialogs/sheets, TV live pulse.
 - **Timed-match start clock button** (developer's request 2026-10-10): the clock starts from the match card, not on the first point. Done in PR #49 (merged 2026-10-10).
+- **Bugs, admin tools and UI restructure** (developer's request 2026-10-12, one message split into threads): reset fix, no scoring before the clock, feedback fix, clearer walkover text, deleting tournaments from System and the test-tournament cleanup, notification spacing, TV Mode not on phones, the four-item menu Lobby/Spillere/Kamper/Tabell-Cup, and user block/delete in System (6.1, with server-side enforcement). Menu, TV Mode and notification spacing: PR "Ny meny og visninger".
 - **Phase 30 Definition of Done** boxes checked for real, then `ROADMAP.md` Priority 1 can be archived.
 
 Pending developer decisions already listed in ROADMAP that block items here: post-finish corrections scope, retroactive guest-stat claiming, invitation push, Cup time overrides, public read-only view.
@@ -54,7 +57,7 @@ Why here: every later feature (league seasons, scheduled tournaments, recurring 
 ## 3. Release 1.2 — More formats and a player-first UI
 
 - **Server-wire the hidden formats one at a time:** Americano, Team-Americano, Mexicano, Team-Mexicano, King of the Court, Groups+Playoffs. Each needs a branch in `admin_advance_round_impl` and an end-to-end check like Round Robin had.
-- **Styring redesign:** hide settings that cannot change in the current state.
+- **Lobby/Regler cleanup** (Styring became the lobby in 1.0.x, 2026-10-12): hide settings that cannot change in the current state.
 - **Player-first UI:** "Min neste kamp" and "Mine kamper" first.
 
 Why before 2.0: Americano/Mexicano are rotating-partner formats. Wiring them server-side builds the same pieces the League generator needs: a round generator called from the server, partner/opponent history, sit-outs.

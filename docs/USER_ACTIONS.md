@@ -2,7 +2,7 @@
 
 Things only the developer can do or decide. Every work session updates this file before it ends: new items are added, finished ones are ticked and moved to "Done" (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). Order = recommended order.
 
-Last updated: 2026-10-10 (version 1.0.0 on padelstar.app).
+Last updated: 2026-10-12 (version 1.0.0 on padelstar.app).
 Status: `[ ]` open, `[x]` done.
 
 ## 1. Decide or review now
@@ -29,6 +29,7 @@ One structured field test with two accounts and two phones covers most of these 
 - [ ] **Network loss during a running match.** Airplane mode for ~30 s while scoring, then back online: the queued points arrive, nothing lost or doubled.
 - [ ] **Points mode (0.17).** Create a tournament with "Poeng (først til N)" (e.g. first to 21, win by 2), start and score a match: the table shows GAMES and POENG, 20-20 continues until a 2-point lead, "Set resultat" takes two numbers. Also best of 3 games and a timed match, and the point-by-point approval with a second player.
 - [ ] **Motion on your phone (after 1.0.0).** The menu highlight slides, pages fly in, the winning point shows the win moment, the podium lands 3rd, 2nd, 1st. With "Reduce motion" on in the phone's settings nothing should move. Tell Claude anything that feels slow or wrong.
+- [ ] **The new tournament menu on phone, tablet and computer (after "Ny meny og visninger" is merged).** As admin: Lobby shows Del turnering, Spillere, Regler, Banekø in that order; Spillere puts the players on court first; Kamper starts with the current match; the fourth item says Cup and shows the bracket in a Cup. TV Mode must be missing on the phone and present on the tablet/computer. As a player on another phone: no admin menu, only I dag / Kamper / Tabell. Open the bell with one and with several notices and check the spacing.
 - [ ] **Large Round Robin after PR #44 is merged.** Create a Round Robin with 20–40 players on padelstar.app, start it and play a few matches.
 
 ## 3. Later, when the time comes

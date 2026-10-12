@@ -35,7 +35,6 @@
 
     function renderCourtNames() {
       renderCourtNamesInto(elements.courtNamesList, elements.courtNamesForm);
-      renderCourtNamesInto(elements.lobbyCourtNamesList, elements.lobbyCourtNamesForm);
     }
 
     function localizeGeneratedCourtNames() {
