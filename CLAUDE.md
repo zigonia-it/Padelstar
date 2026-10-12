@@ -108,7 +108,7 @@ Prefer implementation over commentary.
 
 ## Versioning
 
-The actual current baseline is **`1.0.0`** (released 2026-10-05 on the developer's explicit instruction: the Padelstar 1.0 redesign). Earlier versions are listed in `docs/CHANGELOG.md`.
+The actual current baseline is **`1.0.1`** (released 2026-10-12 on the developer's instruction: the bug-fix batch after the 1.0 redesign; `1.0.0`, the Padelstar 1.0 redesign, was released 2026-10-05). Earlier versions are listed in `docs/CHANGELOG.md`.
 
 Version numbers represent **completed and verified milestones**, not planned work. Target versions are in `docs/MASTER-ROADMAP.md`.
 

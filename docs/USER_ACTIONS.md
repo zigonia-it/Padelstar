@@ -2,16 +2,15 @@
 
 Things only the developer can do or decide. Every work session updates this file before it ends: new items are added, finished ones are ticked and moved to "Done" (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). Order = recommended order.
 
-Last updated: 2026-10-12 (version 1.0.0 on padelstar.app).
+Last updated: 2026-10-12 (version 1.0.1 on padelstar.app).
 Status: `[ ]` open, `[x]` done.
 
 ## 1. Decide or review now
 
-- [ ] **Review and merge the walkover / admin tournament delete PR** (branch `walkover-text-and-admin-delete`). Its migration is already applied to Supabase (2026-10-12). After merging, open System → Turneringer and check the new Kode and Konto columns.
-- [ ] **Review and merge PR #53** (blocked-account guard; its migration is live since 2026-10-12). Then, with a second test account: block it in System → Brukere while it is signed in on another device; on that device any action that needs the account fails at once and, after a reload, it shows "Du er logget ut fordi økten ble avsluttet"; signing in shows "Kontoen er sperret". Unblock and sign in again.
+- [ ] **System → Turneringer** (1.0.1, PR #54): check the new Kode and Konto columns, the walkover question naming the winner, and that Slett asks with the tournament's details.
+- [ ] **Blocked-account guard with two devices** (1.0.1, PR #53). With a second test account: block it in System → Brukere while it is signed in on another device; on that device any action that needs the account fails at once and, after a reload, it shows "Du er logget ut fordi økten ble avsluttet"; signing in shows "Kontoen er sperret". Unblock and sign in again.
 - [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), check that the + buttons and Før poeng are disabled, press Start klokken on the match card or on the player's own match, then score; check that the countdown runs on the card and on the TV board.
 - [ ] **Try "Nullstill turnering" on your phone** once the fix is live, on an account tournament: it must go back to Hjem and the tournament must not reappear under "Dine turneringer" after a reload. A copy that came back before the fix can be removed with Nullstill turnering too.
-- [ ] **Review and merge PR #44** (large Round Robin can be created; above 8 players each team plays one match per rotation). Until it is merged, a Round Robin with many players fails on padelstar.app (`docs/BUGS.md`). The 2 MB server limit it relies on is already live.
 - [ ] **Review PR #46** (League v2.0 plan and `docs/MASTER-ROADMAP.md`). The master roadmap is the governing plan (developer's decision 2026-10-05); merging #46 puts it in the repo.
 - [ ] **Master roadmap decisions** (`docs/MASTER-ROADMAP.md` §15):
   1. Should League 2.0 start right after 1.0.x, or after 1.1–1.5 as planned?
@@ -31,9 +30,9 @@ One structured field test with two accounts and two phones covers most of these 
 - [ ] **Withdrawal with two devices.** Start a Round Robin, withdraw one player on the admin device, then on the teammate's phone choose "Spill alene" / "Gi walkover".
 - [ ] **Network loss during a running match.** Airplane mode for ~30 s while scoring, then back online: the queued points arrive, nothing lost or doubled.
 - [ ] **Points mode (0.17).** Create a tournament with "Poeng (først til N)" (e.g. first to 21, win by 2), start and score a match: the table shows GAMES and POENG, 20-20 continues until a 2-point lead, "Set resultat" takes two numbers. Also best of 3 games and a timed match, and the point-by-point approval with a second player.
-- [ ] **Motion on your phone (after 1.0.0).** The menu highlight slides, pages fly in, the winning point shows the win moment, the podium lands 3rd, 2nd, 1st. With "Reduce motion" on in the phone's settings nothing should move. Tell Claude anything that feels slow or wrong.
+- [ ] **Motion on your phone (after 1.0.0).** The menu highlight slides, pages fly in, the winning point shows the win moment, the podium lands 3rd, 2nd, 1st, and standings rows slide to their new places when a result changes the order (app and TV board, PR #50). With "Reduce motion" on in the phone's settings nothing should move. Tell Claude anything that feels slow or wrong.
 - [ ] **The new tournament menu on phone, tablet and computer (PR #56, merged 2026-10-12).** As admin: Lobby shows Del turnering, Spillere, Regler, Banekø in that order; Spillere puts the players on court first; Kamper starts with the current match; the fourth item says Cup and shows the bracket in a Cup. TV Mode must be missing on the phone and present on the tablet/computer. As a player on another phone: no admin menu, only I dag / Kamper / Tabell. Open the bell with one and with several notices and check the spacing.
-- [ ] **Large Round Robin after PR #44 is merged.** Create a Round Robin with 20–40 players on padelstar.app, start it and play a few matches.
+- [ ] **Large Round Robin (1.0.1, PR #44).** Create a Round Robin with 20–40 players on padelstar.app, start it and play a few matches.
 
 ## 3. Later, when the time comes
 
@@ -41,6 +40,11 @@ One structured field test with two accounts and two phones covers most of these 
 - [ ] `assets/padelstar-webapp-ui-design/` (16 MB) is still in git history (removed from the tree in PR #8). Purging it means rewriting history; your decision.
 
 ## Done
+
+- [x] Released 1.0.1 (2026-10-12): PR #53, #54, #44 and #50 merged with the earlier post-1.0.0 work.
+- [x] Walkover / admin tournament delete merged (PR #54, 2026-10-12, in 1.0.1; migration applied 2026-10-12).
+- [x] Blocked-account guard merged (PR #53, 2026-10-12, in 1.0.1; migration live since 2026-10-12).
+- [x] Large Round Robin fix merged (PR #44, 2026-10-12, in 1.0.1).
 
 Kept short for reference; details are in `docs/CHANGELOG.md` and git history.
 
