@@ -2,7 +2,7 @@
 
 # Padelstar – Active Bugs
 
-Last updated: 2026-10-05 (version 1.0.0 on padelstar.app).
+Last updated: 2026-10-12 (version 1.0.0 on padelstar.app).
 
 Only **active** defects and known limitations are listed here. When a bug is fixed, delete it from this file and describe the fix in `docs/CHANGELOG.md` (that is the record). Every work session adds new bugs it finds and removes the ones it fixed (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). Everything found and fixed up to 2026-09-19 (account creation, tournament start, results, persistence, completion, Cup, guest claiming, realtime, undo, PWA icons, ...) is in `docs/archive/bugs-resolved-2026-09.md` (not authoritative).
 
@@ -18,6 +18,8 @@ A bug is complete only when it was reproduced or clearly verified, the smallest 
 - [ ] **Editor formatting breaks tests**: a code formatter that reformats `index.html` on save changes the exact markup that some tests check (found 2026-09-20). Turn format-on-save off for that file; if `git diff index.html` is huge, restore the file and re-apply only the intended change.
 
 ## Known limitations (decided or accepted, not bugs to fix now)
+
+- **A blocked account can still use Padelstar as a guest** (2026-10-12): blocking stops the account, not the person. They can join tournaments without an account and keep admin links for tournaments stored on their own device. To stop a specific tournament, delete it (tournament deletion in System is being built separately).
 
 - Two players with exactly the same name cannot be told apart by the claim flow; only the first match in the roster is reachable. Names are the only key the claim flow has.
 - When players on **both** teams of one Round Robin match have withdrawn, the match is cancelled (no rule was given for it). In a Cup a cancelled match makes the best-placed losing team take the place (0.13.0).

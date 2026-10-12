@@ -2,11 +2,12 @@
 
 Things only the developer can do or decide. Every work session updates this file before it ends: new items are added, finished ones are ticked and moved to "Done" (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). Order = recommended order.
 
-Last updated: 2026-10-10 (version 1.0.0 on padelstar.app).
+Last updated: 2026-10-12 (version 1.0.0 on padelstar.app).
 Status: `[ ]` open, `[x]` done.
 
 ## 1. Decide or review now
 
+- [ ] **Review the blocked-account guard PR and say "apply"** for migration `20261012100000_blocked_account_request_guard.sql`. Claude applies it to Supabase only on your explicit go. Then, with a second test account: block it in System → Brukere while it is signed in on another device; on that device any action that needs the account fails at once and, after a reload, it shows "Du er logget ut fordi økten ble avsluttet"; signing in shows "Kontoen er sperret". Unblock and sign in again.
 - [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), score a point (the clock stays at 5:00), press Start klokken on the match card or on the player's own match, and check that the countdown runs on the card and on the TV board.
 - [ ] **Review and merge PR #44** (large Round Robin can be created; above 8 players each team plays one match per rotation). Until it is merged, a Round Robin with many players fails on padelstar.app (`docs/BUGS.md`). The 2 MB server limit it relies on is already live.
 - [ ] **Review PR #46** (League v2.0 plan and `docs/MASTER-ROADMAP.md`). The master roadmap is the governing plan (developer's decision 2026-10-05); merging #46 puts it in the repo.
