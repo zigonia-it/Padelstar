@@ -10,6 +10,10 @@ Last updated: 2026-10-12.
 
 ### Changed
 - **New app icon and light-surface logo** (developer's request 2026-10-12; PR #59, merged 2026-10-12). The glossy tennis-ball icon the developer uploaded (`assets/icons/Glanset tennisballikon.png`) replaces the old flat ball everywhere the app or browser shows an icon: `favicon-64.png` (tab icon on every page), a new root `favicon.ico` (16/32/48, what browsers and the Vercel dashboard ask for by default), `apple-touch-icon.png` (iPhone home screen), `padelstar-192.png`/`padelstar-512.png` (PWA install) and `padelstar-icon.png` (push notifications). Apple-touch and the maskable PWA icon put the ball on a full-bleed navy square so the phone's own corner mask does not cut the drawn frame. The refined wordmark (`assets/logos/new/Padelstar med tennisball-ikon.png`) has its white background removed and is now `assets/brand/padelstar-logo-dark.webp`/`.png` (919 x 180, transparent), the logo shown on light surfaces (Daylight theme, light TV board). The dark-surface logo (`assets/brand/padelstar-logo-light.webp`/`.png`, Floodlight theme and dark TV board) is the same wordmark with white letters (developer's request 2026-10-12). Vector versions of both: `assets/brand/padelstar-logo-dark.svg` and `padelstar-logo-light.svg` (traced letters, the ball as a circle with a gradient and traced seams, transparent, about 9 KB each); the app still loads the `.webp` files. Service worker cache bumped to `padelstar-v390` so installed apps pick up the new files.
+- **Smaller Vercel deployments** (PR #58, merged 2026-10-12): a `.vercelignore` keeps unused design archives, large source images, docs, tests and database files out of every deployment (about 330 MB down to about 11 MB). Vercel's 10 GB deployment storage had filled up. `test/vercelignore.test.js` checks no page loads an excluded asset.
+
+### Fixed
+- **Feedback email sends again** (live configuration, 2026-10-12): the Resend key in Vercel had been saved under the wrong variable name; `RESEND_API_KEY` and `FEEDBACK_TO_EMAIL` are now set for Production. Confirmed by the developer on padelstar.app.
 
 ## 1.0.1
 
