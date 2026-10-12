@@ -1,3 +1,5 @@
+> Archived 2026-10-05: 1.0.0 was released that day. The open Definition-of-Done items carried over into `docs/USER_ACTIONS.md` §2 and `docs/MASTER-ROADMAP.md` §1.
+
 # v1.0.0 readiness (Phase 30 Definition of Done)
 
 Status at 0.17.0, 2026-09-20 (first written at 0.9.0 on 2026-09-19). `1.0.0` is **not** released: the checklist below still has open items and the developer has to approve the version change.

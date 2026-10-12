@@ -15,14 +15,14 @@ function load(file) {
   return context;
 }
 
-function setup() {
+function setup(settings = {}) {
   const scoring = load("scoring-engine.js").PadelstarScoring;
   const calls = [];
   const queued = [];
   const deps = {
     afterPaint: (callback) => queued.push(callback),
     captureMatchUndoState: () => ({}), currentLocalRole: () => "admin", enterApproval: () => {}, finishMatch: () => calls.push("finish"),
-    flashMatchCards: (id) => calls.push(`flash:${id}`), getState: () => ({ settings: {} }), isSupabaseReady: () => false,
+    flashMatchCards: (id, options) => calls.push(`flash:${id}${options?.won ? ":won" : ""}`), getState: () => ({ settings }), isSupabaseReady: () => false,
     matchIncludesPlayer: () => false, queuePlayerScore: () => {}, queueRemoteSetResult: () => {},
     render: () => calls.push("render"), renderLargeScore: () => calls.push("big"), saveState: () => calls.push("save"),
     scoring, showToast: () => {}, t: (key) => key,
@@ -49,4 +49,17 @@ test("closing the big score flushes a pending point at once", () => {
   actions.awardTennisPoint(match, 1);
   actions.flushPendingPoint();
   assert.deepEqual(calls, ["big", "save", "render", "flash:m1"]);
+});
+
+test("the point that wins the match flushes at once and asks for the win moment", () => {
+  const { actions, match, calls, queued } = setup({ gamesToWinSet: 1, setsToWinMatch: 1 });
+  for (let point = 0; point < 50 && !calls.includes("finish"); point += 1) {
+    queued.splice(0).forEach((flush) => flush());
+    calls.length = 0;
+    actions.awardTennisPoint(match, 0);
+  }
+  assert.deepEqual(calls, ["finish", "big", "save", "render", "flash:m1:won"]);
+  actions.awardTennisPoint({ ...match, state: "playing", id: "m2", currentGame: { teamOne: 0, teamTwo: 0 }, currentSet: { teamOne: 0, teamTwo: 0 }, completedSets: [] }, 1);
+  queued.splice(0).forEach((flush) => flush());
+  assert.equal(calls.at(-1), "flash:m2", "the next ordinary point is a plain flash again");
 });

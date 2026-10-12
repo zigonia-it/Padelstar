@@ -6,7 +6,7 @@ window.PadelstarPodium = (() => {
 
     function podiumPlaceMarkup(entry, rank) {
       return `
-    <div class="podium-place podium-place-${rank + 1}" style="animation-delay:${rank * 0.12}s">
+    <div class="podium-place podium-place-${rank + 1}" style="--podium-step:${2 - rank}">
       <div class="podium-avatar" style="${accentStyle(entry.player.accent)}">
         ${avatarMarkup(entry.player, "avatar", gemSize[rank])}
       </div>

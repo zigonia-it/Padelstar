@@ -52,8 +52,8 @@
         return;
       }
       const restoredMatch = structuredClone(undoState.match);
-      // The scorer role, its log and the event history are not part of a score snapshot.
-      for (const field of ["scorer", "scorerRequest", "scorerLog", "eventLog"]) {
+      // The scorer role, its log, the event history and the running clock are not part of a score snapshot.
+      for (const field of ["scorer", "scorerRequest", "scorerLog", "eventLog", "startedAt"]) {
         if (field in match) restoredMatch[field] = match[field];
         else delete restoredMatch[field];
       }
@@ -85,6 +85,28 @@
       match.state = "playing";
       deps.recordEvent?.("match_started", "match", match.id, { courtId: match.courtId, courtName: match.courtName });
       match.status = "active";
+      beginClock(match);
+      saveState();
+      render();
+      renderLargeScore();
+    }
+
+    // The clock of a timed match runs from startedAt; the rule profile is locked at the same moment.
+    function beginClock(match) {
+      if (match.startedAt) return;
+      global.PadelstarScoring?.snapshotRules(match, getState().settings);
+      match.startedAt = new Date().toISOString();
+    }
+
+    // Starts the clock of a timed match that is already on court (points scored before it do not start it).
+    function startClock(match) {
+      if (match.state !== "playing" || match.startedAt) return;
+      if (isSupabaseReady()) {
+        queueRemoteMatchAction(match, "start_clock");
+        return;
+      }
+      beginClock(match);
+      deps.recordEvent?.("match_clock_started", "match", match.id, { courtId: match.courtId, courtName: match.courtName });
       saveState();
       render();
       renderLargeScore();
@@ -169,7 +191,7 @@
       renderLargeScore();
     }
 
-    return { cancelMatch, captureMatchUndoState, reopenMatch, setWalkover, startMatch, undoMatch, updateMatchCourt };
+    return { cancelMatch, captureMatchUndoState, reopenMatch, setWalkover, startClock, startMatch, undoMatch, updateMatchCourt };
   }
 
   global.PadelstarMatchActions = { create };

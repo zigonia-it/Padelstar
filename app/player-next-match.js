@@ -6,6 +6,8 @@ window.PadelstarPlayerNextMatch = (() => {
     withdrawalPanelMarkup,
     bindWithdrawalPanel,
     timerMarkup,
+    clockStartMarkup,
+    bindClockStart,
     bindScoreboardTable,
     elements,
     escapeHtml,
@@ -158,7 +160,7 @@ window.PadelstarPlayerNextMatch = (() => {
       <span class="next-match-team next-match-team-opponents">${opponentNames}</span>
     </div>
     ${isPlaying ? `<button class="ps-btn ps-btn--ball ps-btn--lg ps-btn--block next-match-keep-score" type="button">${t("actions.keepScore")}</button>` : ""}
-    ${isPlaying ? `<p class="hint">${timerMarkup(match)}</p>` : ""}
+    ${isPlaying ? `<p class="hint">${timerMarkup(match)}</p>${clockStartMarkup?.(match) ?? ""}` : ""}
     ${isPlaying ? scoreboardTableMarkup(match, true) : `
     <div class="player-now-grid">
       <div><span>${t("common.court")}</span><strong>${courtText}</strong></div>
@@ -171,6 +173,7 @@ window.PadelstarPlayerNextMatch = (() => {
 
       elements.playerNextMatch.querySelector(".next-match-keep-score")?.addEventListener("click", () => openLargeScore?.(match.id));
       if (isPlaying) bindScoreboardTable(elements.playerNextMatch, match, true);
+      if (isPlaying) bindClockStart?.(elements.playerNextMatch, match);
     }
 
     return { renderPlayerNextMatch };

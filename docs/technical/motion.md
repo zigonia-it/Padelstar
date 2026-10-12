@@ -131,11 +131,17 @@ The app's catch-all in `styles/styles.css` (the `*` rule that sets every duratio
   (`.score-flash`, which had no CSS before). Each point now paints the big score first; saving and redrawing the rest
   follow after the frame, shared by a quick run of points while the big score is open (flushed on close and page hide).
   Measured at 4x CPU slowdown: 240ms to 35ms from tap to the new number.
+- **Win moment** (`app/large-score.js` celebrateWin, `styles/motion.css` sections 3 and 4): the point that wins a match
+  keeps the big score up for `--motion-celebrate` plus half a second. The winner's pad shows the final games, says
+  "Winner" and gets a sweep of its own colour; the other pad steps back; then the big score closes by itself. The match
+  card gets a ball-yellow sweep, its score ticks once and the status and winner note settle in (when the card is on
+  screen). Reduced motion: no sweep or tick, the wash fades and the hold is shorter.
+- **Podium**: places land 3rd, 2nd, then 1st, three `--motion-stagger` steps apart, with `--ease-pop`.
 - Navigation is the one place where the old view leaves before the new one is shown; it never waits more than
   `--motion-quick` and the menu highlight moves at once.
 
 ## Plan
 1. Tokens and this spec (done).
-2. Scoring and results motion: scorepad press and tick, `.score-flash`, the win moment, podium stagger.
+2. Scoring and results motion: scorepad press and tick, `.score-flash`, the win moment, podium stagger (done).
 3. Standings and navigation motion: FLIP reorder (app and TV), view transitions, tab indicator, dialogs and sheets.
 4. Polish: move existing transitions onto tokens, fix the TV timer pulse, performance pass on phones and the TV board.

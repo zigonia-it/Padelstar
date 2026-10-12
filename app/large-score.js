@@ -3,8 +3,11 @@ window.PadelstarLargeScore = (() => {
     function renderLargeScore(matchId) {
       if (!matchId || !elements.largeScoreDialog.open) return;
       const match = getMatchById(matchId);
+      if (celebratingMatchId === matchId) return;
+      // another match opened while a win was still showing: that board must not close on the old timer
+      if (celebratingMatchId) stopCelebration();
       if (!match || match.state !== "playing") {
-        closeLargeScore();
+        if (!match || !celebrateWin(match, matchId)) closeLargeScore();
         return;
       }
       const state = getState();
@@ -47,6 +50,57 @@ window.PadelstarLargeScore = (() => {
         numbers.forEach((element, index) => { if (values[index] !== lastNumbers.values[index]) element.classList.add("is-ticking"); });
       }
       lastNumbers = { matchId, values };
+    }
+
+    // The point that wins the match: the board stays up for one beat, the winning pad gets a ball wash and the other
+    // dims and says who won, then the big score closes by itself (docs/technical/motion.md, "win moment").
+    // Only when this board was showing the match a moment ago; opening a finished match still closes at once.
+    let celebratingMatchId = null;
+    let celebrationTimer = null;
+    function stopCelebration() {
+      window.clearTimeout(celebrationTimer);
+      celebratingMatchId = null;
+      lastNumbers = { matchId: null, values: [] };
+    }
+    function celebrateWin(match, matchId) {
+      const winner = match.winnerTeamIndex ?? match.approval?.winnerTeamIndex;
+      const pads = elements.largeScoreBoard.querySelectorAll("[data-large-score-team]");
+      if (window.PADELSTAR_TEST_MODE || lastNumbers.matchId !== matchId || ![0, 1].includes(winner) || pads.length !== 2) return false;
+      celebratingMatchId = matchId;
+      // the pads show the final games of the deciding set (the board still holds the last point's values)
+      const lastSet = match.completedSets?.at(-1);
+      if (lastSet) {
+        pads.forEach((pad, index) => {
+          const games = pad.querySelector("strong");
+          if (games) games.textContent = String(index === 0 ? lastSet.teamOne : lastSet.teamTwo);
+          pad.querySelector("small")?.style.setProperty("visibility", "hidden");
+        });
+        if (!window.PadelstarScoring.isPointsMatch(match, getState().settings)) {
+          const [games, points] = elements.largeScoreActions.querySelectorAll("strong");
+          if (games) games.textContent = `${lastSet.teamOne}-${lastSet.teamTwo}`;
+          if (points) points.textContent = "–";
+        }
+      }
+      // the pads stay as they are (no :disabled grey); a tap now does nothing because the match is no longer playing
+      pads.forEach((pad, index) => {
+        pad.setAttribute("aria-disabled", "true");
+        pad.classList.add(index === winner ? "is-winner" : "is-runner-up");
+        const hint = pad.querySelector(".large-score-hint");
+        if (hint) hint.textContent = index === winner ? t("common.winner") : "";
+      });
+      if (elements.largeScoreUndoButton) elements.largeScoreUndoButton.disabled = true;
+      celebrationTimer = window.setTimeout(() => {
+        stopCelebration();
+        if (elements.largeScoreDialog.open) closeLargeScore();
+      }, celebrationHoldMs());
+      return true;
+    }
+
+    // --motion-celebrate plus a beat to read the winner's name; reduced motion shortens the token, and so the hold
+    function celebrationHoldMs() {
+      const value = getComputedStyle(document.documentElement).getPropertyValue("--motion-celebrate").trim();
+      const ms = value.endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1000;
+      return (Number.isFinite(ms) ? ms : 640) + 500;
     }
 
     return { renderLargeScore };

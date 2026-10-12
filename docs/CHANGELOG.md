@@ -2,15 +2,36 @@
 
 # Padelstar Changelog
 
-Only verified completed changes belong here.
+Only verified completed changes belong here. Every work session that merges or pushes a change adds it under **Unreleased** (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). When the developer applies a version, the Unreleased entries move under that version's heading.
+
+Last updated: 2026-10-10.
 
 ## Unreleased
 
-### Fixed
+Merged to `main` and deployed to padelstar.app after 1.0.0 (version still shown as 1.0.0). Verified with the automated test suite, the asset-version check and browser flows at phone and desktop widths in both themes; not yet checked by a person on a real phone.
 
+### Added
+- **Motion system** (PR #42): motion tokens in `styles/tokens.css` (durations, easings, distances, scales) with a reduced-motion layer that removes movement, and the spec `docs/technical/motion.md`.
+- **Menu highlight slides** to the active item in the top menu, the rail and the tab bars (`app/nav-indicator.js`).
+- **Panels fly between pages** when you move through the menu or rail (View Transitions where the browser has them, a fly-in otherwise; `app/view-motion.js`, `styles/motion.css`).
+- **Win moment** (PR #45): the winning point keeps the big score up for one beat (the winner's pad shows the final games and "Winner", the other pad steps back), the match card gets a ball-yellow sweep and its score ticks once. The podium lands 3rd, 2nd, then 1st.
+
+### Changed
+- **Timed matches start their clock from a button, not on the first point** (developer's request 2026-10-10; PR #49, merged 2026-10-10 with its migration applied to Supabase the same day). A timed match on court shows **Start klokken / Start clock** on the match card (admin) and on the player's own match (a player on the match: the active scorer, or anyone while there is none). **Start kamp** on a waiting match also starts the clock. Points can be scored before the clock is started; they no longer start it, and a match whose clock never started does not time out. Starting the clock locks the match's rule profile, and undo/redo keeps the clock running. Database: migration `20261010150000_match_clock_start_button.sql` (`save_player_point_impl` no longer sets `startedAt`; `admin_match_action` gains `start_clock` and `start` sets `startedAt`; `match_scorer_action` gains `start_clock`; `_scorer_restore` and `admin_undo_match_impl` keep `startedAt`). Tests: `test/match-timer.test.js`, `supabase/tests/match-clock-start.pglite.mjs` (18 checks).
+- **The big score paints the point first** (PR #42); the save and the full re-render follow after the frame (tap to number went from about 240 ms to 35 ms at 4x CPU slowdown).
+- The create and join intros are the captions of their photo cards, also on phones.
+- The join page uses the same single wide code field as the home join card (a typed code or a pasted join link).
+- "Gi tilbakemelding" is only in the footer (it was doubled in the top menu).
+
+### Fixed
 - "Opprett turnering" did nothing for a large Round Robin (reported with 40 players): the saved match plan copied every player into every team pairing (about 10 MB for 40 players), the browser refused to store it and the create step stopped silently. The plan now keeps the teams, with players referred to by id, and rebuilds the pairings and fills in the players when a round starts (about 130 KB for 40 players, under the server's 256 KB create limit), older saved plans are slimmed when loaded, the device's tournament list drops its oldest entries when the browser storage is full, and a failed save on the device no longer stops create, start or scoring. Verified in Chromium: the reported setup (Round Robin, 1 court, 40 players, points to 1, 1 minute) now opens the lobby.
 - Round Robin with more than 8 players: each team plays one match per rotation (teams side by side are paired) instead of meeting every other team, so 40 players give 10 matches a round and 390 in all instead of 7,410, and 12 players 33 instead of 165 (developer's decision 2026-10-05). Up to 8 players nothing changes.
 - The server accepts a tournament state up to 2 MB (was 256 KB) in `create_tournament` and `save_tournament_state` (developer's decision 2026-10-05; applied to the live database 2026-10-05). Started sizes measured in Chromium: 12 players 72 KB, 32 players 0.5 MB, 40 players 0.8 MB.
+- **The 512 px app icon was missing** (PR #43): `assets/icons/padelstar-512.png` was gitignored, so the service worker's precache failed and the app had no offline shell. Cache name bumped.
+- Opening the language picker no longer pushes the desktop menu about 100 px to the left.
+- The System menu link sat 13 px too high; it is centred like the other menu items.
+- The `.score-flash` wash on a match card had no CSS.
+- The big score title no longer resets to its placeholder on every render.
 
 ## 1.0.0
 
