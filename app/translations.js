@@ -1566,7 +1566,7 @@ Object.assign(padelstarTranslations.nb, {
   "match.decidingGame": "Avgjørende game (golden point)",
   "match.timeLeft": "Tid igjen",
   "actions.startClock": "Start klokken",
-  "match.clockNotStarted": "Klokken går ikke før den startes. Poeng kan føres før det.",
+  "match.clockNotStarted": "Start klokken før dere fører poeng.",
 });
 Object.assign(padelstarTranslations.en, {
   "admin.timedMinutes": "Timed match (minutes, 0 = none)",
@@ -1578,7 +1578,7 @@ Object.assign(padelstarTranslations.en, {
   "match.decidingGame": "Deciding game (golden point)",
   "match.timeLeft": "Time left",
   "actions.startClock": "Start clock",
-  "match.clockNotStarted": "The clock doesn't run until it is started. Points can be scored before that.",
+  "match.clockNotStarted": "Start the clock before scoring points.",
 });
 // TV Mode (must exist in every production language; test/tv-i18n.test.js enforces it).
 Object.assign(padelstarTranslations.nb, {

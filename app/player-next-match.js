@@ -159,7 +159,7 @@ window.PadelstarPlayerNextMatch = (() => {
         : `<span class="next-match-vs">${t("tv.versus")}</span>`}
       <span class="next-match-team next-match-team-opponents">${opponentNames}</span>
     </div>
-    ${isPlaying ? `<button class="ps-btn ps-btn--ball ps-btn--lg ps-btn--block next-match-keep-score" type="button">${t("actions.keepScore")}</button>` : ""}
+    ${isPlaying ? `<button class="ps-btn ps-btn--ball ps-btn--lg ps-btn--block next-match-keep-score" type="button" ${window.PadelstarScoring?.clockBlocksScoring?.(match, state.settings) ? "disabled" : ""}>${t("actions.keepScore")}</button>` : ""}
     ${isPlaying ? `<p class="hint">${timerMarkup(match)}</p>${clockStartMarkup?.(match) ?? ""}` : ""}
     ${isPlaying ? scoreboardTableMarkup(match, true) : `
     <div class="player-now-grid">

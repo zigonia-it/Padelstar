@@ -52,6 +52,9 @@
         if (pendingAdminSync && source !== "rpc" && remoteRevision > currentRevision) markRemoteConflict();
         if (source === "realtime" && remoteRevision === currentRevision) return false;
       } else {
+        // A refresh or realtime answer only ever concerns the open tournament. One for another tournament is a
+        // late answer for a tournament this device has since reset or left; adopting it would bring it back.
+        if (["realtime", "refresh"].includes(source)) return false;
         setPendingAdminSync(false);
         setPendingPlayerScores([]);
         persistSyncMetadata();
