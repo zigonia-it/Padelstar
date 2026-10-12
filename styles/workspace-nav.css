@@ -140,7 +140,7 @@ body[data-theme] .admin-subtabs {
     text-align: center;
   }
 
-  /* Five items (Lobby, Styring, Kamper, Tabell, TV) must fit a 375px phone without widening the page. */
+  /* Up to six items (Lobby, Spillere, Kamper, Tabell/Cup, Min side, TV on tablets) must fit without widening the page. */
   .workspace-bottom-tabs .workspace-rail-item > span {
     max-width: 100%;
     overflow: hidden;
@@ -179,5 +179,17 @@ body[data-theme] .admin-subtabs {
 @media not all and (min-width: 860px) {
   .workspace-rail-tv {
     display: none;
+  }
+}
+
+
+/* TV Mode is for tablets and computers only (1.3): phones (narrow, or a coarse pointer on a short landscape screen) get no
+   TV Mode entry anywhere. The same query guards the click handler in app/app.js (isPhoneScreen). */
+@media (max-width: 599.98px), (pointer: coarse) and (max-height: 499.98px) {
+  #tvModeMenuButton,
+  #tvModeRailButton,
+  #tvModeBottomButton,
+  [data-action="tv-mode"] {
+    display: none !important;
   }
 }

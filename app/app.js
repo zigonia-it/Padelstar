@@ -459,8 +459,6 @@ const podium = window.PadelstarPodium.create({
 });
 const lobby = window.PadelstarLobby.create({
   activateAdminPanel: (panel) => activateAdminPanel(panel),
-  createJoinLink: () => createJoinLink(),
-  createQrCodeUrl: (text) => createQrCodeUrl(text),
   elements,
   escapeHtml: (value) => escapeHtml(value),
   generateFullTournamentSchedule: () => generateFullTournamentSchedule(),
@@ -1175,7 +1173,7 @@ function bindBootstrapEvents() {
       openAccountAuth,
       toggleTvMode,
       toggleTvModeFromMenu: () => {
-        if (!hasActiveTournament()) return;
+        if (!hasActiveTournament() || isPhoneScreen()) return;
         toggleTvMode();
         window.PadelstarNavigation?.closeMenu();
       },
@@ -1268,7 +1266,6 @@ function bindGlobalEvents() {
       syncJoinPreview,
       togglePodiumFullStandings,
       startFromLobby,
-      skipLobby,
     },
   });
 }
@@ -1759,6 +1756,12 @@ function renderRoleVisibility() {
 }
 
 // TV Mode always opens in its own tab/window (the app stays where it is); it is read-only and needs no login.
+// TV Mode is for tablets and computers (1.3): a phone screen is too small for the board. Same query as styles/workspace-nav.css.
+const phoneScreenQuery = "(max-width: 599.98px), (pointer: coarse) and (max-height: 499.98px)";
+function isPhoneScreen() {
+  return Boolean(window.matchMedia?.(phoneScreenQuery).matches);
+}
+
 function openTvMode() {
   const inviteCode = state?.inviteCode ? `?spectate=${encodeURIComponent(state.inviteCode)}` : "";
   // No "noopener" feature here: with it window.open always returns null, which looked like a blocked pop-up and sent the
@@ -1867,6 +1870,7 @@ function renderMatches(matches) {
     filteredAdminMatches,
     t("tournament.noMatches"),
     (match) => createMatchCard(match, isEditableAdminMatch(match)),
+    { byStatus: true },
   );
   matchList.renderGroupedMatches(
     elements.playerMatches,
@@ -2145,10 +2149,6 @@ function goToNewTournamentFromPodium() {
 
 function startFromLobby() {
   return lobby.startFromLobby();
-}
-
-function skipLobby() {
-  return lobby.skipToWorkspace();
 }
 
 function updateCourtsFromInput(value) {

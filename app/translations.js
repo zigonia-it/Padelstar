@@ -2055,6 +2055,20 @@ Object.assign(padelstarTranslations.de, {"player.yourMatch": "Dein Match", "acti
 Object.assign(padelstarTranslations.fr, {"player.yourMatch": "Ton match", "actions.keepScore": "Compter les points", "common.live": "En direct", "score.tapForPoint": "Touchez pour un point", "nav.today": "Aujourd'hui", "player.tabsAria": "Tournoi"});
 Object.assign(padelstarTranslations.sv, {"player.yourMatch": "Din match", "actions.keepScore": "För poäng", "common.live": "Live", "score.tapForPoint": "Tryck för poäng", "nav.today": "I dag", "player.tabsAria": "Turnering"});
 Object.assign(padelstarTranslations.da, {"player.yourMatch": "Din kamp", "actions.keepScore": "Før point", "common.live": "Live", "score.tapForPoint": "Tryk for point", "nav.today": "I dag", "player.tabsAria": "Turnering"});
+// Four-item tournament menu (Lobby, Spillere, Kamper, Tabell/Cup), 2026-10-12
+for (const [language, values] of Object.entries({
+  nb: { "matches.current": "Nåværende kamper", "matches.currentOne": "Nåværende kamp", "matches.upcoming": "Neste kamper", "matches.nextUp": "Neste kamp", "admin.actionsTitle": "Handlinger", "nav.myView": "Min side" },
+  nn: { "matches.current": "Noverande kampar", "matches.currentOne": "Noverande kamp", "matches.upcoming": "Neste kampar", "matches.nextUp": "Neste kamp", "admin.actionsTitle": "Handlingar", "nav.myView": "Mi side" },
+  en: { "matches.current": "Current matches", "matches.currentOne": "Current match", "matches.upcoming": "Next matches", "matches.nextUp": "Next match", "admin.actionsTitle": "Actions", "nav.myView": "My view" },
+  es: { "matches.current": "Partidos actuales", "matches.currentOne": "Partido actual", "matches.upcoming": "Próximos partidos", "matches.nextUp": "Próximo partido", "admin.actionsTitle": "Acciones", "nav.myView": "Mi vista" },
+  de: { "matches.current": "Aktuelle Spiele", "matches.currentOne": "Aktuelles Spiel", "matches.upcoming": "Nächste Spiele", "matches.nextUp": "Nächstes Spiel", "admin.actionsTitle": "Aktionen", "nav.myView": "Meine Ansicht" },
+  fr: { "matches.current": "Matchs en cours", "matches.currentOne": "Match en cours", "matches.upcoming": "Prochains matchs", "matches.nextUp": "Prochain match", "admin.actionsTitle": "Actions", "nav.myView": "Ma vue" },
+  sv: { "matches.current": "Pågående matcher", "matches.currentOne": "Pågående match", "matches.upcoming": "Nästa matcher", "matches.nextUp": "Nästa match", "admin.actionsTitle": "Åtgärder", "nav.myView": "Min sida" },
+  da: { "matches.current": "Aktuelle kampe", "matches.currentOne": "Aktuel kamp", "matches.upcoming": "Næste kampe", "matches.nextUp": "Næste kamp", "admin.actionsTitle": "Handlinger", "nav.myView": "Min side" },
+})) {
+  Object.assign(padelstarTranslations[language], values);
+}
+
 window.PadelstarTranslations = padelstarTranslations;
 window.PadelstarI18n = {
   fallbackLanguage,

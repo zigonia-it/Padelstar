@@ -61,14 +61,9 @@
     document.querySelectorAll('[data-rail-target="player"]').forEach((button) => {
       button.classList.toggle("hidden", !showPlayerItem);
     });
-    // The lobby is the first panel of the admin workspace and stays there after the start.
-    document.querySelectorAll('[data-rail-target="lobby"]').forEach((button) => {
-      button.classList.toggle("hidden", !showRail);
-    });
-
     const playerSection = document.querySelector('[data-section="player"]');
     const isPlayerActive = Boolean(playerSection) && !playerSection.classList.contains("hidden");
-    const activeSubtab = document.querySelector(".subtab.active")?.dataset.adminPanel ?? "control";
+    const activeSubtab = document.querySelector(".subtab.active")?.dataset.adminPanel ?? "lobby";
     const activeTarget = isPlayerActive ? "player" : activeSubtab;
 
     document.querySelectorAll("[data-rail-target]").forEach((button) => {

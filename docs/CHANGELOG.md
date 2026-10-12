@@ -4,7 +4,7 @@
 
 Only verified completed changes belong here. Every work session that merges or pushes a change adds it under **Unreleased** (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). When the developer applies a version, the Unreleased entries move under that version's heading.
 
-Last updated: 2026-10-10.
+Last updated: 2026-10-12.
 
 ## Unreleased
 
@@ -17,6 +17,8 @@ Merged to `main` and deployed to padelstar.app after 1.0.0 (version still shown 
 - **Win moment** (PR #45): the winning point keeps the big score up for one beat (the winner's pad shows the final games and "Winner", the other pad steps back), the match card gets a ball-yellow sweep and its score ticks once. The podium lands 3rd, 2nd, then 1st.
 
 ### Changed
+- **The tournament menu is Lobby, Spillere, Kamper, Tabell/Cup** (developer's request 2026-10-12, sections 4 and 6.2; PR #56, merged 2026-10-12). The same four items are on the desktop rail, the phone tab bar and the sub-tabs; Styring is gone as a separate item. **Lobby** shows the tournament status (before the start: the "fill the list" headline and Start turnering; after it: the live overview), then Del turnering, Spillere (compact list, add and email invites), Regler (format, scoring, courts in use, court names) and Banekø, then the tournament actions (start/finish, backup, reset, admin access). The duplicate share and court blocks of the old pre-start lobby are removed. **Spillere** is the full player list with replace/withdraw/remove, now ordered by status: in a match now, up next on a court (with a "Neste kamp" chip), later, idle, withdrawn last. **Kamper** leads with "Nåværende kamp(er)", then "Neste kamper", then finished. **Tabell/Cup** is named after the format: Round Robin shows the table, Cup shows the bracket (moved here from Kamper) and no table; the player's own Tabell tab follows the same rule. Opening the admin view of a started tournament lands on Kamper, before the start on Lobby. The admin's own player view in the rail is labelled "Min side" so it is not confused with Spillere. Role checks are unchanged: the rail, tabs and admin panels show only for the tournament admin, routing still sends a non-admin to the player view, and the database permissions are untouched. Tests: `test/tournament-menu.test.js`, updated `test/lobby-setup.test.js`, `test/bugfix-0-9-1.test.js`, `test/pwa.test.js`.
+- **TV Mode is not offered on phones** (developer's request 2026-10-12, 1.3). The TV Mode entries (menu, rail, tab bar) are hidden below 600 px width, or on a touch screen shorter than 500 px (a phone held sideways), and the click handler ignores them there; tablets and computers keep them. The spectator link (which opens the TV page) still works anywhere.
 - **Timed matches start their clock from a button, not on the first point** (developer's request 2026-10-10; PR #49, merged 2026-10-10 with its migration applied to Supabase the same day). A timed match on court shows **Start klokken / Start clock** on the match card (admin) and on the player's own match (a player on the match: the active scorer, or anyone while there is none). **Start kamp** on a waiting match also starts the clock. Points can be scored before the clock is started; they no longer start it, and a match whose clock never started does not time out. Starting the clock locks the match's rule profile, and undo/redo keeps the clock running. Database: migration `20261010150000_match_clock_start_button.sql` (`save_player_point_impl` no longer sets `startedAt`; `admin_match_action` gains `start_clock` and `start` sets `startedAt`; `match_scorer_action` gains `start_clock`; `_scorer_restore` and `admin_undo_match_impl` keep `startedAt`). Tests: `test/match-timer.test.js`, `supabase/tests/match-clock-start.pglite.mjs` (18 checks).
 - **The big score paints the point first** (PR #42); the save and the full re-render follow after the frame (tap to number went from about 240 ms to 35 ms at 4x CPU slowdown).
 - The create and join intros are the captions of their photo cards, also on phones.
@@ -24,6 +26,7 @@ Merged to `main` and deployed to padelstar.app after 1.0.0 (version still shown 
 - "Gi tilbakemelding" is only in the footer (it was doubled in the top menu).
 
 ### Fixed
+- **Notification center spacing** (developer's report 2026-10-12, 1.2): notices are cards instead of pills, so the unread stripe, title, text and time line up; the head and the "Marker alle som lest" footer are separated by hairlines with even spacing for one or many notices.
 - **The 512 px app icon was missing** (PR #43): `assets/icons/padelstar-512.png` was gitignored, so the service worker's precache failed and the app had no offline shell. Cache name bumped.
 - Opening the language picker no longer pushes the desktop menu about 100 px to the left.
 - The System menu link sat 13 px too high; it is centred like the other menu items.

@@ -4,12 +4,12 @@
 
 Padelstar is a multi-device padel tournament application/PWA for creating, running, scoring and displaying tournaments.
 
-Last updated: 2026-10-10.
+Last updated: 2026-10-12.
 
 ## Current state
 
 - **Version 1.0.0** is live on https://padelstar.app (Vercel, deployed from `main`; Supabase project `sxzlljxodorkfrjnwfgr` in the EU). Released 2026-10-05 with the Padelstar 1.0 redesign.
-- Merged after 1.0.0, not yet versioned: the motion system and win moment (PR #42, #45) and the missing 512 px icon (PR #43). See `docs/CHANGELOG.md` "Unreleased".
+- Merged after 1.0.0, not yet versioned: the motion system and win moment (PR #42, #45), the missing 512 px icon (PR #43) and the tournament menu Lobby/Spillere/Kamper/Tabell-Cup with TV Mode off phones (PR #56, 2026-10-12). See `docs/CHANGELOG.md` "Unreleased".
 - Open pull requests: **#44** large Round Robin can be created (the 2 MB server limit it needs is already live); #49 (timed-match start clock button, with its migration) and #46 (League v2.0 plan and `docs/MASTER-ROADMAP.md`) are merged.
 - Live modes: Round Robin and Cup. Scoring: Tennis (padel) and Points modes on the generic scoring engine.
 - Current stage of the plan: **1.0.x, stabilise** (master roadmap §1): live verification on real devices, the open bugs in `docs/BUGS.md`, the privacy sign-off, motion step 3.
@@ -82,12 +82,12 @@ One active scorer per match, point by point, approved by the teams (details belo
 - **Corrections after the finish**: the admin can still correct a finished result (not in a cancelled tournament); the account statistics follow the corrected result. A Cup result that later matches depend on stays blocked.
 - **Invitations by email**: the invitation is saved in the app first, then emailed from `invitations@padelstar.app` (join link and code). The invited person also sees it under Profil after signing in with that verified address.
 - **System owner**: `admin.html` has Oversikt, Turneringer (search, filter, paging), Brukere (search, block, unblock, delete; never the owner), Logg (sign-ups, tournaments created/finished/deleted, the owner's own actions; ids only, 90 days) and Vedlikehold (cleanup jobs). Everything else the owner could do with other people's tournaments is deliberately not built (privacy).
-- **TV Mode** works on desktop and phone (button in the rail and the phone tab bar; the page stacks on a phone) and has the Lys/Mørk switch.
+- **TV Mode** is offered on tablets and computers only (developer's decision 2026-10-12): the entries are hidden on phones (under 600 px wide, or a short touch screen). The TV page itself still stacks on a phone when opened from the spectator link, and has the Lys/Mørk switch.
 - **Privacy text** ends with a section naming the services used (Supabase in the EU, Vercel, Resend, jsDelivr, flagcdn.com, Cloudflare Turnstile, quickchart.io).
 - **Design (1.0.0)**: the Padelstar 1.0 redesign from the Claude Design system: one token set (`styles/tokens.css`), two themes (Daylight and Floodlight); the choice is saved, the device decides only on the first visit. No colour literals in components. Players have no colour or avatar (names in plain ink). The version shows in a pill beside the logo.
 - **Motion**: motion tokens and `docs/technical/motion.md`; the menu highlight slides, pages fly in, a win moment on the winning point, the podium lands 3rd, 2nd, 1st. "Reduce motion" removes movement.
 - **Round Robin rounds advance by themselves** (0.17.3): when the last match of a round is finished or cancelled, the next round starts in the same database write.
-- **One screen for lobby, Styring, Kamper and Tabell** (0.12.0): the lobby is the first panel of the workspace, reached from the side rail, the phone tab bar and the sub-tabs.
+- **Tournament menu: Lobby, Spillere, Kamper, Tabell/Cup** (developer's decision 2026-10-12, replaces the 0.12 Lobby/Styring/Kamper/Tabell menu). Lobby = status, Del turnering, Spillere, Regler, Banekø, then the tournament actions. Spillere = the full list ordered by match status. Kamper = current matches first, then the next ones. The fourth item is Tabell for Round Robin and Cup (bracket only) for Cup. A started tournament opens on Kamper. The menu is admin-only; players keep their own I dag / Kamper / Tabell-Cup tabs, and admin rights are enforced in the database as before.
 - **Withdrawal in a Cup** (0.13.0): the same conditions as in a Round Robin; a fully withdrawn team = walkover; both sides of a match withdrawn = the best-placed losing team takes the place after the admin confirms.
 - **Sign-up check**: a Cloudflare Turnstile "I'm not a robot" dialog before sign-up, sign-in and the admin sign-in link (enforced by Supabase).
 - **Two-factor for System** (0.14.0): the owner needs a code from an authenticator app (TOTP) on top of signing in; every owner function checks it in the database.
