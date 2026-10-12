@@ -281,3 +281,43 @@ test("the log is fetched a page at a time with its filter", async () => {
   assert.match(html, /data-tab="log"/);
   assert.match(html, /data-search-form="log"/);
 });
+
+test("a tournament can be deleted from the list: the question shows name, code, status, owner and date, and the database is asked", async () => {
+  const row = { id: "t<1>", invite_code: "NFZYLWZP", name: "Mandagspadel <21/9>", status: "Avsluttet", format: "roundRobin", players: 4, rounds: 3, account_owned: true, owner_email: "a@b.no", created_at: "2026-09-17T10:00:00Z", updated_at: "2026-09-18T10:00:00Z" };
+  const html = admin.renderTournamentList({ total: 1, limit: 25, offset: 0, rows: [row] }, t);
+  assert.match(html, /data-tournament-action="delete" data-tournament-id="t&lt;1&gt;"/);
+  assert.match(html, /data-label="Kode">NFZYLWZP</);
+  assert.match(html, />a@b\.no</, "the owner's e-mail is shown");
+
+  const handlers = {}; const calls = []; const confirms = [];
+  const targets = { tournaments: { innerHTML: "", inserted: "", setAttribute() {}, removeAttribute() {}, insertAdjacentHTML(_where, markup) { this.inserted += markup; } } };
+  const content = { addEventListener: (type, fn) => { handlers[type] = fn; }, querySelector: (s) => targets[s.match(/data-results="(\w+)"/)?.[1]] ?? null, querySelectorAll: () => [] };
+  let failNext = false;
+  const rpc = async (name, args) => { calls.push([name, args]); if (failNext && name === "admin_delete_tournament") return { data: null, error: new Error("Not authorized") }; return { data: { total: 0, rows: [] }, error: null }; };
+  let answer = false;
+  admin.bindPanels({ content, client: { rpc }, t, locale: "nb-NO", confirmAction: (message) => { confirms.push(message); return answer; } });
+  const dataset = { tournamentAction: "delete", tournamentId: "t1", tournamentName: "Mandagspadel 21/9", tournamentCode: "NFZYLWZP", tournamentStatus: "Avsluttet", tournamentFormat: "Round Robin", tournamentPlayers: "4", tournamentCreated: "17.09.2026", tournamentOwner: "a@b.no" };
+  const button = { dataset, disabled: false };
+  const click = () => handlers.click({ target: { closest: (s) => (s === "[data-tournament-action]" ? button : null) } });
+
+  click(); await new Promise((resolve) => setImmediate(resolve));
+  assert.match(confirms.at(-1), /Mandagspadel 21\/9[\s\S]*NFZYLWZP[\s\S]*Avsluttet[\s\S]*a@b\.no[\s\S]*kan ikke angres/);
+  assert.equal(calls.length, 0, "declining sends nothing");
+  answer = true;
+  click(); await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(JSON.parse(JSON.stringify(calls[0])), ["admin_delete_tournament", { p_tournament_id: "t1" }]);
+  assert.equal(calls[1][0], "admin_list_tournaments", "the list is reloaded");
+  assert.match(targets.tournaments.inserted, /er slettet/);
+  failNext = true; calls.length = 0;
+  click(); await new Promise((resolve) => setImmediate(resolve));
+  assert.match(targets.tournaments.inserted, /kunne ikke gjennomføres/);
+  assert.equal(button.disabled, false, "a refused delete can be tried again");
+});
+
+test("the delete-tournament migration is owner-only, keeps profile statistics by default and lists code and owner", () => {
+  const sql = read("supabase", "migrations", "20261012090000_admin_delete_tournament.sql");
+  assert.match(sql, /function public\.admin_delete_tournament\(p_tournament_id uuid, p_remove_history boolean default false\)[\s\S]*if not public\.is_system_owner\(\) then\s+raise exception 'Not authorized'/);
+  assert.match(sql, /if coalesce\(p_remove_history, false\) then[\s\S]*account_tournament_statistics/);
+  assert.match(sql, /revoke execute on function public\.admin_delete_tournament\(uuid, boolean\) from public, anon;/);
+  assert.match(sql, /t\.invite_code,[\s\S]*u\.email as owner_email/);
+});

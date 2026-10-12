@@ -2,7 +2,7 @@
   function create({ elements, translate }) {
     let toastTimer = null;
 
-    function requestConfirmation(message, title = translate("common.confirmAction")) {
+    function requestConfirmation(message, title = translate("common.confirmAction"), acceptLabel = translate("common.confirm")) {
       const dialog = elements.confirmDialog;
       if (!dialog || typeof dialog.showModal !== "function") {
         return Promise.resolve(typeof global.confirm === "function" ? global.confirm(message) : true);
@@ -11,7 +11,7 @@
       elements.confirmTitle.textContent = title;
       elements.confirmMessage.textContent = message;
       elements.confirmCancel.textContent = translate("actions.close");
-      elements.confirmAccept.textContent = translate("common.confirm");
+      elements.confirmAccept.textContent = acceptLabel;
       dialog.returnValue = "cancel";
       dialog.showModal();
       elements.confirmAccept.focus();

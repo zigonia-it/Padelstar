@@ -1,4 +1,4 @@
-const cacheName = "padelstar-v382";
+const cacheName = "padelstar-v383";
 
 const appShell = [
   "./",
@@ -37,7 +37,7 @@ const appShell = [
   "./styles/privacy.css?v=padelstar-privacy-8",
   "./styles/redesign.css?v=padelstar-redesign-5",
   "./styles/motion.css?v=padelstar-motion-2",
-  "./app/translations.js?v=padelstar-i18n-71",
+  "./app/translations.js?v=padelstar-i18n-72",
   "./app/i18n-ui.js?v=padelstar-i18n-ui-6",
   "./app/storage.js?v=padelstar-storage-1",
   "./app/tournament-library.js?v=padelstar-tournament-library-3",
@@ -107,14 +107,14 @@ const appShell = [
   "./app/pwa-install.js?v=padelstar-pwa-install-3",
   "./app/accent-system.js?v=padelstar-accent-system-2",
   "./app/player-visuals.js?v=padelstar-player-visuals-3",
-  "./app/ui-feedback.js?v=padelstar-ui-feedback-2",
+  "./app/ui-feedback.js?v=padelstar-ui-feedback-3",
   "./app/notification-system.js?v=padelstar-notification-system-3",
   "./app/color-mode.js?v=padelstar-color-mode-3",
   "./app/notification-center.js?v=padelstar-notification-center-9",
   "./app/push-preferences.js?v=padelstar-push-preferences-1",
   "./app/expiry-notice.js?v=padelstar-expiry-notice-1",
   "./app/notification-center-ui.js?v=padelstar-notification-center-9",
-  "./app/system-admin.js?v=padelstar-system-admin-4",
+  "./app/system-admin.js?v=padelstar-system-admin-5",
   "./app/system-two-factor.js?v=padelstar-system-two-factor-1",
   "./app/invitations.js?v=padelstar-invitations-2",
   "./styles/system-admin.css?v=padelstar-system-admin-5",
@@ -161,9 +161,9 @@ const appShell = [
   "./app/player-tabs.js?v=padelstar-player-tabs-1",
   "./app/accent-picker.js?v=padelstar-accent-picker-1",
   "./app/admin-form-events.js?v=padelstar-admin-form-events-9",
-  "./app/match-actions.js?v=padelstar-match-actions-5",
+  "./app/match-actions.js?v=padelstar-match-actions-6",
   "./app/initial-view.js?v=padelstar-initial-view-3",
-  "./app/app.js?v=padelstar-session-96",
+  "./app/app.js?v=padelstar-session-97",
   "./supabase-config.js",
   "./manifest.webmanifest",
   "./assets/icons/padelstar-192.png",
