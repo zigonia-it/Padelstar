@@ -1,16 +1,34 @@
 window.PadelstarCupBracket = (() => {
   function create({ document, elements, escapeHtml, getMatchById, getState, matchStateText, t }) {
-    function renderCupBracket() {
-      if (!elements.cupBracket) return;
-      const state = getState();
-      const bracket = state.settings.format === "cup" ? state.cup?.bracket : null;
-      elements.cupBracket.classList.toggle("hidden", !bracket?.rounds?.length);
-      if (!bracket?.rounds?.length) {
-        elements.cupBracket.innerHTML = "";
-        return;
-      }
+    // The fourth menu item is "Tabell" for Round Robin and "Cup" for Cup (4.5): a cup shows its bracket and no table.
+    function syncStandingsOrBracket(isCup) {
+      const key = isCup ? "admin.cupFormat" : "common.standings";
+      document.querySelectorAll?.("[data-standings-label]").forEach((label) => {
+        if (label.dataset.i18n === key) return;
+        label.dataset.i18n = key;
+        label.textContent = t(key);
+      });
+      elements.ownerStandingsList?.classList.toggle("hidden", isCup);
+      elements.playerStandingsList?.classList.toggle("hidden", isCup);
+    }
 
-      elements.cupBracket.innerHTML = `
+    function renderCupBracket() {
+      const state = getState();
+      const isCup = state.settings.format === "cup";
+      syncStandingsOrBracket(isCup);
+      const bracket = isCup ? state.cup?.bracket : null;
+      const markup = bracket?.rounds?.length ? bracketMarkup(bracket) : "";
+      // before the draw a cup has no bracket yet: say so instead of showing an empty page
+      const placeholder = isCup && !markup ? `<p class="hint">${t("cup.waitingForMatch")}</p>` : "";
+      [elements.cupBracket, elements.playerCupBracket].forEach((container) => {
+        if (!container) return;
+        container.classList.toggle("hidden", !isCup);
+        container.innerHTML = markup || placeholder;
+      });
+    }
+
+    function bracketMarkup(bracket) {
+      return `
     <div class="panel-heading">
       <h3>${t("cup.bracket")}</h3>
       <span>${t("cup.teamSlots", { count: bracket.bracketSize })}</span>

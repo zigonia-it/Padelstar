@@ -7,18 +7,20 @@ const vm = require("node:vm");
 const root = path.join(__dirname, "..");
 const read = (...parts) => fs.readFileSync(path.join(root, ...parts), "utf8");
 
-test("the lobby has its own add-players and court forms, wired to the same handlers as the Styring tab", () => {
+test("the lobby tab holds Del turnering, Spillere, Regler and Banekø in that order, with one court form (4.2)", () => {
   const html = read("index.html");
-  const lobby = html.slice(html.indexOf('id="lobbyPanel"'), html.indexOf('data-admin-panel-section="control"', html.indexOf('id="lobbyPanel"')));
-  assert.match(lobby, /id="lobbyAddPlayerForm"[\s\S]*name="playerName"/);
-  assert.match(lobby, /id="lobbyCourtNamesForm"[\s\S]*name="courtCount"[\s\S]*id="lobbyCourtNamesList"/);
+  const admin = html.slice(html.indexOf('data-section="admin"'), html.indexOf('data-section="player"'));
+  const order = ['id="lobbyPanel"', 'id="shareTournamentButton"', 'id="lobbyAddPlayerForm"', 'id="tournamentSettingsForm"', 'id="courtNamesForm"', 'id="courtQueue"', 'id="resetTournamentButton"'];
+  order.reduce((previous, marker) => {
+    const index = admin.indexOf(marker);
+    assert.ok(index > previous, `${marker} comes after the module before it`);
+    return index;
+  }, -1);
+  assert.doesNotMatch(html, /id="lobbyCourtNamesForm"|id="lobbySkipButton"|id="lobbyInviteCode"/, "no duplicate share or court blocks");
   const events = read("app", "admin-form-events.js");
   assert.match(events, /elements\.addPlayerForm\?\.addEventListener\("submit", submitAddPlayers\)/);
   assert.match(events, /elements\.lobbyAddPlayerForm\?\.addEventListener\("submit", submitAddPlayers\)/);
   assert.match(events, /elements\.courtNamesForm\?\.addEventListener\("submit", submitCourtNames\)/);
-  assert.match(events, /elements\.lobbyCourtNamesForm\?\.addEventListener\("submit", submitCourtNames\)/);
-  const refs = read("app", "bootstrap", "dom-elements.js");
-  for (const id of ["lobbyAddPlayerForm", "lobbyCourtNamesForm", "lobbyCourtNamesList"]) assert.match(refs, new RegExp(`${id}: document\\.querySelector`));
 });
 
 function listElement(active = false) {
@@ -33,20 +35,18 @@ function courtSettings(elements, state, activeElement = null) {
   return context.PadelstarCourtSettings.create({ elements, getState: () => state, translate: (k) => (k === "common.court" ? "Bane" : k), escapeAttribute: String, escapeHtml: String });
 }
 
-test("court names render in both the Styring tab and the lobby, with the same lock", () => {
+test("court names render in the lobby's rules module and lock once the tournament has started", () => {
   const form = () => ({ elements: { courtCount: { disabled: false, value: "" } }, querySelector: () => ({ disabled: false }) });
-  const elements = { courtNamesList: listElement(), courtNamesForm: form(), lobbyCourtNamesList: listElement(), lobbyCourtNamesForm: form() };
+  const elements = { courtNamesList: listElement(), courtNamesForm: form() };
   const state = { rounds: [], status: "Klar", courts: [{ courtNumber: 1, name: "Center" }, { courtNumber: 2, name: "" }] };
   courtSettings(elements, state).renderCourtNames();
-  for (const list of [elements.courtNamesList, elements.lobbyCourtNamesList]) {
-    assert.equal((list.innerHTML.match(/name="courtName"/g) ?? []).length, 2);
-    assert.match(list.innerHTML, /value="Center"/);
-    assert.doesNotMatch(list.innerHTML, /disabled/);
-  }
-  assert.equal(elements.lobbyCourtNamesForm.elements.courtCount.value, "2", "the count follows the tournament");
+  assert.equal((elements.courtNamesList.innerHTML.match(/name="courtName"/g) ?? []).length, 2);
+  assert.match(elements.courtNamesList.innerHTML, /value="Center"/);
+  assert.doesNotMatch(elements.courtNamesList.innerHTML, /disabled/);
+  assert.equal(elements.courtNamesForm.elements.courtCount.value, "2", "the count follows the tournament");
   state.rounds = [{}];
   courtSettings(elements, state).renderCourtNames();
-  assert.match(elements.lobbyCourtNamesList.innerHTML, /disabled/, "locked once the tournament has started, also in the lobby");
+  assert.match(elements.courtNamesList.innerHTML, /disabled/, "locked once the tournament has started");
 });
 
 test("typing in a court name is not overwritten by a re-render", () => {

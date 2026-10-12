@@ -38,7 +38,8 @@ window.PadelstarPlayerList = (() => {
         elements.playersList.append(item);
         return;
       }
-      state.players.forEach((player) => {
+      const statusRank = playerStatusRanks(state);
+      sortedByStatus(state.players, statusRank).forEach((player) => {
         const entry = standings.find((item) => item.player.id === player.id);
         const replacedBy = player.replacedBy ? state.players.find((item) => item.id === player.replacedBy) : null;
         const replaces = player.replacedPlayerId ? state.players.find((item) => item.id === player.replacedPlayerId) : null;
@@ -53,6 +54,7 @@ window.PadelstarPlayerList = (() => {
         ${avatarMarkup(player, "avatar", 34)}
         <span class="player-name-badge">${escapeHtml(player.name)}</span>
         <small class="join-source-chip">${playerStatusLabel(player)}</small>
+        ${statusRank.get(player.id) === 1 ? `<small class="join-source-chip next-match-chip">${t("matches.nextUp")}</small>` : ""}
         ${replacedBy ? `<small class="join-source-chip replacement-chip">${t("players.replacedBy", { name: escapeHtml(replacedBy.name) })}</small>` : ""}
         ${replaces && isActive ? `<small class="join-source-chip replacement-chip">${t("players.replaces", { name: escapeHtml(replaces.name) })}</small>` : ""}
         ${isWithdrawn ? `<small class="join-source-chip withdrawn-chip">${t("players.withdrawn")}</small>` : ""}
@@ -106,6 +108,34 @@ window.PadelstarPlayerList = (() => {
         });
         elements.playersList.append(item);
       });
+    }
+
+    // Spillere (4.3): players in a match now come first, then the ones up next on a court, then the rest in their
+    // usual order; withdrawn and replaced players go last. Ranks: 0 playing, 1 next up, 2 later, 3 idle, 4 out.
+    function playerStatusRanks(state) {
+      const matches = getAllMatches();
+      const includes = (match, playerId) => [match.teamOne, match.teamTwo].some((team) => team?.players?.some((item) => item.id === playerId));
+      const waiting = matches
+        .filter((match) => match.state === "waiting")
+        .sort((first, second) => (first.queuePosition ?? Number.MAX_SAFE_INTEGER) - (second.queuePosition ?? Number.MAX_SAFE_INTEGER));
+      const nextUp = waiting.slice(0, Math.max(state.courts?.length ?? 1, 1));
+      const ranks = new Map();
+      state.players.forEach((player) => {
+        let rank = 3;
+        if (player.active === false || (player.withdrawn && !player.replacedBy) || player.replacedBy) rank = 4;
+        else if (matches.some((match) => ["playing", "awaitingApproval"].includes(match.state) && includes(match, player.id))) rank = 0;
+        else if (nextUp.some((match) => includes(match, player.id))) rank = 1;
+        else if (waiting.some((match) => includes(match, player.id))) rank = 2;
+        ranks.set(player.id, rank);
+      });
+      return ranks;
+    }
+
+    function sortedByStatus(players, ranks) {
+      return players
+        .map((player, index) => ({ player, index }))
+        .sort((first, second) => (ranks.get(first.player.id) - ranks.get(second.player.id)) || (first.index - second.index))
+        .map((item) => item.player);
     }
 
     function renderExistingPlayerList() {

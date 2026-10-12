@@ -11,8 +11,8 @@ configured or reachable the user gets a ready-made email draft instead.
 3. In Vercel: **Project -> Settings -> Environment Variables**, add for *Production* (and Preview if you want to test there):
    - `RESEND_API_KEY` = the key from step 2
    - `FEEDBACK_TO_EMAIL` = your email address (the one you signed up to Resend with)
-   - `FEEDBACK_FROM` (optional) = e.g. `Padelstar <feedback@yourdomain.com>` once you have verified a domain in Resend.
-     Without it the free `onboarding@resend.dev` sender is used, which Resend only delivers to the address you signed up with.
+   - `FEEDBACK_FROM` (optional). Without it the sender is `Padelstar Feedback <feedback@padelstar.app>` (padelstar.app is
+     verified in Resend, so it delivers to any address). Set it only to another address on a verified domain.
 4. Redeploy (Vercel only reads new variables on a new deployment).
 5. Test: open the deployed site, "Gi tilbakemelding", send a message, and check your inbox (and spam).
 

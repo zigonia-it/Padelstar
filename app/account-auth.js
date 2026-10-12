@@ -1,6 +1,12 @@
 (function initializeAccountAuth(global) {
   "use strict";
 
+  // Auth answers that mean the server no longer accepts this session.
+  const SESSION_ENDED_CODES = new Set(["user_banned", "session_not_found", "user_not_found"]);
+  function endedByServer(error) {
+    return Boolean(error) && SESSION_ENDED_CODES.has(error.code);
+  }
+
   function create({ getClient, getElements, getProfile, onProfileLoaded, translate, onAuthChange, captcha }) {
     let user = null;
 
@@ -18,6 +24,12 @@
       try {
         const result = await client.auth.getUser();
         user = result.data?.user ?? null;
+        // The server ended this session (the account was blocked or deleted, or signed out everywhere): drop the stored
+        // session too, so the app does not keep sending a token the API refuses, and carries on as a guest.
+        if (!user && endedByServer(result.error)) {
+          try { await client.auth.signOut({ scope: "local" }); } catch { /* the local session is dropped either way */ }
+          notice(translate(result.error.code === "user_banned" ? "account.authBlocked" : "account.authSessionEnded"), true);
+        }
       } catch { user = null; }
       if (user) await loadRemoteProfile(user);
       render();
@@ -95,7 +107,7 @@
           submitButton.textContent = previousLabel;
         }
       }
-      if (error) { notice(translate("account.authFailed"), true); return false; }
+      if (error) { notice(translate(error.code === "user_banned" ? "account.authBlocked" : "account.authFailed"), true); return false; }
       user = data.user;
       await ensureRemoteProfile(user);
       await loadRemoteProfile(user);

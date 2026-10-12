@@ -2,7 +2,7 @@
 
 # Padelstar – Active Bugs
 
-Last updated: 2026-10-05 (version 1.0.0 on padelstar.app).
+Last updated: 2026-10-12 (version 1.0.0 on padelstar.app).
 
 Only **active** defects and known limitations are listed here. When a bug is fixed, delete it from this file and describe the fix in `docs/CHANGELOG.md` (that is the record). Every work session adds new bugs it finds and removes the ones it fixed (see "Documentation system" in `CLAUDE.md` / `AGENTS.md`). Everything found and fixed up to 2026-09-19 (account creation, tournament start, results, persistence, completion, Cup, guest claiming, realtime, undo, PWA icons, ...) is in `docs/archive/bugs-resolved-2026-09.md` (not authoritative).
 
@@ -15,9 +15,12 @@ A bug is complete only when it was reproduced or clearly verified, the smallest 
 - [ ] **A Round Robin with many players cannot be created** (found 2026-10-05). With 40 players the plan was about 10 MB, so creating failed silently (browser storage full) and starting would have passed the server's state limit. Fix in **PR #44** (`fix/create-large-tournament`, open): above 8 players each team plays one match per rotation against a neighbouring team, and the saved schedule refers to players by id. The server half is already live: migration `20261005153000_tournament_state_2mb.sql` raised the state limit to 2 MB on the production database. Until #44 is merged, `main` and padelstar.app still have the bug.
 - [ ] **Claiming a name already on the roster does not raise the revision** (found 0.17.1), so the admin's next save overwrites the claimed player's `userId`/`guest` markers in the state. Access is unaffected (the account link lives in `tournament_account_players`). To be fixed server-side.
 - [ ] **Unconfirmed, not reproduced (2026-09-26):** on padelstar.app, right after a page reload, clicking "Fullfør turnering" and confirming from a script closed the dialog but the tournament stayed `Runde pågår` on the client and the server; the same steps with real clicks a minute later finished it normally. Possibly the admin session was not yet restored after the reload. If a person sees "finish does nothing" after a reload, note the exact steps here.
+- [ ] **The Regler form's checkbox rows are laid out wrong** (found 2026-10-12 by `scripts/ui-audit.js`, also on `main` before the menu change): "Tiebreak ved lik stilling" shows a full-width checkbox with its label below, and the audit reports it overlapping the next fields. Cosmetic; the setting works.
 - [ ] **Editor formatting breaks tests**: a code formatter that reformats `index.html` on save changes the exact markup that some tests check (found 2026-09-20). Turn format-on-save off for that file; if `git diff index.html` is huge, restore the file and re-apply only the intended change.
 
 ## Known limitations (decided or accepted, not bugs to fix now)
+
+- **A blocked account can still use Padelstar as a guest** (2026-10-12): blocking stops the account, not the person. They can join tournaments without an account and keep admin links for tournaments stored on their own device. To stop a specific tournament, delete it (tournament deletion in System is being built separately).
 
 - Two players with exactly the same name cannot be told apart by the claim flow; only the first match in the roster is reachable. Names are the only key the claim flow has.
 - When players on **both** teams of one Round Robin match have withdrawn, the match is cancelled (no rule was given for it). In a Cup a cancelled match makes the best-placed losing team take the place (0.13.0).
