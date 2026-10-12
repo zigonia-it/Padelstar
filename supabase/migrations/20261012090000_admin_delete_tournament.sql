@@ -3,9 +3,10 @@
 -- admin_delete_tournament: only the system owner (is_system_owner(), which requires aal2). Deleting the tournaments row
 -- cascades to its live data (player_sessions, tournament_account_players, tournament_invitations, push_subscriptions,
 -- match_scorer_heartbeats), and the existing tournaments_log_* trigger writes "tournament_deleted" to the system log.
--- Account statistics, profile history and finalization receipts have no foreign key and are kept by default, exactly like
--- the automatic retention cleanup does. p_remove_history = true also removes those rows for this tournament (used for test
--- data). Devices that still have the tournament open find it missing on their next server call or refresh and leave it.
+-- The delete guard (guard_tournament_history_deletion) needs a finalization receipt, so a tournament that was never
+-- finalized gets a 'cancelled' receipt first, exactly like cleanup_stale_guest_tournaments does; the receipt stays as the
+-- tombstone. Account statistics and profile history have no foreign key and are kept by default, like the automatic
+-- retention cleanup does. p_remove_history = true also removes those rows for this tournament (used for test data). Devices that still have the tournament open find it missing on their next server call or refresh and leave it.
 --
 -- admin_list_tournaments now also returns the invite code and the owner's e-mail, so the admin can check that the right
 -- tournament is chosen, and the search matches the invite code as well as the name.
@@ -20,7 +21,6 @@ declare
   target public.tournaments%rowtype;
   stats_removed integer := 0;
   history_removed integer := 0;
-  receipts_removed integer := 0;
 begin
   if not public.is_system_owner() then
     raise exception 'Not authorized';
@@ -35,9 +35,13 @@ begin
     get diagnostics stats_removed = row_count;
     delete from public.player_profile_history where tournament_id::text = p_tournament_id::text;
     get diagnostics history_removed = row_count;
-    delete from public.tournament_finalization_receipts where tournament_id::text = p_tournament_id::text;
-    get diagnostics receipts_removed = row_count;
   end if;
+
+  insert into public.tournament_finalization_receipts
+    (tournament_id, admin_token_hash, outcome, revision, deleted, finalized_at)
+  values
+    (target.id, encode(extensions.digest(target.admin_token, 'sha256'), 'hex'), 'cancelled', target.revision, true, now())
+  on conflict do nothing;
 
   delete from public.tournaments where id = p_tournament_id;
 
@@ -46,8 +50,7 @@ begin
     'deleted', true,
     'inviteCode', target.invite_code,
     'statisticsRemoved', stats_removed,
-    'historyRemoved', history_removed,
-    'receiptsRemoved', receipts_removed
+    'historyRemoved', history_removed
   );
 end
 $function$;

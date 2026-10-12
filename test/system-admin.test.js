@@ -318,6 +318,8 @@ test("the delete-tournament migration is owner-only, keeps profile statistics by
   const sql = read("supabase", "migrations", "20261012090000_admin_delete_tournament.sql");
   assert.match(sql, /function public\.admin_delete_tournament\(p_tournament_id uuid, p_remove_history boolean default false\)[\s\S]*if not public\.is_system_owner\(\) then\s+raise exception 'Not authorized'/);
   assert.match(sql, /if coalesce\(p_remove_history, false\) then[\s\S]*account_tournament_statistics/);
+  assert.match(sql, /insert into public\.tournament_finalization_receipts[\s\S]*'cancelled'[\s\S]*on conflict do nothing;\s+delete from public\.tournaments/, "the delete guard needs a receipt first");
+  assert.doesNotMatch(sql, /delete from public\.tournament_finalization_receipts/, "the receipt stays as the tombstone");
   assert.match(sql, /revoke execute on function public\.admin_delete_tournament\(uuid, boolean\) from public, anon;/);
   assert.match(sql, /t\.invite_code,[\s\S]*u\.email as owner_email/);
 });
