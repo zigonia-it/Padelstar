@@ -11,7 +11,7 @@
       tournaments: "Turneringer", running: "Pågår", finished: "Avsluttet", expired: "Utløpt", accountOwned: "Med konto", profiles: "Profiler",
       colName: "Navn", colStatus: "Status", colPlayers: "Spillere", colOwner: "Konto", colCreated: "Opprettet", yes: "Ja", no: "Nei", none: "Ingen turneringer.",
       tabsLabel: "Administrasjon", tabOverview: "Oversikt", tabTournaments: "Turneringer", tabUsers: "Brukere", tabMaintenance: "Vedlikehold",
-      searchTournaments: "Søk på turneringsnavn", searchUsers: "Søk på e-post eller navn", search: "Søk", filterAll: "Alle", filterRunning: "Pågår", filterFinished: "Avsluttet", filterExpired: "Utløpt",
+      searchTournaments: "Søk på navn eller kode", searchUsers: "Søk på e-post eller navn", search: "Søk", filterAll: "Alle", filterRunning: "Pågår", filterFinished: "Avsluttet", filterExpired: "Utløpt",
       colRounds: "Runder", colFormat: "Format", colUpdated: "Sist endret", colEmail: "E-post", colConfirmed: "Bekreftet", colLastSignIn: "Sist innlogget", colOwned: "Eier", colPlayed: "Deltatt", colFinished: "Fullført",
       owner: "Systemeier", never: "Aldri", loading: "Laster …", noUsers: "Ingen brukere funnet.", noResults: "Ingen treff.", showing: "Viser {from}–{to} av {total}", previous: "Forrige", next: "Neste", refresh: "Oppdater",
       jobs: "Planlagte oppgaver", jobName: "Oppgave", jobSchedule: "Tidsplan", jobActive: "Aktiv", jobLastRun: "Siste kjøring", jobNever: "Ikke kjørt ennå", jobsNone: "Ingen planlagte oppgaver funnet.",
@@ -22,6 +22,9 @@
       confirmUnblock: "Fjerne blokkeringen av {email}?",
       confirmDelete: "Slette kontoen {email} for godt? Profil, statistikk og koblinger slettes. Turneringer kontoen eier blir værende uten eier. Dette kan ikke angres.",
       actionFailed: "Handlingen kunne ikke gjennomføres.", actionDone: "Ferdig.",
+      colCode: "Kode", deleteTournament: "Slett", guestOwner: "Gjest",
+      confirmDeleteTournament: "Slette turneringen «{name}» for godt?\n\nKode: {code}\nStatus: {status} · {format} · {players} spillere\nOpprettet: {created}\nEier: {owner}\n\nKampene, spillerkoblingene, invitasjonene og varslene for turneringen slettes. Statistikk som allerede er lagret på profiler, beholdes. Enheter som har turneringen åpen, mister den. Dette kan ikke angres.",
+      tournamentDeleted: "Turneringen «{name}» er slettet.",
       logAll: "Alt", logUsers: "Brukere", logTournaments: "Turneringer", colTime: "Tidspunkt", colEvent: "Hendelse", colSubject: "Gjelder", colDetail: "Detaljer", noLog: "Ingen hendelser ennå.",
       log_user_signed_up: "Ny bruker", log_user_blocked: "Bruker blokkert", log_user_unblocked: "Blokkering fjernet", log_user_deleted: "Bruker slettet",
       log_tournament_created: "Turnering opprettet", log_tournament_finished: "Turnering avsluttet", log_tournament_deleted: "Turnering slettet",
@@ -34,7 +37,7 @@
       tournaments: "Tournaments", running: "Running", finished: "Finished", expired: "Expired", accountOwned: "With account", profiles: "Profiles",
       colName: "Name", colStatus: "Status", colPlayers: "Players", colOwner: "Account", colCreated: "Created", yes: "Yes", no: "No", none: "No tournaments.",
       tabsLabel: "Administration", tabOverview: "Overview", tabTournaments: "Tournaments", tabUsers: "Users", tabMaintenance: "Maintenance",
-      searchTournaments: "Search tournament name", searchUsers: "Search e-mail or name", search: "Search", filterAll: "All", filterRunning: "Running", filterFinished: "Finished", filterExpired: "Expired",
+      searchTournaments: "Search name or code", searchUsers: "Search e-mail or name", search: "Search", filterAll: "All", filterRunning: "Running", filterFinished: "Finished", filterExpired: "Expired",
       colRounds: "Rounds", colFormat: "Format", colUpdated: "Last changed", colEmail: "E-mail", colConfirmed: "Confirmed", colLastSignIn: "Last sign-in", colOwned: "Owned", colPlayed: "Played", colFinished: "Finished",
       owner: "System owner", never: "Never", loading: "Loading …", noUsers: "No users found.", noResults: "No results.", showing: "Showing {from}–{to} of {total}", previous: "Previous", next: "Next", refresh: "Refresh",
       jobs: "Scheduled jobs", jobName: "Job", jobSchedule: "Schedule", jobActive: "Active", jobLastRun: "Last run", jobNever: "Not run yet", jobsNone: "No scheduled jobs found.",
@@ -45,6 +48,9 @@
       confirmUnblock: "Remove the block on {email}?",
       confirmDelete: "Delete the account {email} for good? Its profile, statistics and links are deleted. Tournaments the account owns stay without an owner. This cannot be undone.",
       actionFailed: "The action could not be completed.", actionDone: "Done.",
+      colCode: "Code", deleteTournament: "Delete", guestOwner: "Guest",
+      confirmDeleteTournament: "Delete the tournament \"{name}\" for good?\n\nCode: {code}\nStatus: {status} · {format} · {players} players\nCreated: {created}\nOwner: {owner}\n\nIts matches, player links, invitations and notifications are deleted. Statistics already saved on profiles are kept. Devices that have the tournament open lose it. This cannot be undone.",
+      tournamentDeleted: "The tournament \"{name}\" was deleted.",
       logAll: "All", logUsers: "Users", logTournaments: "Tournaments", colTime: "Time", colEvent: "Event", colSubject: "Concerns", colDetail: "Details", noLog: "No events yet.",
       log_user_signed_up: "New user", log_user_blocked: "User blocked", log_user_unblocked: "Block removed", log_user_deleted: "User deleted",
       log_tournament_created: "Tournament created", log_tournament_finished: "Tournament finished", log_tournament_deleted: "Tournament deleted",
@@ -95,19 +101,32 @@
       + `<button class="secondary" type="button" data-page="next"${offset + limit >= total ? " disabled" : ""}>${escapeHtml(t.next)}</button></span></div>`;
   }
 
+  // Delete carries what the confirmation shows, so the admin can check that it is the right tournament.
+  function tournamentActions(row, t, locale) {
+    const data = {
+      id: row.id, name: row.name || "—", code: row.invite_code || "—", status: row.status || "—",
+      format: t[`format_${row.format}`] ?? row.format ?? "—", players: row.players ?? 0,
+      created: formatDate(row.created_at, locale), owner: row.owner_email || (row.account_owned ? t.yes : t.guestOwner),
+    };
+    const attributes = Object.entries(data).map(([key, value]) => `data-tournament-${key}="${escapeHtml(value)}"`).join(" ");
+    return `<span class="system-admin-actions"><button class="ghost danger-button" type="button" data-tournament-action="delete" ${attributes}>${escapeHtml(t.deleteTournament)}</button></span>`;
+  }
+
   function renderTournamentList(data, t, locale = "nb-NO") {
     const rows = (data?.rows ?? []).map((row) => [
       escapeHtml(row.name || "—"),
+      escapeHtml(row.invite_code || "—"),
       escapeHtml(row.status || ""),
       escapeHtml(t[`format_${row.format}`] ?? row.format ?? ""),
       escapeHtml(row.players ?? 0),
       escapeHtml(row.rounds ?? 0),
-      escapeHtml(row.account_owned ? t.yes : t.no),
+      escapeHtml(row.owner_email || (row.account_owned ? t.yes : t.no)),
       escapeHtml(formatDate(row.created_at, locale)),
       escapeHtml(formatDate(row.updated_at, locale)),
+      tournamentActions(row, t, locale),
     ]);
     if (!rows.length) return `<p class="hint">${escapeHtml(t.noResults)}</p>`;
-    return table([t.colName, t.colStatus, t.colFormat, t.colPlayers, t.colRounds, t.colOwner, t.colCreated, t.colUpdated], rows) + renderPager(data, t);
+    return table([t.colName, t.colCode, t.colStatus, t.colFormat, t.colPlayers, t.colRounds, t.colOwner, t.colCreated, t.colUpdated, t.colActions], rows) + renderPager(data, t);
   }
 
   // The system owner is never offered block or delete (the database refuses them anyway).
@@ -245,11 +264,33 @@
       }
     }
 
+    // Delete a tournament: confirmed with its name, code, status, owner and creation date; the database checks the owner.
+    async function runTournamentAction(button) {
+      const data = button.dataset;
+      if (data.tournamentAction !== "delete" || !data.tournamentId) return;
+      const fill = (text) => text.replace(/\{(name|code|status|format|players|created|owner)\}/g, (_, key) => data[`tournament${key[0].toUpperCase()}${key.slice(1)}`] ?? "");
+      if (!confirmAction(fill(t.confirmDeleteTournament))) return;
+      const target = content.querySelector('[data-results="tournaments"]');
+      button.disabled = true;
+      try {
+        const { error } = await client.rpc("admin_delete_tournament", { p_tournament_id: data.tournamentId });
+        if (error) throw error;
+        loaded.delete("log");
+        await load("tournaments");
+        target?.insertAdjacentHTML?.("afterbegin", `<p class="hint" role="status">${escapeHtml(fill(t.tournamentDeleted))}</p>`);
+      } catch {
+        button.disabled = false;
+        if (target) target.insertAdjacentHTML?.("afterbegin", `<p class="hint" role="alert">${escapeHtml(t.actionFailed)}</p>`);
+      }
+    }
+
     content.addEventListener("click", (event) => {
       const tab = event.target.closest?.("[data-tab]");
       if (tab) { select(tab.dataset.tab); return; }
       const action = event.target.closest?.("[data-user-action]");
       if (action) { void runUserAction(action); return; }
+      const tournamentAction = event.target.closest?.("[data-tournament-action]");
+      if (tournamentAction) { void runTournamentAction(tournamentAction); return; }
       const page = event.target.closest?.("[data-page]");
       if (page && !page.disabled) {
         const panel = page.closest("[data-panel]")?.dataset.panel;

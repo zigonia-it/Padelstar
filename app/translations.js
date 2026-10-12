@@ -673,7 +673,9 @@ Object.assign(padelstarTranslations.nb, {
   "messages.finishMatchesBeforeNext": "Alle kamper må være ferdige før neste runde.",
   "messages.noUndo": "Det finnes ingen siste handling å angre for denne kampen.",
   "messages.cancelMatchConfirm": "Avbryte denne kampen? Den teller ikke i tabellen.",
-  "messages.walkoverConfirm": "Registrere walkover til {team}?",
+  "messages.walkoverTitle": "Registrere walkover til {team}?",
+  "messages.walkoverConfirm": "{team} blir da satt som vinner av denne kampen.",
+  "messages.walkoverAccept": "Sett {team} som vinner",
   "messages.invalidScoreInteger": "Resultatet må være hele tall.",
   "messages.invalidScoreNegative": "Resultatet kan ikke være negativt.",
   "messages.invalidScoreDraw": "Resultatet kan ikke være uavgjort.",
@@ -1429,7 +1431,9 @@ Object.assign(padelstarTranslations.en, {
   "messages.finishMatchesBeforeNext": "All matches must be finished before the next round.",
   "messages.noUndo": "There is no last action to undo for this match.",
   "messages.cancelMatchConfirm": "Cancel this match? It won't count in the standings.",
-  "messages.walkoverConfirm": "Register a walkover for {team}?",
+  "messages.walkoverTitle": "Register a walkover for {team}?",
+  "messages.walkoverConfirm": "{team} will then be set as the winner of this match.",
+  "messages.walkoverAccept": "Set {team} as winner",
   "admin.identityEmailRequired": "Enter the admin email address first.",
 });
 // Scorer role (Phase 10).

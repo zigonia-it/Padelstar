@@ -904,7 +904,7 @@ const matchActions = window.PadelstarMatchActions.create({
   queueRemoteMatchAction: (match, action, teamIndex) => queueRemoteMatchAction(match, action, teamIndex),
   render: () => render(),
   renderLargeScore: () => renderLargeScore(),
-  requestConfirmation: (message) => requestConfirmation(message),
+  requestConfirmation: (message, title, acceptLabel) => requestConfirmationWithTitle(message, title, acceptLabel),
   saveState: () => saveState(),
   showToast: (message, statusClass) => showToast(message, statusClass),
   t: (key, values) => t(key, values),
@@ -1552,7 +1552,7 @@ function setRemoteNotice(message) {
 }
 
 function requestConfirmation(message) { return uiFeedback.requestConfirmation(message); }
-function requestConfirmationWithTitle(message, title) { return uiFeedback.requestConfirmation(message, title); }
+function requestConfirmationWithTitle(message, title, acceptLabel) { return uiFeedback.requestConfirmation(message, title, acceptLabel); }
 function showToast(message, statusClass = "status-message-success") { return uiFeedback.showToast(message, statusClass); }
 
 function showRecoveryNotice() {

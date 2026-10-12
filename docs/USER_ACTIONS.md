@@ -7,6 +7,7 @@ Status: `[ ]` open, `[x]` done.
 
 ## 1. Decide or review now
 
+- [ ] **Review and merge the walkover / admin tournament delete PR** (branch `walkover-text-and-admin-delete`). Its migration is already applied to Supabase (2026-10-12). After merging, open System → Turneringer and check the new Kode and Konto columns.
 - [ ] **Review and merge PR #53** (blocked-account guard; its migration is live since 2026-10-12). Then, with a second test account: block it in System → Brukere while it is signed in on another device; on that device any action that needs the account fails at once and, after a reload, it shows "Du er logget ut fordi økten ble avsluttet"; signing in shows "Kontoen er sperret". Unblock and sign in again.
 - [ ] **Try the start clock on your phone** once it is live: create a Round Robin with "Tidsbegrenset kamp" set (e.g. 5 minutes), check that the + buttons and Før poeng are disabled, press Start klokken on the match card or on the player's own match, then score; check that the countdown runs on the card and on the TV board.
 - [ ] **Try "Nullstill turnering" on your phone** once the fix is live, on an account tournament: it must go back to Hjem and the tournament must not reappear under "Dine turneringer" after a reload. A copy that came back before the fix can be removed with Nullstill turnering too.
