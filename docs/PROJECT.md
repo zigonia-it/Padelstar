@@ -10,7 +10,7 @@ Last updated: 2026-10-12.
 
 - **Version 1.0.1** is live on https://padelstar.app (Vercel, deployed from `main`; Supabase project `sxzlljxodorkfrjnwfgr` in the EU). Released 2026-10-12: the bug-fix batch after 1.0.0 (released 2026-10-05 with the Padelstar 1.0 redesign). What it contains: `docs/CHANGELOG.md` "1.0.1".
 - Merged after 1.0.1, not yet versioned: nothing.
-- Open pull requests: #52 (plan for a Vite build in the master roadmap, waits for the developer's decision) and #51 (League step B, draft, release 2.0).
+- Open pull requests: the `.vercelignore` PR (smaller deployments, ready to merge), #52 (plan for a Vite build in the master roadmap, waits for the developer's decision) and #51 (League step B, draft, release 2.0).
 - Live modes: Round Robin and Cup. Scoring: Tennis (padel) and Points modes on the generic scoring engine.
 - Current stage of the plan: **1.0.x, stabilise** (master roadmap §1): live verification on real devices, the open bugs in `docs/BUGS.md`, the privacy sign-off, the rest of motion step 3 (dialogs/sheets, TV live pulse).
 - What the developer must do or decide: `docs/USER_ACTIONS.md`.
