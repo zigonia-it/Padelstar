@@ -8,6 +8,9 @@ Last updated: 2026-10-12.
 
 ## Unreleased
 
+### Changed
+- **New app icon and light-surface logo** (developer's request 2026-10-12). The glossy tennis-ball icon the developer uploaded (`assets/icons/Glanset tennisballikon.png`) replaces the old flat ball everywhere the app or browser shows an icon: `favicon-64.png` (tab icon on every page), a new root `favicon.ico` (16/32/48, what browsers and the Vercel dashboard ask for by default), `apple-touch-icon.png` (iPhone home screen), `padelstar-192.png`/`padelstar-512.png` (PWA install) and `padelstar-icon.png` (push notifications). Apple-touch and the maskable PWA icon put the ball on a full-bleed navy square so the phone's own corner mask does not cut the drawn frame. The refined wordmark (`assets/logos/new/Padelstar med tennisball-ikon.png`) has its white background removed and is now `assets/brand/padelstar-logo-dark.webp`/`.png` (919 x 180, transparent), the logo shown on light surfaces (Daylight theme, light TV board). The dark-surface logo is unchanged until the developer supplies a new one. Service worker cache bumped to `padelstar-v390` so installed apps pick up the new files.
+
 ## 1.0.1
 
 Released 2026-10-12 on the developer's instruction ("merge all finished threads to main as bug-fix update v1.0.1"). Collects everything merged after 1.0.0: PR #42, #43, #45, #49, #55, #56 and, on release day, #53, #54, #44 and #50. Verified: the automated test suite (621 tests) and `npm run check:syntax` on the merged `main`, the asset-version check, and the production database checked on 2026-10-12 for every migration this release needs (`check_account_access` set as `pgrst.db_pre_request`, `admin_delete_tournament`, the clock guard in `save_player_point`, the 2 MB state limit). Browser flows were checked in each PR; not yet checked by a person on a real phone (see `docs/USER_ACTIONS.md`).
