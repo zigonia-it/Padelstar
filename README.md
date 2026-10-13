@@ -1,4 +1,4 @@
-# Padelstar
+# ![padelstar logo](assets/brand/padelstar-logo-light.png)
 
 Live app: https://padelstar.app
 
