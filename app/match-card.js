@@ -24,6 +24,7 @@
       openCorrection,
       withdrawalDecision,
       sittingOutSummary,
+      startClock,
       startMatch,
       teamAccentStyle,
       teamDisplay,
@@ -172,6 +173,33 @@
       return `<span class="match-timer ${deciding ? "match-timer-expired" : ""}" role="timer" data-timer-start="${escapeAttribute(match.startedAt ?? "")}" data-timer-minutes="${minutes}" ${deciding ? "data-deciding=\"true\"" : ""} aria-label="${translate("match.timeLeft")}">${deciding ? translate("match.decidingGame") : timerLabel(seconds)}</span>`;
     }
 
+    // A timed match on court whose clock has not been started. Points can be scored before it, but only this starts the clock.
+    function clockWaitingToStart(match) {
+      const minutes = match.rules?.timedMinutes ?? getState().settings?.timedMinutes ?? 0;
+      return Boolean(minutes) && match.state === "playing" && !match.startedAt && !match.endReason;
+    }
+
+    // Admins start the clock from the match card, players on the match from their own view (active scorer, or nobody yet).
+    function viewerMayStartClock(match, editable, scoreOnly) {
+      if (!clockWaitingToStart(match) || getState().status === "Avsluttet") return false;
+      if (currentLocalRole() !== "player") return Boolean(editable) && !scoreOnly;
+      const me = selectedPlayerId();
+      return Boolean(me) && matchIncludesPlayer(match, me) && playerMayScore(match);
+    }
+
+    function clockStartMarkup(match, editable, scoreOnly = false) {
+      if (!viewerMayStartClock(match, editable, scoreOnly)) return "";
+      return `<div class="match-clock-start"><button class="ps-btn ps-btn--ball start-clock-button" type="button">${translate("actions.startClock")}</button><span class="hint">${translate("match.clockNotStarted")}</span></div>`;
+    }
+
+    function bindClockStart(root, match) {
+      root.querySelector(".start-clock-button")?.addEventListener("click", (event) => {
+        event.currentTarget.disabled = true;
+        if (currentLocalRole() === "player") void scorerAction(match, "start_clock");
+        else startClock(match);
+      });
+    }
+
     // Called every second: updates every visible countdown (the last minute is highlighted, never negative).
     function updateTimers(root = global.document, now = Date.now()) {
       root.querySelectorAll(".match-timer[data-timer-minutes]").forEach((element) => {
@@ -311,6 +339,11 @@
       return "";
     }
 
+    // A timed match takes no points until its clock is started.
+    function clockBlocksScoring(match) {
+      return Boolean(global.PadelstarScoring?.clockBlocksScoring?.(match, getState().settings));
+    }
+
     function scoreboardRow(match, teamIndex, teamName, pointControlsEnabled, pointsMode) {
       const team = teamIndex === 0 ? match.teamOne : match.teamTwo;
       const key = teamIndex === 0 ? "teamOne" : "teamTwo";
@@ -318,7 +351,7 @@
       // While a result waits for approval only an unsubmitted draft (scorer) or the admin can still undo.
       const undoOpen = !awaiting || currentLocalRole() !== "player" || match.approval?.status === "draft";
       const canUndo = pointControlsEnabled && match.state !== "finished" && undoOpen && Boolean(match.undoStack?.length) && playerIsScorerOrNotPlayer(match);
-      const canAward = pointControlsEnabled && match.state !== "finished" && !awaiting;
+      const canAward = pointControlsEnabled && match.state !== "finished" && !awaiting && !clockBlocksScoring(match);
       return `
     <tr class="scoreboard-row" style="${teamAccentStyle(team)}">
       <td class="scoreboard-team-name">${teamName}</td>
@@ -413,6 +446,7 @@
           <div class="scorecard-players">${teamDisplay(match.teamTwo, "scorecard")}</div>
         </section>
       </div>
+      ${clockStartMarkup(match, editable, scoreOnly)}
       ${scoreboardTableMarkup(match, editable)}
       ${scorerPanelMarkup(match, editable, scoreOnly)}
       ${approvalPanelMarkup(match, editable, scoreOnly)}
@@ -423,6 +457,7 @@
   `;
 
       bindScoreboardTable(card, match, editable && match.state !== "cancelled");
+      bindClockStart(card, match);
       bindScorerPanel(card, match);
       bindApprovalPanel(card, match);
       bindWithdrawalPanel(card, match);
@@ -454,9 +489,9 @@
         <button class="secondary save-court-button" type="button">${translate("actions.saveCourt")}</button>
       </div>
       <div class="button-row">
-        <button class="secondary set-score-button" type="button" ${["finished", "cancelled", "awaitingApproval", "awaitingWithdrawalDecision"].includes(match.state) ? "disabled" : ""}>${translate("actions.setResult")}</button>
+        <button class="secondary set-score-button" type="button" ${["finished", "cancelled", "awaitingApproval", "awaitingWithdrawalDecision"].includes(match.state) || clockBlocksScoring(match) ? "disabled" : ""}>${translate("actions.setResult")}</button>
         <button class="secondary start-match-button" type="button" ${match.state !== "waiting" ? "disabled" : ""}>${translate("actions.startMatch")}</button>
-        <button class="secondary large-score-button" type="button" ${match.state !== "playing" ? "disabled" : ""}>${translate("actions.largeScore")}</button>
+        <button class="secondary large-score-button" type="button" ${match.state !== "playing" || clockBlocksScoring(match) ? "disabled" : ""}>${translate("actions.largeScore")}</button>
         <button class="secondary reopen-match-button" type="button" ${["cancelled"].includes(match.state) || !match.undoStack?.length ? "disabled" : ""}>${["finished", "awaitingApproval"].includes(match.state) ? translate("actions.undoResult") : translate("actions.undoLast")}</button>
         <button class="ghost cancel-match-button" type="button" ${["finished", "cancelled"].includes(match.state) ? "disabled" : ""}>${translate("actions.cancelMatch")}</button>
         <div class="walkover-row">
@@ -492,7 +527,7 @@
       return card;
     }
 
-    return { createMatchCard, withdrawalPanelMarkup, bindWithdrawalPanel, scoreboardTableMarkup, bindScoreboardTable, scorerPanelMarkup, approvalPanelMarkup, bindApprovalPanel, timerMarkup, updateTimers, correctionHistoryMarkup };
+    return { createMatchCard, withdrawalPanelMarkup, bindWithdrawalPanel, scoreboardTableMarkup, bindScoreboardTable, scorerPanelMarkup, approvalPanelMarkup, bindApprovalPanel, timerMarkup, updateTimers, correctionHistoryMarkup, clockStartMarkup, bindClockStart };
   }
 
   global.PadelstarMatchCard = { create };

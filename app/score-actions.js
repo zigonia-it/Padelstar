@@ -7,6 +7,10 @@
     }
 
     function saveSetResult(match, teamOne, teamTwo) {
+      if (deps.scoring.clockBlocksScoring?.(match, deps.getState().settings)) {
+        deps.showToast(deps.t("match.clockNotStarted"), "status-message-error");
+        return;
+      }
       const validationError = validateSetScore(teamOne, teamTwo);
       if (validationError) {
         deps.showToast(deps.translateScoreValidationError(validationError, teamOne, teamTwo), "status-message-error");
@@ -62,6 +66,10 @@
 
     function awardTennisPoint(match, teamIndex) {
       if (["finished", "cancelled"].includes(match.state)) return;
+      if (deps.scoring.clockBlocksScoring?.(match, deps.getState().settings)) {
+        deps.showToast(deps.t("match.clockNotStarted"), "status-message-error");
+        return;
+      }
       if (deps.currentLocalRole() === "player") {
         const playerId = deps.getState().selectedPlayerId;
         const scorerId = match.scorer?.playerId;

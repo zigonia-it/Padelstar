@@ -1134,3 +1134,38 @@ body[data-theme] .large-score-label { display: flex; flex-wrap: wrap; align-item
 body[data-theme] .large-score-label .large-score-hint { flex: 0 0 100%; }
 body[data-theme] .large-score-label .team-player { display: inline-flex; font: 700 clamp(20px, 3.2vw, 30px)/1.15 var(--font-display); letter-spacing: -0.02em; }
 body[data-theme] .large-score-label .team-player + .team-player::before { color: inherit; opacity: .55; }
+
+/* =========================================================
+   21. TOURNAMENT MENU — Lobby, Spillere, Kamper, Tabell/Cup (2026-10-12)
+   The lobby stacks Del turnering, Spillere, Regler and Banekø as separate cards, so their inner boxes go flat.
+   ========================================================= */
+body[data-theme] .lobby-players-panel .lobby-players-card,
+body[data-theme] .lobby-players-panel .lobby-invite-card { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+body[data-theme] .lobby-players-panel .lobby-invite-card { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--hairline); }
+body[data-theme] .rules-panel .settings-group-title { display: none; }
+body[data-theme] .rules-panel #courtSettingsForm,
+body[data-theme] .rules-panel #courtNamesForm { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--hairline); }
+body[data-theme] .court-queue-panel .court-queue { margin-top: 0; padding-top: 0; border-top: 0; }
+body[data-theme] .court-queue-panel .status-grid { margin-top: 16px; }
+body[data-theme] .lobby-panel .lobby-header.hidden,
+body[data-theme] .lobby-panel .lobby-actions.hidden,
+body[data-theme] .lobby-panel .live-overview.hidden { display: none; }
+/* Kamper: the current matches lead, in the display face; the next ones follow under a quieter heading. */
+body[data-theme] .match-group + .match-group { margin-top: 18px; }
+body[data-theme] .match-group-current > h4 { color: var(--ink-heading); font: 700 clamp(18px, 2.2vw, 22px)/1.2 var(--font-display); letter-spacing: -0.01em; text-transform: none; }
+body[data-theme] .match-group-next > h4 { color: var(--ink-heading); font: 700 16px/1.2 var(--font-display); text-transform: none; letter-spacing: 0; }
+body[data-theme] .next-match-chip { background: var(--ball-wash); color: var(--ink-heading); }
+/* Notification center (1.2): rows are cards, not pills, so the unread stripe, the text and the time line up; even rhythm
+   between the head, the rows and the footer whether there is one notice or many. */
+body[data-theme] .notification-dialog-card { gap: 16px; padding: 20px; }
+body[data-theme] .notification-dialog-head { padding-bottom: 12px; border-bottom: 1px solid var(--hairline); }
+body[data-theme] .notification-dialog-head .icon-button { min-height: 36px; padding: 0 14px; }
+body[data-theme] .notification-list { gap: 10px; padding: 2px; }
+body[data-theme] .notification-item button {
+  gap: 4px; min-height: 0; padding: 12px 14px 12px 16px; border-radius: var(--radius-md, 12px);
+  border-left-width: 4px; line-height: 1.35; white-space: normal; justify-items: start;
+}
+body[data-theme] .notification-item strong { font-size: 0.98rem; }
+body[data-theme] .notification-item small { margin-top: 2px; font-size: 0.78rem; }
+body[data-theme] .notification-dialog-foot { justify-content: flex-end; padding-top: 12px; border-top: 1px solid var(--hairline); }
+body[data-theme] .notification-empty { padding: 24px 8px; }

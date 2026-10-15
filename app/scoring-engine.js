@@ -354,9 +354,18 @@ window.PadelstarScoring = (() => {
   }
 
   // A timed match ends when the clock has run out and the game in progress is finished.
+  // The clock runs from match.startedAt, set when someone presses "Start match" / "Start clock" (not by the first point).
   function timeExpired(match, rules, nowMs) {
     if (!rules.timedMinutes || !match.startedAt) return false;
     return nowMs >= Date.parse(match.startedAt) + rules.timedMinutes * 60000;
+  }
+
+  // A timed match takes no points until its clock is started (developer's decision 2026-10-12): a waiting match is
+  // started with "Start match" (which starts the clock), a match already on court with "Start clock".
+  function clockBlocksScoring(match, settings = {}) {
+    if (!match || match.startedAt || match.endReason) return false;
+    if (!["waiting", "playing"].includes(match.state)) return false;
+    return matchRules(match, settings).timedMinutes > 0;
   }
 
   function remainingSeconds(match, nowMs = Date.now()) {
@@ -376,7 +385,6 @@ window.PadelstarScoring = (() => {
   // timeWinnerTeamIndex because the set count alone cannot always express it.
   function awardPoint(match, teamIndex, settings, nowMs = Date.now()) {
     const rules = snapshotRules(match, settings);
-    if (!match.startedAt) match.startedAt = new Date(nowMs).toISOString();
     const result = applyPoint(match, teamIndex, rules);
     if (!result.gameWon || result.matchWon) return result;
     if (!match.decidingGame && !timeExpired(match, rules, nowMs)) return result;
@@ -496,6 +504,7 @@ window.PadelstarScoring = (() => {
     snapshotRules,
     awardPoint,
     remainingSeconds,
+    clockBlocksScoring,
     pointLabel,
   };
 })();

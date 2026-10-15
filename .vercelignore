@@ -1,0 +1,12 @@
+# Files the live site never serves. Keeping them out of each Vercel deployment
+# cuts it from about 330 MB to under 15 MB (Vercel Hobby: 10 GB deployment storage).
+assets/archive
+assets/backgrounds
+assets/logos
+docs
+shots
+supabase
+scripts
+test
+*.md
+supabase_schema.sql

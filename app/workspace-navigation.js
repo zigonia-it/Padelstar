@@ -15,6 +15,8 @@
     function showModule(moduleName) {
       const requestedModule = deps.normalizeModule(moduleName);
       const openLobbyPanel = moduleName === "lobby" && requestedModule === "admin";
+      // Entering the admin workspace from elsewhere lands on Kamper once the tournament has started, on the lobby before.
+      const enteringAdmin = requestedModule === "admin" && !openLobbyPanel && deps.getActiveModule?.() !== "admin";
       deps.setActiveModule(requestedModule);
       const workspaceModule = deps.workspaceModuleFromActiveModule();
       const isWorkspaceActive = Boolean(workspaceModule);
@@ -58,6 +60,7 @@
       if (!deps.isTestMode()) deps.requestAnimationFrame(() => deps.focusModuleHeading(activeSections[0]));
       renderRoleVisibility();
       if (openLobbyPanel) activateAdminPanel("lobby");
+      else if (enteringAdmin) activateAdminPanel(defaultAdminPanel());
     }
 
     function activateTab(view) {
@@ -114,11 +117,18 @@
       });
     }
 
+    function defaultAdminPanel() {
+      const state = deps.getState();
+      return (state?.rounds?.length ?? 0) > 0 ? "matches" : "lobby";
+    }
+
     function activateAdminPanel(panel) {
       const availablePanels = new Set(
         Array.from(document.querySelectorAll(".subtab"), (tab) => tab.dataset.adminPanel),
       );
-      const activePanel = availablePanels.has(panel) ? panel : "control";
+      // "control" (Styring) was folded into the lobby in the 4-item menu; older callers still ask for it.
+      const requested = panel === "control" ? "lobby" : panel;
+      const activePanel = availablePanels.has(requested) ? requested : "lobby";
       document.querySelectorAll(".subtab").forEach((tab) => {
         tab.classList.toggle("active", tab.dataset.adminPanel === activePanel);
         tab.setAttribute("aria-selected", String(tab.dataset.adminPanel === activePanel));

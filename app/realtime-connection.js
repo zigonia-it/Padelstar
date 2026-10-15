@@ -57,6 +57,9 @@
 
       const currentTournamentId = state.id;
       refreshPromise = getInviteState(state.inviteCode).then(({ data, error }) => {
+        // The tournament was reset, left or switched while this read was in flight: the answer is stale. Applying it
+        // brought a just-reset tournament back onto the device without its admin token (field test 2026-10-12).
+        if (getState().id !== currentTournamentId) return false;
         if (error) {
           handleRemoteError(error, translate("messages.fetchRemoteFailed"));
           return false;
