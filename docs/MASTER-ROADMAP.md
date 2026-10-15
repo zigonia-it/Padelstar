@@ -173,6 +173,11 @@ Master plan Part III, in its recommended order. Each phase may span one or more 
 
 ## 13. Always-on backlog (no fixed release)
 
+- **Build tooling: move to Vite** (developer's decision 2026-10-12; scope and risks in `docs/technical/vite-migration.md`). Start after Zigonia Events M0, once Vite has been tried there. It changes no product behaviour, so it carries no version of its own.
+  - *Stage 0 (small, any time):* remove the stale GitHub Pages workflow; fix the `responsive.css` version drift in `admin.html`.
+  - *Stages 1–2 (one PR):* Vite builds the five pages with no code rewrite (`<script type="module">`); the service worker's precache list is generated (`vite-plugin-pwa`, `injectManifest`, push handlers kept); the `?v=` versions, `scripts/bump-asset-versions.js`, the `cacheName` counter and the pinned test strings are deleted; Vercel builds `dist`. Merge only after the critical path and the installed-PWA update/offline check pass on a Vercel preview.
+  - *Stage 3 (small):* `@supabase/supabase-js` from npm at a pinned version instead of the unpinned jsDelivr tag.
+  - *Stage 4 (gradual, alongside releases):* convert `app/` files to ES modules, leaf files first, then add types per file. Start with `app/scoring-engine.js` so the 1.5 standalone scoring engine is built as a module.
 - Permanent tamper-protected security audit log. Needed by 3.0 at the latest, because admin exceptions and payments must be audit logged.
 - Broader public template ecosystem / template marketplace in `admin.html`. Best after 4.x entitlements.
 - Debugging passes after each release (each ROADMAP priority ends with one).
