@@ -323,7 +323,7 @@ Object.assign(padelstarTranslations.nb, {
   "queue.next": "Neste",
   "queue.later": "Deretter",
   "queue.empty": "Ingen kamper i kø akkurat nå.",
-  "meta.description": "Padelstar - Padel Manager av Sigurd Steen Grødem / Zigonia IT. Administrer padelturneringer, kamper, baner og resultater.",
+  "meta.description": "Padelstar - Padel Manager av Sigurd Steen Grødem / Zigonia Events. Administrer padelturneringer, kamper, baner og resultater.",
   "hero.title": "Spill mer. Organiser mindre.",
   "hero.subtitle": "Opprett turneringen, inviter spillerne og la Padelstar ordne med resten.",
   "avatar.smash": "Smash",
@@ -688,7 +688,7 @@ Object.assign(padelstarTranslations.nb, {
   "messages.markAwayConfirm": "Markere {name} som ute/reist? Spilleren blir ikke satt opp i nye runder, men historiske kamper beholdes.",
   "messages.returnToTournamentConfirm": "Gjøre {name} tilgjengelig for nye runder igjen?",
   "messages.availabilityUpdateFailed": "Kunne ikke oppdatere spillerstatus live akkurat nå. Prøv igjen når forbindelsen er tilbake.",
-  "footer.developedBy": "Utviklet av Sigurd Steen Grødem",
+  "footer.developedBy": "Utviklet av Sigurd Steen Grødem hos Zigonia Events",
   "footer.copyrightPrefix": "Copyright",
   "footer.rights": "Alle rettigheter forbeholdt.",
   "footer.privacy": "Personvern",
@@ -696,7 +696,7 @@ Object.assign(padelstarTranslations.nb, {
 });
 
 Object.assign(padelstarTranslations.nn, {
-  "meta.description": "Padelstar - Padel Manager av Sigurd Steen Grødem / Zigonia IT. Administrer padelturneringar, kampar, baner og resultat.",
+  "meta.description": "Padelstar - Padel Manager av Sigurd Steen Grødem / Zigonia Events. Administrer padelturneringar, kampar, baner og resultat.",
   "hero.title": "Spel meir. Organiser mindre.",
   "hero.subtitle": "Opprett turneringa, inviter spelarane og la Padelstar ordne med resten.",
   "nav.skipToContent": "Hopp til innhald",
@@ -768,7 +768,7 @@ Object.assign(padelstarTranslations.nn, {
 });
 
 Object.assign(padelstarTranslations.en, {
-  "meta.description": "Padelstar - Padel Manager by Sigurd Steen Grodem / Zigonia IT. Manage padel tournaments, matches, courts and results.",
+  "meta.description": "Padelstar - Padel Manager by Sigurd Steen Grodem / Zigonia <Events>. Manage padel tournaments, matches, courts and results.",
   "hero.title": "Play more. Organize less.",
   "hero.subtitle": "Create the tournament, invite the players and let Padelstar take care of the rest.",
   "nav.homeAria": "Go home", "nav.modulesAria": "Modules", "nav.home": "Home", "nav.create": "Create", "nav.login": "Sign in", "nav.join": "Join", "nav.admin": "Admin", "nav.player": "Player", "nav.tournament": "Tournament", "nav.frontPageAria": "Front page", "nav.openMenu": "Open menu", "nav.closeMenu": "Close menu", "nav.startChoicesAria": "Start choices", "nav.openViewMenu": "Open view menu", "nav.closeViewMenu": "Close view menu", "nav.viewAria": "View", "nav.leaveSpectator": "Leave spectator view",
@@ -786,7 +786,7 @@ Object.assign(padelstarTranslations.en, {
 });
 
 Object.assign(padelstarTranslations.es, {
-  "meta.description": "Padelstar - Padel Manager de Sigurd Steen Grodem / Zigonia IT. Gestiona torneos, partidos, pistas y resultados de pádel.",
+  "meta.description": "Padelstar - Padel Manager de Sigurd Steen Grodem / Zigonia Events. Gestiona torneos, partidos, pistas y resultados de pádel.",
   "hero.title": "Juega más. Organiza menos.",
   "hero.subtitle": "Crea el torneo, invita a los jugadores y deja que Padelstar se encargue del resto.",
   "nav.homeAria": "Ir al inicio", "nav.modulesAria": "Módulos", "nav.home": "Inicio", "nav.create": "Crear", "nav.join": "Unirse", "nav.admin": "Admin", "nav.player": "Jugador", "nav.tournament": "Torneo", "nav.frontPageAria": "Página principal", "nav.openMenu": "Abrir menú", "nav.closeMenu": "Cerrar menú", "nav.startChoicesAria": "Opciones de inicio", "nav.openViewMenu": "Abrir menú de vista", "nav.closeViewMenu": "Cerrar menú de vista", "nav.viewAria": "Vista", "nav.leaveSpectator": "Salir de la vista de espectador", "role.admin": "Admin", "role.player": "Jugador", "role.spectator": "Espectador",
@@ -805,7 +805,7 @@ Object.assign(padelstarTranslations.es, {
 
 Object.assign(padelstarTranslations.en, {
   "avatar.smash": "Smash", "avatar.serve": "Serve", "avatar.wall": "Wall", "avatar.lob": "Lob",
-  "footer.developedBy": "Developed by Sigurd Steen Grodem", "footer.copyrightPrefix": "Copyright", "footer.rights": "All rights reserved.", "footer.privacy": "Privacy", "guide.link": "Quick guide",
+  "footer.developedBy": "Developed by Sigurd Steen Grødem at Zigonia Events", "footer.copyrightPrefix": "Copyright", "footer.rights": "All rights reserved.", "footer.privacy": "Privacy", "guide.link": "Quick guide",
 });
 
 Object.assign(padelstarTranslations.nn, {
@@ -813,7 +813,7 @@ Object.assign(padelstarTranslations.nn, {
   "avatar.smash": "Smash", "avatar.serve": "Serve", "avatar.wall": "Vegg", "avatar.lob": "Lobb",
   "share.spectatorLink": "Tilskodarlenkje", "actions.copySpectatorLink": "Kopier tilskodarlenkje", "actions.markAway": "Meld deg ute", "actions.returnToTournament": "Bli med igjen", "actions.viewAsSpectator": "Sjå som tilskodar", "actions.choosePlayer": "Vel spelar", "actions.joinAgain": "Bli med på nytt",
   "player.away": "Ute/reist", "player.leftDevice": "Har forlatt eining", "messages.spectatorLinkCopied": "Tilskodarlenkja er kopiert.", "messages.remoteStateUpdated": "Live-turneringa er oppdatert.", "messages.markAwayConfirm": "Markere {name} som ute/reist? Spelaren blir ikkje sett opp i nye rundar, men historiske kampar blir tekne vare på.", "messages.returnToTournamentConfirm": "Gjere {name} tilgjengeleg for nye rundar igjen?", "messages.availabilityUpdateFailed": "Klarte ikkje å oppdatere spelarstatus live akkurat no.",
-  "footer.developedBy": "Utvikla av Sigurd Steen Grodem", "footer.copyrightPrefix": "Copyright", "footer.rights": "Alle rettar reserverte.", "footer.privacy": "Personvern", "guide.link": "Brukarrettleiing",
+  "footer.developedBy": "Utvikla av Sigurd Steen Grødem hos Zigonia Events", "footer.copyrightPrefix": "Copyright", "footer.rights": "Alle rettar reserverte.", "footer.privacy": "Personvern", "guide.link": "Brukarrettleiing",
 });
 
 Object.assign(padelstarTranslations.de, {
@@ -2045,36 +2045,22 @@ Object.assign(padelstarTranslations.en, {
   "round.autoStarted": "Round {finished} is complete. Round {round} has started.",
   "round.allRoundsFinished": "All rounds have been played. You can finish the tournament.",
 });
-Object.assign(padelstarTranslations.nb, {"home.joinEyebrow": "Bli med · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Lim inn koden eller lenken du fikk fra arrangøren.", "home.joinInvalid": "Skriv inn den åtte tegn lange koden fra arrangøren, eller lim inn lenken.", "home.heroAlt": "Padelspiller klar ved grunnlinjen på en blå bane"});
-Object.assign(padelstarTranslations.nn, {"home.joinEyebrow": "Bli med · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Lim inn koden eller lenkja du fekk frå arrangøren.", "home.joinInvalid": "Skriv inn den åtte teikn lange koden frå arrangøren, eller lim inn lenkja.", "home.heroAlt": "Padelspelar klar ved grunnlinja på ei blå bane"});
-Object.assign(padelstarTranslations.en, {"home.joinEyebrow": "Join · tournament code", "home.joinPlaceholder": "CODE", "home.joinHint": "Paste the code or link you got from the organiser.", "home.joinInvalid": "Enter the eight-character code from the organiser, or paste the link.", "home.heroAlt": "Padel player ready at the baseline on a blue court"});
-Object.assign(padelstarTranslations.es, {"home.joinEyebrow": "Unirse · código del torneo", "home.joinPlaceholder": "CÓDIGO", "home.joinHint": "Pega el código o el enlace que te dio el organizador.", "home.joinInvalid": "Introduce el código de ocho caracteres del organizador o pega el enlace.", "home.heroAlt": "Jugador de pádel preparado en la línea de fondo de una pista azul"});
-Object.assign(padelstarTranslations.de, {"home.joinEyebrow": "Beitreten · Turniercode", "home.joinPlaceholder": "CODE", "home.joinHint": "Füge den Code oder Link vom Veranstalter ein.", "home.joinInvalid": "Gib den achtstelligen Code vom Veranstalter ein oder füge den Link ein.", "home.heroAlt": "Padelspieler bereit an der Grundlinie auf einem blauen Platz"});
-Object.assign(padelstarTranslations.fr, {"home.joinEyebrow": "Rejoindre · code du tournoi", "home.joinPlaceholder": "CODE", "home.joinHint": "Colle le code ou le lien reçu de l’organisateur.", "home.joinInvalid": "Saisis le code à huit caractères de l’organisateur ou colle le lien.", "home.heroAlt": "Joueur de padel prêt sur la ligne de fond d’un court bleu"});
-Object.assign(padelstarTranslations.sv, {"home.joinEyebrow": "Gå med · turneringskod", "home.joinPlaceholder": "KOD", "home.joinHint": "Klistra in koden eller länken du fick av arrangören.", "home.joinInvalid": "Skriv in den åtta tecken långa koden från arrangören eller klistra in länken.", "home.heroAlt": "Padelspelare redo vid baslinjen på en blå bana"});
-Object.assign(padelstarTranslations.da, {"home.joinEyebrow": "Deltag · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Indsæt koden eller linket, du fik fra arrangøren.", "home.joinInvalid": "Skriv den otte tegn lange kode fra arrangøren, eller indsæt linket.", "home.heroAlt": "Padelspiller klar ved baglinjen på en blå bane"});
-Object.assign(padelstarTranslations.nb, {"player.yourMatch": "Din kamp", "actions.keepScore": "Før poeng", "common.live": "Live", "score.tapForPoint": "Trykk for poeng", "nav.today": "I dag", "player.tabsAria": "Turnering"});
-Object.assign(padelstarTranslations.nn, {"player.yourMatch": "Kampen din", "actions.keepScore": "Før poeng", "common.live": "Live", "score.tapForPoint": "Trykk for poeng", "nav.today": "I dag", "player.tabsAria": "Turnering"});
-Object.assign(padelstarTranslations.en, {"player.yourMatch": "Your match", "actions.keepScore": "Keep score", "common.live": "Live", "score.tapForPoint": "Tap for a point", "nav.today": "Today", "player.tabsAria": "Tournament"});
-Object.assign(padelstarTranslations.es, {"player.yourMatch": "Tu partido", "actions.keepScore": "Anotar puntos", "common.live": "En vivo", "score.tapForPoint": "Toca para sumar", "nav.today": "Hoy", "player.tabsAria": "Torneo"});
-Object.assign(padelstarTranslations.de, {"player.yourMatch": "Dein Match", "actions.keepScore": "Punkte zählen", "common.live": "Live", "score.tapForPoint": "Tippen für Punkt", "nav.today": "Heute", "player.tabsAria": "Turnier"});
-Object.assign(padelstarTranslations.fr, {"player.yourMatch": "Ton match", "actions.keepScore": "Compter les points", "common.live": "En direct", "score.tapForPoint": "Touchez pour un point", "nav.today": "Aujourd'hui", "player.tabsAria": "Tournoi"});
-Object.assign(padelstarTranslations.sv, {"player.yourMatch": "Din match", "actions.keepScore": "För poäng", "common.live": "Live", "score.tapForPoint": "Tryck för poäng", "nav.today": "I dag", "player.tabsAria": "Turnering"});
-Object.assign(padelstarTranslations.da, {"player.yourMatch": "Din kamp", "actions.keepScore": "Før point", "common.live": "Live", "score.tapForPoint": "Tryk for point", "nav.today": "I dag", "player.tabsAria": "Turnering"});
-// Four-item tournament menu (Lobby, Spillere, Kamper, Tabell/Cup), 2026-10-12
-for (const [language, values] of Object.entries({
-  nb: { "matches.current": "Nåværende kamper", "matches.currentOne": "Nåværende kamp", "matches.upcoming": "Neste kamper", "matches.nextUp": "Neste kamp", "admin.actionsTitle": "Handlinger", "nav.myView": "Min side" },
-  nn: { "matches.current": "Noverande kampar", "matches.currentOne": "Noverande kamp", "matches.upcoming": "Neste kampar", "matches.nextUp": "Neste kamp", "admin.actionsTitle": "Handlingar", "nav.myView": "Mi side" },
-  en: { "matches.current": "Current matches", "matches.currentOne": "Current match", "matches.upcoming": "Next matches", "matches.nextUp": "Next match", "admin.actionsTitle": "Actions", "nav.myView": "My view" },
-  es: { "matches.current": "Partidos actuales", "matches.currentOne": "Partido actual", "matches.upcoming": "Próximos partidos", "matches.nextUp": "Próximo partido", "admin.actionsTitle": "Acciones", "nav.myView": "Mi vista" },
-  de: { "matches.current": "Aktuelle Spiele", "matches.currentOne": "Aktuelles Spiel", "matches.upcoming": "Nächste Spiele", "matches.nextUp": "Nächstes Spiel", "admin.actionsTitle": "Aktionen", "nav.myView": "Meine Ansicht" },
-  fr: { "matches.current": "Matchs en cours", "matches.currentOne": "Match en cours", "matches.upcoming": "Prochains matchs", "matches.nextUp": "Prochain match", "admin.actionsTitle": "Actions", "nav.myView": "Ma vue" },
-  sv: { "matches.current": "Pågående matcher", "matches.currentOne": "Pågående match", "matches.upcoming": "Nästa matcher", "matches.nextUp": "Nästa match", "admin.actionsTitle": "Åtgärder", "nav.myView": "Min sida" },
-  da: { "matches.current": "Aktuelle kampe", "matches.currentOne": "Aktuel kamp", "matches.upcoming": "Næste kampe", "matches.nextUp": "Næste kamp", "admin.actionsTitle": "Handlinger", "nav.myView": "Min side" },
-})) {
-  Object.assign(padelstarTranslations[language], values);
-}
-
+Object.assign(padelstarTranslations.nb, { "home.joinEyebrow": "Bli med · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Lim inn koden eller lenken du fikk fra arrangøren.", "home.joinInvalid": "Skriv inn den åtte tegn lange koden fra arrangøren, eller lim inn lenken.", "home.heroAlt": "Padelspiller klar ved grunnlinjen på en blå bane" });
+Object.assign(padelstarTranslations.nn, { "home.joinEyebrow": "Bli med · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Lim inn koden eller lenkja du fekk frå arrangøren.", "home.joinInvalid": "Skriv inn den åtte teikn lange koden frå arrangøren, eller lim inn lenkja.", "home.heroAlt": "Padelspelar klar ved grunnlinja på ei blå bane" });
+Object.assign(padelstarTranslations.en, { "home.joinEyebrow": "Join · tournament code", "home.joinPlaceholder": "CODE", "home.joinHint": "Paste the code or link you got from the organiser.", "home.joinInvalid": "Enter the eight-character code from the organiser, or paste the link.", "home.heroAlt": "Padel player ready at the baseline on a blue court" });
+Object.assign(padelstarTranslations.es, { "home.joinEyebrow": "Unirse · código del torneo", "home.joinPlaceholder": "CÓDIGO", "home.joinHint": "Pega el código o el enlace que te dio el organizador.", "home.joinInvalid": "Introduce el código de ocho caracteres del organizador o pega el enlace.", "home.heroAlt": "Jugador de pádel preparado en la línea de fondo de una pista azul" });
+Object.assign(padelstarTranslations.de, { "home.joinEyebrow": "Beitreten · Turniercode", "home.joinPlaceholder": "CODE", "home.joinHint": "Füge den Code oder Link vom Veranstalter ein.", "home.joinInvalid": "Gib den achtstelligen Code vom Veranstalter ein oder füge den Link ein.", "home.heroAlt": "Padelspieler bereit an der Grundlinie auf einem blauen Platz" });
+Object.assign(padelstarTranslations.fr, { "home.joinEyebrow": "Rejoindre · code du tournoi", "home.joinPlaceholder": "CODE", "home.joinHint": "Colle le code ou le lien reçu de l’organisateur.", "home.joinInvalid": "Saisis le code à huit caractères de l’organisateur ou colle le lien.", "home.heroAlt": "Joueur de padel prêt sur la ligne de fond d’un court bleu" });
+Object.assign(padelstarTranslations.sv, { "home.joinEyebrow": "Gå med · turneringskod", "home.joinPlaceholder": "KOD", "home.joinHint": "Klistra in koden eller länken du fick av arrangören.", "home.joinInvalid": "Skriv in den åtta tecken långa koden från arrangören eller klistra in länken.", "home.heroAlt": "Padelspelare redo vid baslinjen på en blå bana" });
+Object.assign(padelstarTranslations.da, { "home.joinEyebrow": "Deltag · turneringskode", "home.joinPlaceholder": "KODE", "home.joinHint": "Indsæt koden eller linket, du fik fra arrangøren.", "home.joinInvalid": "Skriv den otte tegn lange kode fra arrangøren, eller indsæt linket.", "home.heroAlt": "Padelspiller klar ved baglinjen på en blå bane" });
+Object.assign(padelstarTranslations.nb, { "player.yourMatch": "Din kamp", "actions.keepScore": "Før poeng", "common.live": "Live", "score.tapForPoint": "Trykk for poeng", "nav.today": "I dag", "player.tabsAria": "Turnering" });
+Object.assign(padelstarTranslations.nn, { "player.yourMatch": "Kampen din", "actions.keepScore": "Før poeng", "common.live": "Live", "score.tapForPoint": "Trykk for poeng", "nav.today": "I dag", "player.tabsAria": "Turnering" });
+Object.assign(padelstarTranslations.en, { "player.yourMatch": "Your match", "actions.keepScore": "Keep score", "common.live": "Live", "score.tapForPoint": "Tap for a point", "nav.today": "Today", "player.tabsAria": "Tournament" });
+Object.assign(padelstarTranslations.es, { "player.yourMatch": "Tu partido", "actions.keepScore": "Anotar puntos", "common.live": "En vivo", "score.tapForPoint": "Toca para sumar", "nav.today": "Hoy", "player.tabsAria": "Torneo" });
+Object.assign(padelstarTranslations.de, { "player.yourMatch": "Dein Match", "actions.keepScore": "Punkte zählen", "common.live": "Live", "score.tapForPoint": "Tippen für Punkt", "nav.today": "Heute", "player.tabsAria": "Turnier" });
+Object.assign(padelstarTranslations.fr, { "player.yourMatch": "Ton match", "actions.keepScore": "Compter les points", "common.live": "En direct", "score.tapForPoint": "Touchez pour un point", "nav.today": "Aujourd'hui", "player.tabsAria": "Tournoi" });
+Object.assign(padelstarTranslations.sv, { "player.yourMatch": "Din match", "actions.keepScore": "För poäng", "common.live": "Live", "score.tapForPoint": "Tryck för poäng", "nav.today": "I dag", "player.tabsAria": "Turnering" });
+Object.assign(padelstarTranslations.da, { "player.yourMatch": "Din kamp", "actions.keepScore": "Før point", "common.live": "Live", "score.tapForPoint": "Tryk for point", "nav.today": "I dag", "player.tabsAria": "Turnering" });
 window.PadelstarTranslations = padelstarTranslations;
 window.PadelstarI18n = {
   fallbackLanguage,
