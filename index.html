@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <script>(function(){try{var t=localStorage.getItem("padelstar-theme");var m=(t==="light"||t==="dark")?t:(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.dataset.theme=m}catch(e){document.documentElement.dataset.theme="dark"}})();</script>
+  <script>(function () { try { var t = localStorage.getItem("padelstar-theme"); var m = (t === "light" || t === "dark") ? t : (window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"); document.documentElement.dataset.theme = m } catch (e) { document.documentElement.dataset.theme = "dark" } })();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0b0b">
   <meta name="description"
@@ -65,7 +65,8 @@
       </div>
     </form>
   </dialog>
-  <dialog class="app-confirm-dialog captcha-dialog" id="captchaDialog" aria-labelledby="captchaTitle" aria-describedby="captchaHint">
+  <dialog class="app-confirm-dialog captcha-dialog" id="captchaDialog" aria-labelledby="captchaTitle"
+    aria-describedby="captchaHint">
     <form method="dialog" class="app-confirm-card">
       <h2 id="captchaTitle" data-i18n="captcha.title">Bekreft at du ikke er en robot</h2>
       <p id="captchaHint" class="hint" data-i18n="captcha.hint">Dette hindrer automatiske registreringer.</p>
@@ -96,7 +97,9 @@
       <div class="brand-lockup">
         <button class="brand-home-button" type="button" data-module-link="landing" aria-label="Gå til hjem"
           data-i18n-aria-label="nav.homeAria">
-          <span class="ps-logo brand-logo"><img class="logo-on-light" src="assets/brand/padelstar-logo-dark.webp" alt="Padelstar" width="928" height="180"><img class="logo-on-dark" src="assets/brand/padelstar-logo-light.webp" alt="Padelstar" width="928" height="180"></span>
+          <span class="ps-logo brand-logo"><img class="logo-on-light" src="assets/brand/padelstar-logo-dark.webp"
+              alt="Padelstar" width="928" height="180"><img class="logo-on-dark"
+              src="assets/brand/padelstar-logo-light.webp" alt="Padelstar" width="928" height="180"></span>
         </button>
         <p class="version" id="appVersion"></p>
       </div>
@@ -124,9 +127,17 @@
               data-focus-target="profileNameInput" data-i18n="nav.account">Konto</button>
             <a id="systemAdminLink" class="module-link hidden" href="admin.html" data-i18n="nav.systemAdmin">System</a>
             <div class="theme-toggle" role="group" aria-label="Fargetema" data-i18n-aria-label="theme.label">
-          <button class="theme-toggle-option" type="button" data-theme-option="light" data-theme-follows="resolved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg><span data-i18n="theme.light">Lys</span></button>
-          <button class="theme-toggle-option" type="button" data-theme-option="dark" data-theme-follows="resolved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7.5 7.5 0 1 0 10.5 10.5z"/></svg><span data-i18n="theme.dark">Mørk</span></button>
-        </div>
+              <button class="theme-toggle-option" type="button" data-theme-option="light" data-theme-follows="resolved"
+                aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="4" />
+                  <path
+                    d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" />
+                </svg><span data-i18n="theme.light">Lys</span></button>
+              <button class="theme-toggle-option" type="button" data-theme-option="dark" data-theme-follows="resolved"
+                aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7.5 7.5 0 1 0 10.5 10.5z" />
+                </svg><span data-i18n="theme.dark">Mørk</span></button>
+            </div>
             <button id="tvModeMenuButton" class="module-link" type="button" data-action="tv-mode"
               data-i18n="actions.tvMode">TV Mode</button>
           </nav>
@@ -151,11 +162,22 @@
           </div>
         </div>
         <div class="theme-toggle" role="group" aria-label="Fargetema" data-i18n-aria-label="theme.label">
-          <button class="theme-toggle-option" type="button" data-theme-option="light" data-theme-follows="resolved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg><span data-i18n="theme.light">Lys</span></button>
-          <button class="theme-toggle-option" type="button" data-theme-option="dark" data-theme-follows="resolved" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7.5 7.5 0 1 0 10.5 10.5z"/></svg><span data-i18n="theme.dark">Mørk</span></button>
+          <button class="theme-toggle-option" type="button" data-theme-option="light" data-theme-follows="resolved"
+            aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" />
+            </svg><span data-i18n="theme.light">Lys</span></button>
+          <button class="theme-toggle-option" type="button" data-theme-option="dark" data-theme-follows="resolved"
+            aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7.5 7.5 0 1 0 10.5 10.5z" />
+            </svg><span data-i18n="theme.dark">Mørk</span></button>
         </div>
-        <button class="notification-bell hidden" id="notificationBellButton" type="button" aria-label="Varsler" data-i18n-aria-label="notifications.center.open">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 17h12l-1.5-2V10a4.5 4.5 0 0 0-9 0v5L6 17zm4 2a2 2 0 0 0 4 0" /></svg>
+        <button class="notification-bell hidden" id="notificationBellButton" type="button" aria-label="Varsler"
+          data-i18n-aria-label="notifications.center.open">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 17h12l-1.5-2V10a4.5 4.5 0 0 0-9 0v5L6 17zm4 2a2 2 0 0 0 4 0" />
+          </svg>
           <span class="notification-bell-badge hidden" id="notificationBellBadge">0</span>
         </button>
         <div class="status-pill" id="connectionStatus" aria-live="polite">Lokal</div>
@@ -187,17 +209,18 @@
             <input class="home-join-input" id="homeJoinCode" name="homeJoinCode" type="text" inputmode="text"
               autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="200"
               placeholder="KODE" data-i18n-placeholder="home.joinPlaceholder" aria-describedby="homeJoinHint">
-            <p class="home-join-hint" id="homeJoinHint" data-i18n="home.joinHint" aria-live="polite">Lim inn koden eller lenken du fikk fra arrangøren.</p>
+            <p class="home-join-hint" id="homeJoinHint" data-i18n="home.joinHint" aria-live="polite">Lim inn koden eller
+              lenken du fikk fra arrangøren.</p>
             <button class="ps-btn ps-btn--ball ps-btn--lg ps-btn--block home-join-submit" type="submit">
               <span data-i18n="nav.join">Bli med</span><span class="ps-arrow" aria-hidden="true">→</span>
             </button>
           </form>
 
           <div class="landing-actions home-actions" aria-label="Startvalg" data-i18n-aria-label="nav.startChoicesAria">
-            <button class="ps-btn ps-btn--ink ps-btn--lg ps-btn--block landing-cta" type="button" data-module-link="setup-admin"
-              data-i18n="actions.createTournament">Opprett turnering</button>
-            <button class="ps-btn ps-btn--ghost ps-btn--lg landing-cta landing-cta-secondary" type="button" data-module-link="account"
-              data-focus-target="profileNameInput" data-i18n="nav.account">Konto</button>
+            <button class="ps-btn ps-btn--ink ps-btn--lg ps-btn--block landing-cta" type="button"
+              data-module-link="setup-admin" data-i18n="actions.createTournament">Opprett turnering</button>
+            <button class="ps-btn ps-btn--ghost ps-btn--lg landing-cta landing-cta-secondary" type="button"
+              data-module-link="account" data-focus-target="profileNameInput" data-i18n="nav.account">Konto</button>
           </div>
           <p class="hero-account-hint" data-i18n="hero.accountOptionalHint">Konto er valgfritt for å spille, men gir
             historikk og statistikk.</p>
@@ -227,7 +250,14 @@
         </div>
         <section class="landing-features" aria-label="Padelstar-funksjoner" data-i18n-aria-label="hero.featuresAria">
           <article class="landing-feature-card has-photo">
-            <figure class="ps-photo landing-feature-photo"><picture><source type="image/webp" srcset="assets/photos/rackets-net-800.webp 800w, assets/photos/rackets-net-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/rackets-net-1200.jpg" alt="" width="900" height="1200" loading="lazy" decoding="async"></picture></figure>
+            <figure class="ps-photo landing-feature-photo">
+              <picture>
+                <source type="image/webp"
+                  srcset="assets/photos/rackets-net-800.webp 800w, assets/photos/rackets-net-1600.webp 1600w"
+                  sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/rackets-net-1200.jpg" alt=""
+                  width="900" height="1200" loading="lazy" decoding="async">
+              </picture>
+            </figure>
             <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="M7 4h10v4a5 5 0 0 1-10 0V4Zm5 9v4m-4 3h8m-6-3h4M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4" />
             </svg>
@@ -235,7 +265,14 @@
             <p data-i18n="hero.featureOneText">Opprett og organiser kamper uten unødvendig administrasjon.</p>
           </article>
           <article class="landing-feature-card has-photo">
-            <figure class="ps-photo landing-feature-photo"><picture><source type="image/webp" srcset="assets/photos/players-duo-800.webp 800w, assets/photos/players-duo-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/players-duo-1200.jpg" alt="" width="1200" height="800" loading="lazy" decoding="async"></picture></figure>
+            <figure class="ps-photo landing-feature-photo">
+              <picture>
+                <source type="image/webp"
+                  srcset="assets/photos/players-duo-800.webp 800w, assets/photos/players-duo-1600.webp 1600w"
+                  sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/players-duo-1200.jpg" alt=""
+                  width="1200" height="800" loading="lazy" decoding="async">
+              </picture>
+            </figure>
             <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <circle cx="9" cy="8" r="3" />
               <circle cx="17" cy="9" r="2.5" />
@@ -245,7 +282,14 @@
             <p data-i18n="hero.featureTwoText">Del en kode og la spillerne koble seg på fra egne enheter.</p>
           </article>
           <article class="landing-feature-card has-photo">
-            <figure class="ps-photo landing-feature-photo"><picture><source type="image/webp" srcset="assets/photos/serve-floodlight-800.webp 800w, assets/photos/serve-floodlight-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/serve-floodlight-1200.jpg" alt="" width="800" height="1200" loading="lazy" decoding="async"></picture></figure>
+            <figure class="ps-photo landing-feature-photo">
+              <picture>
+                <source type="image/webp"
+                  srcset="assets/photos/serve-floodlight-800.webp 800w, assets/photos/serve-floodlight-1600.webp 1600w"
+                  sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/serve-floodlight-1200.jpg" alt=""
+                  width="800" height="1200" loading="lazy" decoding="async">
+              </picture>
+            </figure>
             <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="M4 19V5m0 14h17" />
               <path d="M8 16v-4m4 4V8m4 8v-7m4 7V5" />
@@ -335,7 +379,9 @@
               <span data-i18n="profile.name">Visningsnavn</span>
               <input id="profileNameInput" name="profileName" type="text" maxlength="64" autocomplete="name"
                 data-i18n-placeholder="profile.namePlaceholder" placeholder="Navnet ditt">
-              <small class="field-hint" data-i18n="profile.nameHint">Dette navnet (eller kallenavnet ditt) fylles inn når du blir med i en turnering. Har du et vanlig navn, legg til første bokstav i etternavnet, for eksempel «Anna K.».</small>
+              <small class="field-hint" data-i18n="profile.nameHint">Dette navnet (eller kallenavnet ditt) fylles inn
+                når du blir med i en turnering. Har du et vanlig navn, legg til første bokstav i etternavnet, for
+                eksempel «Anna K.».</small>
             </label>
             <!-- players have no colour of their own in 1.0; the picker stays (hidden) so a saved choice is kept -->
             <div class="hidden">
@@ -370,7 +416,8 @@
           <div class="panel-heading">
             <h3 data-i18n="profile.finishedTournaments">Avsluttede turneringer</h3>
           </div>
-          <p class="hint" data-i18n="profile.finishedTournamentsHint">Åpne en avsluttet turnering for å korrigere et resultat. Statistikken oppdateres.</p>
+          <p class="hint" data-i18n="profile.finishedTournamentsHint">Åpne en avsluttet turnering for å korrigere et
+            resultat. Statistikken oppdateres.</p>
           <div id="finishedTournamentsList"></div>
           <div class="panel hidden" id="accountSettingsPanel">
             <div class="panel-heading">
@@ -399,11 +446,15 @@
               <h3 id="appearanceTitle" data-i18n="theme.title">Utseende</h3>
             </div>
           </div>
-          <p class="hint" data-i18n="theme.hint">Velg lys eller mørk drakt, eller la Padelstar følge enheten din. Valget gjelder bare denne enheten.</p>
+          <p class="hint" data-i18n="theme.hint">Velg lys eller mørk drakt, eller la Padelstar følge enheten din. Valget
+            gjelder bare denne enheten.</p>
           <div class="theme-choice" role="group" aria-label="Fargetema" data-i18n-aria-label="theme.label">
-            <button class="theme-toggle-option" type="button" data-theme-option="system" aria-pressed="false" data-i18n="theme.system">Følg enheten</button>
-            <button class="theme-toggle-option" type="button" data-theme-option="light" aria-pressed="false" data-i18n="theme.light">Lys</button>
-            <button class="theme-toggle-option" type="button" data-theme-option="dark" aria-pressed="false" data-i18n="theme.dark">Mørk</button>
+            <button class="theme-toggle-option" type="button" data-theme-option="system" aria-pressed="false"
+              data-i18n="theme.system">Følg enheten</button>
+            <button class="theme-toggle-option" type="button" data-theme-option="light" aria-pressed="false"
+              data-i18n="theme.light">Lys</button>
+            <button class="theme-toggle-option" type="button" data-theme-option="dark" aria-pressed="false"
+              data-i18n="theme.dark">Mørk</button>
           </div>
         </section>
         <section class="panel notification-settings-panel" aria-labelledby="notificationSettingsTitle">
@@ -413,14 +464,17 @@
               <h3 id="notificationSettingsTitle" data-i18n="notifications.settings.title">Varsler</h3>
             </div>
           </div>
-          <p class="hint" data-i18n="notifications.settings.hint">Velg hva som skjer når noe nytt skjer i turneringen din, for eksempel når kampen din er klar.</p>
+          <p class="hint" data-i18n="notifications.settings.hint">Velg hva som skjer når noe nytt skjer i turneringen
+            din, for eksempel når kampen din er klar.</p>
           <label class="notification-setting-row">
             <input type="checkbox" role="switch" class="switch" id="notificationSettingsVibration" checked>
             <span data-i18n="notifications.settings.vibration">Vibrasjon ved varsler</span>
           </label>
-          <p class="hint hidden" id="notificationSettingsVibrationHint" data-i18n="notifications.settings.vibrationUnsupported">Vibrasjon støttes ikke på denne enheten.</p>
+          <p class="hint hidden" id="notificationSettingsVibrationHint"
+            data-i18n="notifications.settings.vibrationUnsupported">Vibrasjon støttes ikke på denne enheten.</p>
           <h4 class="notification-settings-subtitle" data-i18n="notifications.push.title">Push-varsler</h4>
-          <p class="hint" data-i18n="notifications.push.hint">Velg hvilke meldinger du vil ha når appen er lukket. Valget gjelder denne enheten, og serveren følger det før meldingen sendes.</p>
+          <p class="hint" data-i18n="notifications.push.hint">Velg hvilke meldinger du vil ha når appen er lukket.
+            Valget gjelder denne enheten, og serveren følger det før meldingen sendes.</p>
           <label class="notification-setting-row">
             <input type="checkbox" role="switch" class="switch" id="pushPrefMatch" checked>
             <span data-i18n="notifications.push.match">Kampen min er klar, ny runde</span>
@@ -443,11 +497,18 @@
       <section class="setup-panel app-module hidden" id="setupAdminView" data-module="setup-admin"
         aria-labelledby="setupAdminTitle">
         <div class="setup-intro-panel">
-          <figure class="ps-photo setup-photo"><picture><source type="image/webp" srcset="assets/photos/ready-stance-800.webp 800w, assets/photos/ready-stance-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/ready-stance-1200.jpg" alt="" width="800" height="1200" loading="lazy" decoding="async"></picture>
+          <figure class="ps-photo setup-photo">
+            <picture>
+              <source type="image/webp"
+                srcset="assets/photos/ready-stance-800.webp 800w, assets/photos/ready-stance-1600.webp 1600w"
+                sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/ready-stance-1200.jpg" alt="" width="800"
+                height="1200" loading="lazy" decoding="async">
+            </picture>
             <figcaption class="ps-photo__caption setup-photo-caption">
               <p class="eyebrow" data-i18n="setup.createEyebrow">Opprett</p>
               <h2 id="setupAdminTitle" data-i18n="setup.newTournament">Ny turnering</h2>
-              <p class="hint" data-i18n="setup.createDescription">Konfigurer din turnering raskt. Sett opp baner, opprett
+              <p class="hint" data-i18n="setup.createDescription">Konfigurer din turnering raskt. Sett opp baner,
+                opprett
                 spillerlister manuelt, eller la spillere bli med selv med en invitasjonskode.</p>
             </figcaption>
           </figure>
@@ -619,7 +680,13 @@
       <section class="setup-panel app-module hidden" id="setupPlayerView" data-module="setup-player"
         aria-labelledby="setupPlayerTitle">
         <div class="setup-intro-panel">
-          <figure class="ps-photo setup-photo"><picture><source type="image/webp" srcset="assets/photos/player-balls-800.webp 800w, assets/photos/player-balls-1600.webp 1600w" sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/player-balls-1200.jpg" alt="" width="800" height="1200" loading="lazy" decoding="async"></picture>
+          <figure class="ps-photo setup-photo">
+            <picture>
+              <source type="image/webp"
+                srcset="assets/photos/player-balls-800.webp 800w, assets/photos/player-balls-1600.webp 1600w"
+                sizes="(min-width: 900px) 40vw, 100vw"><img src="assets/photos/player-balls-1200.jpg" alt="" width="800"
+                height="1200" loading="lazy" decoding="async">
+            </picture>
             <figcaption class="ps-photo__caption setup-photo-caption">
               <p class="eyebrow" data-i18n="setup.joinEyebrow">Bli med</p>
               <h2 id="setupPlayerTitle" data-i18n="setup.joinTitle">Bli med i turnering</h2>
@@ -633,14 +700,15 @@
             <span data-i18n="share.inviteCode">Invitasjonskode</span>
             <!-- the same field as the join card on home: one wide box, a code or a pasted join link (app/invite-code-input.js) -->
             <input name="inviteCode" type="text" class="home-join-input invite-code-input" inputmode="text" required
-              minlength="8" maxlength="200" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-              placeholder="KODE" data-i18n-placeholder="home.joinPlaceholder">
+              minlength="8" maxlength="200" autocomplete="off" autocapitalize="characters" autocorrect="off"
+              spellcheck="false" placeholder="KODE" data-i18n-placeholder="home.joinPlaceholder">
           </label>
           <label>
             <span data-i18n="common.name">Navn</span>
             <input name="playerName" type="text" placeholder="Skriv navnet ditt" maxlength="64" autocomplete="name"
               required data-i18n-placeholder="setup.playerNamePlaceholder">
-            <small class="field-hint" data-i18n="setup.nameHint">Har du et vanlig navn? Legg til første bokstav i etternavnet, for eksempel «Anna K.». Da kan ikke navnet ditt forveksles med en annen.</small>
+            <small class="field-hint" data-i18n="setup.nameHint">Har du et vanlig navn? Legg til første bokstav i
+              etternavnet, for eksempel «Anna K.». Da kan ikke navnet ditt forveksles med en annen.</small>
           </label>
           <div class="hidden">
             <span data-i18n="setup.chooseColor">Velg farge</span>
@@ -677,38 +745,60 @@
             <span id="roleIndicator" class="role-indicator" data-i18n="role.spectator">Tilskuer</span>
             <button class="ghost danger-button hidden" id="leaveSessionButton" type="button"
               data-i18n="actions.leaveTournament">Forlat turnering</button>
-            <span class="ps-logo ps-logo--lg tv-mode-logo"><img class="logo-on-light" src="assets/brand/padelstar-logo-dark.webp" alt="Padelstar" width="928" height="180"><img class="logo-on-dark" src="assets/brand/padelstar-logo-light.webp" alt="Padelstar" width="928" height="180"></span>
+            <span class="ps-logo ps-logo--lg tv-mode-logo"><img class="logo-on-light"
+                src="assets/brand/padelstar-logo-dark.webp" alt="Padelstar" width="928" height="180"><img
+                class="logo-on-dark" src="assets/brand/padelstar-logo-light.webp" alt="Padelstar" width="928"
+                height="180"></span>
           </div>
         </div>
         <div class="expiry-notice hidden" id="expiryNotice" role="status">
           <p id="expiryNoticeText"></p>
-          <button class="primary" type="button" id="expiryResumeButton" data-i18n="expiry.resume">Fortsett turneringen</button>
+          <button class="primary" type="button" id="expiryResumeButton" data-i18n="expiry.resume">Fortsett
+            turneringen</button>
         </div>
 
         <div class="workspace-body">
           <nav class="workspace-rail hidden" id="workspaceRail" aria-label="Turneringsnavigasjon">
             <button type="button" class="workspace-rail-item hidden" data-rail-target="lobby">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 15V3M7 8l5-5 5 5" />
+                <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="common.lobby">Lobby</span>
             </button>
             <button type="button" class="workspace-rail-item" data-rail-target="control">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M3 11l9-7 9 7" />
+                <path d="M5 10v10h14V10" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="admin.control">Styring</span>
             </button>
             <button type="button" class="workspace-rail-item" data-rail-target="matches">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M12 4v16M3 12h18"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3" y="4" width="18" height="16" rx="3" />
+                <path d="M12 4v16M3 12h18" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="admin.matches">Kamper</span>
             </button>
             <button type="button" class="workspace-rail-item" data-rail-target="standings">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 20V10M12 20V4M18 20v-7"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 20V10M12 20V4M18 20v-7" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="common.standings">Tabell</span>
             </button>
             <button type="button" class="workspace-rail-item hidden" data-rail-target="player">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.9-3.6 3.6-5.5 7-5.5s6.1 1.9 7 5.5"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="8" r="3.5" />
+                <path d="M5 20c.9-3.6 3.6-5.5 7-5.5s6.1 1.9 7 5.5" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="nav.player">Spiller</span>
             </button>
-            <button type="button" class="workspace-rail-item workspace-rail-tv" id="tvModeRailButton" data-action="tv-mode">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <button type="button" class="workspace-rail-item workspace-rail-tv" id="tvModeRailButton"
+              data-action="tv-mode">
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3" y="5" width="18" height="12" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="actions.tvMode">TV Mode</span>
             </button>
           </nav>
@@ -730,70 +820,74 @@
 
               <div class="panel lobby-wrap">
                 <div class="admin-panel lobby-panel hidden" id="lobbyPanel" data-admin-panel-section="lobby">
-        <div class="lobby-header">
-          <h3 data-i18n="tournament.lobbyHeadline">Del koden og fyll spillerlisten.</h3>
-          <p id="lobbyReadiness"></p>
-        </div>
-        <div class="lobby-grid">
-          <div class="share-details">
-            <div>
-              <span data-i18n="share.inviteCode">Invitasjonskode</span>
-              <strong id="lobbyInviteCode">-----</strong>
-            </div>
-            <div class="qr-card">
-              <span data-i18n="share.qrCode">QR-kode</span>
-              <img id="lobbyQrCode" src="" alt="QR-kode for påmelding" width="150" height="150"
-                data-i18n-alt="share.qrCodeAlt">
-            </div>
-            <div>
-              <span data-i18n="share.joinLink">Join-lenke</span>
-              <input id="lobbyJoinLink" type="text" readonly value="">
-            </div>
-          </div>
-          <div class="lobby-players-card">
-            <div class="panel-heading">
-              <h3 data-i18n="admin.lobbyPlayers">Lobby / spillere</h3>
-            </div>
-            <ul class="compact-list" id="lobbyPlayersList"></ul>
-            <form class="inline-form lobby-add-form" id="lobbyAddPlayerForm">
-              <textarea name="playerName" rows="2" maxlength="2048" placeholder="Legg til én eller flere spillere"
-                autocomplete="off" aria-label="Legg til spillere" data-i18n-placeholder="admin.addPlayersPlaceholder"
-                data-i18n-aria-label="lobby.addPlayers" required></textarea>
-              <button class="secondary" type="submit" data-i18n="actions.add">Legg til</button>
-            </form>
-          </div>
-          <div class="lobby-invite-card hidden" id="lobbyInviteCard">
-            <div class="panel-heading">
-              <h3 data-i18n="invitations.title">Inviter med e-post</h3>
-            </div>
-            <p class="hint" data-i18n="invitations.hint">Personen ser invitasjonen når vedkommende logger inn med denne e-postadressen. Ingen plass reserveres før vedkommende blir med.</p>
-            <form class="inline-form" id="lobbyInviteForm">
-              <input name="email" type="email" maxlength="200" autocomplete="off" required
-                placeholder="navn@eksempel.no" aria-label="E-postadresse" data-i18n-aria-label="invitations.email">
-              <button class="secondary" type="submit" data-i18n="invitations.send">Send invitasjon</button>
-            </form>
-            <ul class="compact-list" id="lobbyInvitationsList"></ul>
-          </div>
-          <div class="lobby-courts-card">
-            <form class="court-names-form" id="lobbyCourtNamesForm">
-              <div class="panel-heading">
-                <h3 data-i18n="lobby.courts">Baner</h3>
-                <label class="court-count-control">
-                  <span data-i18n="setup.courtCount">Antall baner</span>
-                  <input name="courtCount" type="number" min="1" max="12" value="1" required>
-                </label>
-              </div>
-              <div class="court-names-list" id="lobbyCourtNamesList"></div>
-              <button class="secondary" type="submit" data-i18n="lobby.saveCourts">Lagre baner</button>
-            </form>
-          </div>
-        </div>
-        <div class="lobby-actions">
-          <button class="primary" id="lobbyStartButton" type="button" data-i18n="actions.startTournament">Start
-            turnering</button>
-          <button class="ghost" id="lobbySkipButton" type="button" data-i18n="admin.control">Styring</button>
-        </div>
-      </div>
+                  <div class="lobby-header">
+                    <h3 data-i18n="tournament.lobbyHeadline">Del koden og fyll spillerlisten.</h3>
+                    <p id="lobbyReadiness"></p>
+                  </div>
+                  <div class="lobby-grid">
+                    <div class="share-details">
+                      <div>
+                        <span data-i18n="share.inviteCode">Invitasjonskode</span>
+                        <strong id="lobbyInviteCode">-----</strong>
+                      </div>
+                      <div class="qr-card">
+                        <span data-i18n="share.qrCode">QR-kode</span>
+                        <img id="lobbyQrCode" src="" alt="QR-kode for påmelding" width="150" height="150"
+                          data-i18n-alt="share.qrCodeAlt">
+                      </div>
+                      <div>
+                        <span data-i18n="share.joinLink">Join-lenke</span>
+                        <input id="lobbyJoinLink" type="text" readonly value="">
+                      </div>
+                    </div>
+                    <div class="lobby-players-card">
+                      <div class="panel-heading">
+                        <h3 data-i18n="admin.lobbyPlayers">Lobby / spillere</h3>
+                      </div>
+                      <ul class="compact-list" id="lobbyPlayersList"></ul>
+                      <form class="inline-form lobby-add-form" id="lobbyAddPlayerForm">
+                        <textarea name="playerName" rows="2" maxlength="2048"
+                          placeholder="Legg til én eller flere spillere" autocomplete="off"
+                          aria-label="Legg til spillere" data-i18n-placeholder="admin.addPlayersPlaceholder"
+                          data-i18n-aria-label="lobby.addPlayers" required></textarea>
+                        <button class="secondary" type="submit" data-i18n="actions.add">Legg til</button>
+                      </form>
+                    </div>
+                    <div class="lobby-invite-card hidden" id="lobbyInviteCard">
+                      <div class="panel-heading">
+                        <h3 data-i18n="invitations.title">Inviter med e-post</h3>
+                      </div>
+                      <p class="hint" data-i18n="invitations.hint">Personen ser invitasjonen når vedkommende logger inn
+                        med denne e-postadressen. Ingen plass reserveres før vedkommende blir med.</p>
+                      <form class="inline-form" id="lobbyInviteForm">
+                        <input name="email" type="email" maxlength="200" autocomplete="off" required
+                          placeholder="navn@eksempel.no" aria-label="E-postadresse"
+                          data-i18n-aria-label="invitations.email">
+                        <button class="secondary" type="submit" data-i18n="invitations.send">Send invitasjon</button>
+                      </form>
+                      <ul class="compact-list" id="lobbyInvitationsList"></ul>
+                    </div>
+                    <div class="lobby-courts-card">
+                      <form class="court-names-form" id="lobbyCourtNamesForm">
+                        <div class="panel-heading">
+                          <h3 data-i18n="lobby.courts">Baner</h3>
+                          <label class="court-count-control">
+                            <span data-i18n="setup.courtCount">Antall baner</span>
+                            <input name="courtCount" type="number" min="1" max="12" value="1" required>
+                          </label>
+                        </div>
+                        <div class="court-names-list" id="lobbyCourtNamesList"></div>
+                        <button class="secondary" type="submit" data-i18n="lobby.saveCourts">Lagre baner</button>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="lobby-actions">
+                    <button class="primary" id="lobbyStartButton" type="button"
+                      data-i18n="actions.startTournament">Start
+                      turnering</button>
+                    <button class="ghost" id="lobbySkipButton" type="button" data-i18n="admin.control">Styring</button>
+                  </div>
+                </div>
               </div>
 
               <div class="panel command-panel">
@@ -867,7 +961,8 @@
                         <label>
                           <span data-i18n="admin.scoringMode">Poengsystem</span>
                           <select name="scoringMode">
-                            <option value="tennis" data-i18n="admin.scoringModeTennis">Tennis og padel (game, sett, kamp)</option>
+                            <option value="tennis" data-i18n="admin.scoringModeTennis">Tennis og padel (game, sett,
+                              kamp)</option>
                             <option value="points" data-i18n="admin.scoringModePoints">Poeng (først til N)</option>
                           </select>
                         </label>
@@ -1145,17 +1240,26 @@
               </div>
 
               <!-- TabBar for players (design system): phones only, jumps between the sections of this view. -->
-              <nav class="player-bottom-tabs" id="playerBottomTabs" aria-label="Turnering" data-i18n-aria-label="player.tabsAria">
+              <nav class="player-bottom-tabs" id="playerBottomTabs" aria-label="Turnering"
+                data-i18n-aria-label="player.tabsAria">
                 <button type="button" class="workspace-rail-item is-active" data-player-tab="playerNextMatch">
-                  <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+                  <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 11l9-7 9 7" />
+                    <path d="M5 10v10h14V10" />
+                  </svg>
                   <span class="workspace-rail-label" data-i18n="nav.today">I dag</span>
                 </button>
                 <button type="button" class="workspace-rail-item" data-player-tab="playerMatchesPanel">
-                  <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M12 4v16M3 12h18"/></svg>
+                  <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <rect x="3" y="4" width="18" height="16" rx="3" />
+                    <path d="M12 4v16M3 12h18" />
+                  </svg>
                   <span class="workspace-rail-label" data-i18n="admin.matches">Kamper</span>
                 </button>
                 <button type="button" class="workspace-rail-item" data-player-tab="playerStandingsPanel">
-                  <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 20V10M12 20V4M18 20v-7"/></svg>
+                  <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6 20V10M12 20V4M18 20v-7" />
+                  </svg>
                   <span class="workspace-rail-label" data-i18n="common.standings">Tabell</span>
                 </button>
               </nav>
@@ -1165,27 +1269,44 @@
 
           <nav class="workspace-bottom-tabs hidden" id="workspaceBottomTabs" aria-label="Turneringsnavigasjon">
             <button type="button" class="workspace-rail-item hidden" data-rail-target="lobby">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 15V3M7 8l5-5 5 5" />
+                <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="common.lobby">Lobby</span>
             </button>
             <button type="button" class="workspace-rail-item" data-rail-target="control">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M3 11l9-7 9 7" />
+                <path d="M5 10v10h14V10" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="admin.control">Styring</span>
             </button>
             <button type="button" class="workspace-rail-item" data-rail-target="matches">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M12 4v16M3 12h18"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3" y="4" width="18" height="16" rx="3" />
+                <path d="M12 4v16M3 12h18" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="admin.matches">Kamper</span>
             </button>
             <button type="button" class="workspace-rail-item" data-rail-target="standings">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 20V10M12 20V4M18 20v-7"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 20V10M12 20V4M18 20v-7" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="common.standings">Tabell</span>
             </button>
             <button type="button" class="workspace-rail-item hidden" data-rail-target="player">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.9-3.6 3.6-5.5 7-5.5s6.1 1.9 7 5.5"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="8" r="3.5" />
+                <path d="M5 20c.9-3.6 3.6-5.5 7-5.5s6.1 1.9 7 5.5" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="nav.player">Spiller</span>
             </button>
             <button type="button" class="workspace-rail-item" id="tvModeBottomButton" data-action="tv-mode">
-              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              <svg class="workspace-rail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3" y="5" width="18" height="12" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+              </svg>
               <span class="workspace-rail-label" data-i18n="actions.tvMode">TV Mode</span>
             </button>
           </nav>
@@ -1214,14 +1335,20 @@
     <dialog class="large-score-dialog" id="largeScoreDialog" aria-labelledby="largeScoreTitle">
       <div class="large-score-surface" id="largeScoreSurface">
         <div class="large-score-top">
-          <button class="ghost icon-button large-score-close" id="closeLargeScoreButton" type="button"
-            aria-label="Lukk" data-i18n-aria-label="actions.close"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+          <button class="ghost icon-button large-score-close" id="closeLargeScoreButton" type="button" aria-label="Lukk"
+            data-i18n-aria-label="actions.close"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg></button>
           <div class="large-score-heading">
             <p class="eyebrow" id="largeScoreContext">Kamp</p>
             <h2 id="largeScoreTitle">Stor score</h2>
           </div>
           <button class="ghost icon-button large-score-undo" id="largeScoreUndoButton" type="button"
-            aria-label="Angre siste" data-i18n-aria-label="actions.undoLast"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>
+            aria-label="Angre siste" data-i18n-aria-label="actions.undoLast"><svg viewBox="0 0 24 24" aria-hidden="true"
+              focusable="false">
+              <path d="M9 14L4 9l5-5" />
+              <path d="M4 9h10a6 6 0 0 1 0 12h-3" />
+            </svg></button>
         </div>
         <div class="large-score-board" id="largeScoreBoard"></div>
         <div class="large-score-actions" id="largeScoreActions"></div>
@@ -1243,7 +1370,8 @@
     <dialog class="info-dialog" id="infoDialog" aria-labelledby="infoDialogTitle">
       <div class="info-dialog-card">
         <h2 class="sr-only" id="infoDialogTitle"></h2>
-        <button class="info-dialog-close" id="infoDialogClose" type="button" aria-label="Lukk" data-i18n-aria-label="actions.close"><span aria-hidden="true">&times;</span></button>
+        <button class="info-dialog-close" id="infoDialogClose" type="button" aria-label="Lukk"
+          data-i18n-aria-label="actions.close"><span aria-hidden="true">&times;</span></button>
         <iframe class="info-dialog-frame" id="infoDialogFrame" title=""></iframe>
       </div>
     </dialog>
@@ -1252,11 +1380,13 @@
       <div class="notification-dialog-card">
         <div class="notification-dialog-head">
           <h2 id="notificationCenterTitle" data-i18n="notifications.center.title">Varsler</h2>
-          <button class="ghost icon-button" id="notificationCenterClose" type="button" data-i18n="actions.close">Lukk</button>
+          <button class="ghost icon-button" id="notificationCenterClose" type="button"
+            data-i18n="actions.close">Lukk</button>
         </div>
         <ul class="notification-list" id="notificationCenterList"></ul>
         <div class="notification-dialog-foot">
-          <button class="secondary" id="notificationMarkAllRead" type="button" data-i18n="notifications.center.markAllRead">Marker alle som lest</button>
+          <button class="secondary" id="notificationMarkAllRead" type="button"
+            data-i18n="notifications.center.markAllRead">Marker alle som lest</button>
         </div>
       </div>
     </dialog>
@@ -1280,7 +1410,8 @@
           </svg>
           <span data-i18n="pwa.install">Installer Padelstar på din enhet</span>
         </button>
-        <button class="secondary install-app-button feedback-app-button" id="feedbackFooterButton" type="button" data-feedback-open>
+        <button class="secondary install-app-button feedback-app-button" id="feedbackFooterButton" type="button"
+          data-feedback-open>
           <svg class="install-app-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M5 4h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8l-5 4v-4H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" />
           </svg>
@@ -1292,7 +1423,7 @@
         </nav>
       </div>
       <p class="footer-credit">
-        <span data-i18n="footer.developedBy">Utviklet av Sigurd Steen Grødem</span> ·
+        <span data-i18n="footer.developedBy">Utviklet av Sigurd Steen Grødem for Zigonia Events</span> ·
         <span data-i18n="footer.copyrightPrefix">Copyright</span> &copy; <span id="copyrightYearRange">2026</span>.
         <span data-i18n="footer.rights">Alle rettigheter forbeholdt.</span>
       </p>
